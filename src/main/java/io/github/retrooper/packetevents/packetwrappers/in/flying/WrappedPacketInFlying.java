@@ -24,7 +24,6 @@
 
 package io.github.retrooper.packetevents.packetwrappers.in.flying;
 
-
 import io.github.retrooper.packetevents.packet.PacketTypeClasses;
 import io.github.retrooper.packetevents.packetwrappers.WrappedPacket;
 

@@ -179,7 +179,6 @@ public class WrappedPacket implements WrapperPacketReader {
             if (type.isAssignableFrom(f.getType())) {
                 if (index == currentIndex++) {
                     try {
-                        System.out.println("Ended: " + (System.nanoTime() - start) + "ns");
                         return f.get(packet);
                     } catch (Exception exception) {
                         exception.printStackTrace();
