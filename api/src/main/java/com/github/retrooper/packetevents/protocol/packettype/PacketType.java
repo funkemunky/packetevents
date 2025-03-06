@@ -989,7 +989,7 @@ public final class PacketType {
             SET_TITLE_TEXT(WrapperPlayServerSetTitleText.class),
             SET_TITLE_TIMES(WrapperPlayServerSetTitleTimes.class),
             ENTITY_SOUND_EFFECT(WrapperPlayServerEntitySoundEffect.class),
-            SOUND_EFFECT(WrapperPlayServerEntitySoundEffect.class),
+            SOUND_EFFECT(WrapperPlayServerSoundEffect.class),
             STOP_SOUND(null),
             PLAYER_LIST_HEADER_AND_FOOTER(WrapperPlayServerPlayerListHeaderAndFooter.class),
             NBT_QUERY_RESPONSE(WrapperPlayServerNBTQueryResponse.class),
