@@ -498,10 +498,17 @@ public final class PacketType {
             private static int INDEX = 0;
             private static final Map<Byte, Map<Integer, PacketTypeCommon>> PACKET_TYPE_ID_MAP = new HashMap<>();
             private final int[] ids;
+            private final Class<? extends PacketWrapper<?>> wrapper;
 
-            Client(@Nullable Class<?> clazz) {
+            Client(@Nullable Class<? extends PacketWrapper<?>> wrapper) {
                 this.ids = new int[SERVERBOUND_CONFIG_VERSION_MAPPER.getVersions().length];
                 Arrays.fill(this.ids, -1);
+                this.wrapper = wrapper;
+            }
+
+            @Override
+            public Class<? extends PacketWrapper<?>> getWrapperClass() {
+                return wrapper;
             }
 
             public static void load() {
@@ -585,10 +592,17 @@ public final class PacketType {
             private static int INDEX = 0;
             private static final Map<Byte, Map<Integer, PacketTypeCommon>> PACKET_TYPE_ID_MAP = new HashMap<>();
             private final int[] ids;
+            private final Class<? extends PacketWrapper<?>> wrapper;
 
-            Server(@Nullable Class<?> clazz) {
+            Server(@Nullable Class<? extends PacketWrapper<?>> wrapper) {
                 this.ids = new int[CLIENTBOUND_CONFIG_VERSION_MAPPER.getVersions().length];
                 Arrays.fill(this.ids, -1);
+                this.wrapper = wrapper;
+            }
+
+            @Override
+            public Class<? extends PacketWrapper<?>> getWrapperClass() {
+                return wrapper;
             }
 
             public static void load() {
@@ -788,10 +802,17 @@ public final class PacketType {
             private static int INDEX = 0;
             private static final Map<Byte, Map<Integer, PacketTypeCommon>> PACKET_TYPE_ID_MAP = new HashMap<>();
             private final int[] ids;
+            private final Class<? extends PacketWrapper<?>> wrapper;
 
-            Client(@Nullable Class<?> clazz) {
+            Client(@Nullable Class<? extends PacketWrapper<?>> wrapper) {
                 ids = new int[SERVERBOUND_PLAY_VERSION_MAPPER.getVersions().length];
                 Arrays.fill(ids, -1);
+                this.wrapper = wrapper;
+            }
+
+            @Override
+            public Class<? extends PacketWrapper<?>> getWrapperClass() {
+                return wrapper;
             }
 
             @Nullable
@@ -1038,10 +1059,17 @@ public final class PacketType {
             private static int INDEX = 0;
             private static final Map<Byte, Map<Integer, PacketTypeCommon>> PACKET_TYPE_ID_MAP = new HashMap<>();
             private final int[] ids;
+            private final Class<? extends PacketWrapper<?>> wrapper;
 
-            Server(@Nullable Class<?> clazz) {
+            Server(@Nullable Class<? extends PacketWrapper<?>> wrapper) {
                 ids = new int[CLIENTBOUND_PLAY_VERSION_MAPPER.getVersions().length];
                 Arrays.fill(ids, -1);
+                this.wrapper = wrapper;
+            }
+
+            @Override
+            public Class<? extends PacketWrapper<?>> getWrapperClass() {
+                return wrapper;
             }
 
             public int getId(ClientVersion version) {
