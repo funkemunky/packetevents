@@ -42,12 +42,21 @@ public class WrapperPlayClientEditBook extends PacketWrapper<WrapperPlayClientEd
 
     private int slot;
 
-    // >= 1.17.1
+    /**
+     * Added with 1.17.1 - this will only be null for versions older than 1.17.1
+     */
     private @Nullable List<String> pages;
+    /**
+     * Added with 1.17.1
+     */
     private @Nullable String title;
-
-    // < 1.17.1
+    /**
+     * Removed with 1.17.1
+     */
     private @Nullable ItemStack itemStack;
+    /**
+     * Removed with 1.17.1
+     */
     private @Nullable Boolean signing;
 
     public WrapperPlayClientEditBook(PacketReceiveEvent event) {
@@ -147,7 +156,15 @@ public class WrapperPlayClientEditBook extends PacketWrapper<WrapperPlayClientEd
         return itemStack;
     }
 
+    public void setItemStack(@Nullable ItemStack itemStack) {
+        this.itemStack = itemStack;
+    }
+
     public @Nullable Boolean getSigning() {
         return signing;
+    }
+
+    public void setSigning(@Nullable Boolean signing) {
+        this.signing = signing;
     }
 }
