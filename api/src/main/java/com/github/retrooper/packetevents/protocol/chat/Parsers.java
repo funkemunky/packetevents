@@ -214,6 +214,14 @@ public class Parsers {
     public static final Parser LOOT_MODIFIER = define("loot_modifier", null, null);
     public static final Parser UUID = define("uuid", null, null);
 
+    /**
+     * Added with 1.21.5
+     */
+    public static final Parser RESOURCE_SELECTOR = define("resource_selector",
+            wrapper -> Collections.singletonList(wrapper.readIdentifier()),
+            (wrapper, value) -> wrapper.writeIdentifier((ResourceLocation) value.get(0))
+    );
+
     static {
         TYPES_BUILDER.unloadFileMappings();
     }
