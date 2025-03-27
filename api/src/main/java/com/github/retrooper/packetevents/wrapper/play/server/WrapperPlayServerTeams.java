@@ -169,9 +169,15 @@ public class WrapperPlayServerTeams extends PacketWrapper<WrapperPlayServerTeams
                     nameTagVisibility = NameTagVisibility.ALWAYS;
                     color = NamedTextColor.WHITE;
                 } else {
-                    nameTagVisibility = NameTagVisibility.fromID(readString(32));
-                    if (serverVersion.isNewerThanOrEquals(ServerVersion.V_1_9))
-                        collisionRule = CollisionRule.fromID(readString(32));
+                    if (serverVersion.isNewerThanOrEquals(ServerVersion.V_1_21_5)) {
+                        nameTagVisibility = readEnum(NameTagVisibility.class);
+                        collisionRule = readEnum(CollisionRule.class);
+                    } else {
+                        nameTagVisibility = NameTagVisibility.fromID(readString(32));
+                        if (serverVersion.isNewerThanOrEquals(ServerVersion.V_1_9)) {
+                            collisionRule = CollisionRule.fromID(readString(32));
+                        }
+                    }
                     if (serverVersion.isNewerThanOrEquals(ServerVersion.V_1_17)) {
                         // starting from 1.17, the color is sent with ColorFormatting enum ordinal
                         int colorId = readVarInt();
@@ -232,8 +238,13 @@ public class WrapperPlayServerTeams extends PacketWrapper<WrapperPlayServerTeams
             } else {
                 writeComponent(info.displayName);
                 writeByte(info.optionData.getByteValue());
-                writeString(info.tagVisibility.id);
-                writeString(info.collisionRule.getId());
+                if (serverVersion.isNewerThanOrEquals(ServerVersion.V_1_21_5)) {
+                    writeEnum(info.tagVisibility);
+                    writeEnum(info.collisionRule);
+                } else {
+                    writeString(info.tagVisibility.id);
+                    writeString(info.collisionRule.getId());
+                }
                 if (serverVersion.isNewerThanOrEquals(ServerVersion.V_1_17)) {
                     int colorId = ColorUtil.getId(info.color);
                     if (colorId < 0)
@@ -270,7 +281,6 @@ public class WrapperPlayServerTeams extends PacketWrapper<WrapperPlayServerTeams
     public String getTeamName() {
         return teamName;
     }
-
 
     public void setTeamName(String teamName) {
         this.teamName = teamName;
@@ -381,7 +391,5 @@ public class WrapperPlayServerTeams extends PacketWrapper<WrapperPlayServerTeams
         public void setOptionData(OptionData optionData) {
             this.optionData = optionData;
         }
-
     }
-
 }
