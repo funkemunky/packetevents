@@ -120,7 +120,7 @@ public class StateTypes {
     public static StateType SAND = StateTypes.builder().name("SAND").blastResistance(0.5f).hardness(0.5f).isBlocking(true).requiresCorrectTool(false).isSolid(true).setMaterial(MaterialType.SAND).build();
     public static StateType SUSPICIOUS_SAND = StateTypes.builder().name("SUSPICIOUS_SAND").blastResistance(0.25f).hardness(0.25f)
             .isBlocking(true)
-            .requiresCorrectTool(true).isSolid(true).setMaterial(MaterialType.SAND).build();
+            .requiresCorrectTool(false).isSolid(true).setMaterial(MaterialType.SAND).build();
     public static StateType RED_SAND = StateTypes.builder().name("RED_SAND").blastResistance(0.5f).hardness(0.5f).isBlocking(true).requiresCorrectTool(false).isSolid(true).setMaterial(MaterialType.SAND).build();
     public static StateType GRAVEL = StateTypes.builder().name("GRAVEL").blastResistance(0.6f).hardness(0.6f).isBlocking(true).requiresCorrectTool(false).isSolid(true).setMaterial(MaterialType.SAND).build();
     public static StateType COAL_ORE = StateTypes.builder().name("COAL_ORE").blastResistance(3.0f).hardness(3.0f).isBlocking(true).requiresCorrectTool(true).isSolid(true).setMaterial(MaterialType.STONE).build();
@@ -1084,7 +1084,7 @@ public class StateTypes {
     public static StateType POTTED_FLOWERING_AZALEA_BUSH = StateTypes.builder().name("POTTED_FLOWERING_AZALEA_BUSH").blastResistance(0.0f).hardness(0.0f).isBlocking(false).requiresCorrectTool(false).isSolid(true).setMaterial(MaterialType.DECORATION).build();
     //1.20 added types
     public static StateType SUSPICIOUS_GRAVEL = StateTypes.builder().name("SUSPICIOUS_GRAVEL").blastResistance(0.25f)
-            .hardness(0.25f).isBlocking(true).requiresCorrectTool(true)
+            .hardness(0.25f).isBlocking(true).requiresCorrectTool(false)
             .isSolid(true).setMaterial(MaterialType.SAND).build();
     public static StateType PITCHER_CROP = StateTypes.builder().name("PITCHER_CROP").blastResistance(0.0f).hardness(0.0f)
             .isBlocking(false).requiresCorrectTool(false).isSolid(false).setMaterial(MaterialType.PLANT).build();
