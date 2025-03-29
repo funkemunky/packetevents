@@ -435,7 +435,15 @@ public class PacketWrapper<T extends PacketWrapper<T>> {
     }
 
     public <K, V> Map<K, V> readMap(Reader<K> keyFunction, Reader<V> valueFunction) {
-        int size = readVarInt();
+        return this.readMap(keyFunction, valueFunction, Integer.MAX_VALUE);
+    }
+
+    public <K, V> Map<K, V> readMap(Reader<K> keyFunction, Reader<V> valueFunction, int maxSize) {
+        int size = this.readVarInt();
+        if (size > maxSize) {
+            throw new RuntimeException(size + " elements exceeded max size of: " + maxSize);
+        }
+
         Map<K, V> map = new HashMap<>(size);
         for (int i = 0; i < size; i++) {
             K key = keyFunction.apply(this);
