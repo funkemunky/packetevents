@@ -57,6 +57,7 @@ public class Vector3i {
         this.z = 0;
     }
 
+    @Deprecated
     public Vector3i(long val) {
         this(val, PacketEvents.getAPI().getServerManager().getVersion());
     }
@@ -156,6 +157,7 @@ public class Vector3i {
         return ((long) (getX() & 0x3FFFFFF) << 38) | ((long) (getY() & 0xFFF) << 26) | (getZ() & 0x3FFFFFF);
     }
 
+    @Deprecated
     public long getSerializedPosition() {
         return getSerializedPosition(PacketEvents.getAPI().getServerManager().getVersion());
     }
