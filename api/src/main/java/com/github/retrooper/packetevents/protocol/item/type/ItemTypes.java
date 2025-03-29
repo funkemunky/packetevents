@@ -1461,6 +1461,19 @@ public final class ItemTypes {
     public static final ItemType CHISELED_RESIN_BRICKS = builder("chiseled_resin_bricks").setMaxAmount(64).setPlacedType(StateTypes.CHISELED_RESIN_BRICKS).build();
     public static final ItemType RESIN_BRICK = builder("resin_brick").setMaxAmount(64).build();
 
+    // 1.21.5 items
+    public static final ItemType BUSH = builder("bush").setMaxAmount(64).setPlacedType(StateTypes.BUSH).build();
+    public static final ItemType FIREFLY_BUSH = builder("firefly_bush").setMaxAmount(64).setPlacedType(StateTypes.FIREFLY_BUSH).build();
+    public static final ItemType SHORT_DRY_GRASS = builder("short_dry_grass").setMaxAmount(64).setPlacedType(StateTypes.SHORT_DRY_GRASS).setAttributes(ItemAttribute.FUEL).build();
+    public static final ItemType TALL_DRY_GRASS = builder("tall_dry_grass").setMaxAmount(64).setPlacedType(StateTypes.TALL_DRY_GRASS).setAttributes(ItemAttribute.FUEL).build();
+    public static final ItemType WILDFLOWERS = builder("wildflowers").setMaxAmount(64).setPlacedType(StateTypes.WILDFLOWERS).build();
+    public static final ItemType LEAF_LITTER = builder("leaf_litter").setMaxAmount(64).setPlacedType(StateTypes.LEAF_LITTER).setAttributes(ItemAttribute.FUEL).build();
+    public static final ItemType CACTUS_FLOWER = builder("cactus_flower").setMaxAmount(64).setPlacedType(StateTypes.CACTUS_FLOWER).build();
+    public static final ItemType TEST_BLOCK = builder("test_block").setMaxAmount(64).setPlacedType(StateTypes.TEST_BLOCK).build();
+    public static final ItemType TEST_INSTANCE_BLOCK = builder("test_instance_block").setMaxAmount(64).setPlacedType(StateTypes.TEST_INSTANCE_BLOCK).build();
+    public static final ItemType BLUE_EGG = builder("blue_egg").setMaxAmount(16).build();
+    public static final ItemType BROWN_EGG = builder("brown_egg").setMaxAmount(16).build();
+
     /**
      * @deprecated Burning furnace shows up as a missing texture, removed in 1.9
      */
