@@ -1579,7 +1579,7 @@ public final class ItemTypes {
         // all versions where base components were changed TODO UPDATE
         ClientVersion[] versions = new ClientVersion[]{
                 ClientVersion.V_1_20_5, ClientVersion.V_1_21, ClientVersion.V_1_21_2,
-                ClientVersion.V_1_21_4,
+                ClientVersion.V_1_21_4, ClientVersion.V_1_21_5,
         };
         for (ClientVersion version : versions) {
             parseAllComponents(version);
