@@ -1420,15 +1420,17 @@ public class WrappedBlockState {
     }
 
     /**
-     * Added with 1.21.4
+     * Added with 1.21.4, removed with 1.21.5
      */
+    @ApiStatus.Obsolete
     public boolean isActive() {
         return (boolean) this.data.get(StateValue.ACTIVE);
     }
 
     /**
-     * Added with 1.21.4
+     * Added with 1.21.4, removed with 1.21.5
      */
+    @ApiStatus.Obsolete
     public void setActive(boolean active) {
         this.checkIfCloneNeeded();
         this.data.put(StateValue.ACTIVE, active);
@@ -1448,6 +1450,54 @@ public class WrappedBlockState {
     public void setNatural(boolean natural) {
         this.checkIfCloneNeeded();
         this.data.put(StateValue.NATURAL, natural);
+        this.checkIsStillValid();
+    }
+
+    /**
+     * Added with 1.21.5
+     */
+    public int getSegmentAmount() {
+        return (int) this.data.get(StateValue.SEGMENT_AMOUNT);
+    }
+
+    /**
+     * Added with 1.21.5
+     */
+    public void setSegmentAmount(int segmentAmount) {
+        this.checkIfCloneNeeded();
+        this.data.put(StateValue.SEGMENT_AMOUNT, segmentAmount);
+        this.checkIsStillValid();
+    }
+
+    /**
+     * Added with 1.21.5
+     */
+    public CreakingHeartState getCreakingHeartState() {
+        return (CreakingHeartState) this.data.get(StateValue.CREAKING_HEART_STATE);
+    }
+
+    /**
+     * Added with 1.21.5
+     */
+    public void setCreakingHeartState(CreakingHeartState creakingHeartState) {
+        this.checkIfCloneNeeded();
+        this.data.put(StateValue.CREAKING_HEART_STATE, creakingHeartState);
+        this.checkIsStillValid();
+    }
+
+    /**
+     * Added with 1.21.5
+     */
+    public boolean isMap() {
+        return (boolean) this.data.get(StateValue.MAP);
+    }
+
+    /**
+     * Added with 1.21.5
+     */
+    public void setMap(boolean map) {
+        this.checkIfCloneNeeded();
+        this.data.put(StateValue.MAP, map);
         this.checkIsStillValid();
     }
 
