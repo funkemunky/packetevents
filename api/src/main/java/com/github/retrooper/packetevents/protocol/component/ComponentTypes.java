@@ -54,6 +54,7 @@ import com.github.retrooper.packetevents.protocol.component.builtin.item.ItemRar
 import com.github.retrooper.packetevents.protocol.component.builtin.item.ItemRecipes;
 import com.github.retrooper.packetevents.protocol.component.builtin.item.ItemRepairable;
 import com.github.retrooper.packetevents.protocol.component.builtin.item.ItemTool;
+import com.github.retrooper.packetevents.protocol.component.builtin.item.ItemTooltipDisplay;
 import com.github.retrooper.packetevents.protocol.component.builtin.item.ItemTooltipStyle;
 import com.github.retrooper.packetevents.protocol.component.builtin.item.ItemUnbreakable;
 import com.github.retrooper.packetevents.protocol.component.builtin.item.ItemUseCooldown;
@@ -154,8 +155,16 @@ public final class ComponentTypes {
     @Deprecated
     public static final ComponentType<Integer> CUSTOM_MODEL_DATA = CUSTOM_MODEL_DATA_LISTS.legacyMap(
             ItemCustomModelData::getLegacyId, ItemCustomModelData::new);
+    /**
+     * Removed with 1.21.5
+     */
+    @ApiStatus.Obsolete
     public static final ComponentType<Dummy> HIDE_ADDITIONAL_TOOLTIP = define("hide_additional_tooltip",
             Dummy::dummyRead, Dummy::dummyWrite);
+    /**
+     * Removed with 1.21.5
+     */
+    @ApiStatus.Obsolete
     public static final ComponentType<Dummy> HIDE_TOOLTIP = define("hide_tooltip",
             Dummy::dummyRead, Dummy::dummyWrite);
     public static final ComponentType<Integer> REPAIR_COST = define("repair_cost",
@@ -270,6 +279,12 @@ public final class ComponentTypes {
             ItemDeathProtection::read, ItemDeathProtection::write);
     public static final ComponentType<ItemTooltipStyle> TOOLTIP_STYLE = define("tooltip_style",
             ItemTooltipStyle::read, ItemTooltipStyle::write);
+
+    /**
+     * Added with 1.21.5
+     */
+    public static final ComponentType<ItemTooltipDisplay> TOOLTIP_DISPLAY = define("tooltip_display",
+            ItemTooltipDisplay::read, ItemTooltipDisplay::write);
 
     /**
      * Returns an immutable view of the component types.
