@@ -23,6 +23,7 @@ import com.github.retrooper.packetevents.protocol.component.ComponentTypes;
 import com.github.retrooper.packetevents.protocol.component.PatchableComponentMap;
 import com.github.retrooper.packetevents.protocol.component.StaticComponentMap;
 import com.github.retrooper.packetevents.protocol.component.builtin.item.ItemEnchantments;
+import com.github.retrooper.packetevents.protocol.component.builtin.item.ItemUnbreakable;
 import com.github.retrooper.packetevents.protocol.item.enchantment.Enchantment;
 import com.github.retrooper.packetevents.protocol.item.enchantment.type.EnchantmentType;
 import com.github.retrooper.packetevents.protocol.item.enchantment.type.EnchantmentTypes;
@@ -145,7 +146,8 @@ public class ItemStack {
     public boolean isDamageableItem() {
         return !this.cachedIsEmpty && this.getMaxDamage() > 0
                 && (this.nbt == null || !this.nbt.getBoolean("Unbreakable"))
-                && !this.getComponentOr(ComponentTypes.UNBREAKABLE, false);
+                && !this.getComponent(ComponentTypes.UNBREAKABLE_MODERN)
+                .map(ItemUnbreakable::isState).orElse(false);
     }
 
     public boolean isDamaged() {

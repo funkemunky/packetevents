@@ -55,6 +55,7 @@ import com.github.retrooper.packetevents.protocol.component.builtin.item.ItemRec
 import com.github.retrooper.packetevents.protocol.component.builtin.item.ItemRepairable;
 import com.github.retrooper.packetevents.protocol.component.builtin.item.ItemTool;
 import com.github.retrooper.packetevents.protocol.component.builtin.item.ItemTooltipStyle;
+import com.github.retrooper.packetevents.protocol.component.builtin.item.ItemUnbreakable;
 import com.github.retrooper.packetevents.protocol.component.builtin.item.ItemUseCooldown;
 import com.github.retrooper.packetevents.protocol.component.builtin.item.ItemUseRemainder;
 import com.github.retrooper.packetevents.protocol.component.builtin.item.LodestoneTracker;
@@ -121,8 +122,14 @@ public final class ComponentTypes {
             PacketWrapper::readVarInt, PacketWrapper::writeVarInt);
     public static final ComponentType<Integer> DAMAGE = define("damage",
             PacketWrapper::readVarInt, PacketWrapper::writeVarInt);
-    public static final ComponentType<Boolean> UNBREAKABLE = define("unbreakable",
-            PacketWrapper::readBoolean, PacketWrapper::writeBoolean);
+    public static final ComponentType<ItemUnbreakable> UNBREAKABLE_MODERN = define("unbreakable",
+            ItemUnbreakable::read, ItemUnbreakable::write);
+    /**
+     * Changed in 1.21.5
+     */
+    @Deprecated
+    public static final ComponentType<Boolean> UNBREAKABLE = UNBREAKABLE_MODERN.legacyMap(
+            ItemUnbreakable::isState, ItemUnbreakable::new);
     public static final ComponentType<Component> CUSTOM_NAME = define("custom_name",
             PacketWrapper::readComponent, PacketWrapper::writeComponent);
     public static final ComponentType<Component> ITEM_NAME = define("item_name",
