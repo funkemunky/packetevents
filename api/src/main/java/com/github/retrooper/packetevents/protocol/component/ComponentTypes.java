@@ -50,6 +50,7 @@ import com.github.retrooper.packetevents.protocol.component.builtin.item.ItemMap
 import com.github.retrooper.packetevents.protocol.component.builtin.item.ItemMapPostProcessingState;
 import com.github.retrooper.packetevents.protocol.component.builtin.item.ItemModel;
 import com.github.retrooper.packetevents.protocol.component.builtin.item.ItemPotionContents;
+import com.github.retrooper.packetevents.protocol.component.builtin.item.ItemPotionDurationScale;
 import com.github.retrooper.packetevents.protocol.component.builtin.item.ItemProfile;
 import com.github.retrooper.packetevents.protocol.component.builtin.item.ItemRarity;
 import com.github.retrooper.packetevents.protocol.component.builtin.item.ItemRecipes;
@@ -297,6 +298,11 @@ public final class ComponentTypes {
      */
     public static final ComponentType<ItemBlocksAttack> BLOCKS_ATTACK = define("blocks_attack",
             ItemBlocksAttack::read, ItemBlocksAttack::write);
+    /**
+     * Added with 1.21.5
+     */
+    public static final ComponentType<ItemPotionDurationScale> POTION_DURATION_SCALE = define("potion_duration_scale",
+            ItemPotionDurationScale::read, ItemPotionDurationScale::write);
 
     /**
      * Returns an immutable view of the component types.
