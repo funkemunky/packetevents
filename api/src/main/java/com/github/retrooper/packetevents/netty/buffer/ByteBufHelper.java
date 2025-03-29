@@ -239,6 +239,10 @@ public class ByteBufHelper {
         return PacketEvents.getAPI().getNettyManager().getByteBufOperator().resetWriterIndex(buffer);
     }
 
+    public static Object allocateNewBuffer(Object buffer) {
+        return PacketEvents.getAPI().getNettyManager().getByteBufOperator().allocateNewBuffer(buffer);
+    }
+
     public static int readVarInt(Object buffer) {
         int value = 0;
         int length = 0;

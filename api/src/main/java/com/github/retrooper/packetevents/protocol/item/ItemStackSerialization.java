@@ -19,6 +19,7 @@
 package com.github.retrooper.packetevents.protocol.item;
 
 import com.github.retrooper.packetevents.manager.server.ServerVersion;
+import com.github.retrooper.packetevents.netty.buffer.ByteBufHelper;
 import com.github.retrooper.packetevents.protocol.component.ComponentType;
 import com.github.retrooper.packetevents.protocol.component.ComponentTypes;
 import com.github.retrooper.packetevents.protocol.component.PatchableComponentMap;
@@ -96,8 +97,19 @@ public final class ItemStackSerialization {
     /**
      * Added with 1.20.5
      */
-    @SuppressWarnings("unchecked")
     public static ItemStack readModern(PacketWrapper<?> wrapper) {
+        return readModern(wrapper, false);
+    }
+
+    /**
+     * Added with 1.21.5
+     */
+    public static ItemStack readUntrusted(PacketWrapper<?> wrapper) {
+        return readModern(wrapper, true);
+    }
+
+    @SuppressWarnings("unchecked")
+    private static ItemStack readModern(PacketWrapper<?> wrapper, boolean lengthPrefixed) {
         int count = wrapper.readVarInt();
         if (count <= 0) {
             return ItemStack.EMPTY;
@@ -116,7 +128,17 @@ public final class ItemStackSerialization {
                 new HashMap<>(4));
         for (int i = 0; i < presentCount; i++) {
             ComponentType<?> type = wrapper.readMappedEntity(ComponentTypes.getRegistry());
-            components.set((ComponentType<Object>) type, type.read(wrapper));
+            // this is not 1:1 how vanilla decodes the length prefix, vanilla slices the buffer and
+            // restricts reading to only the slice; packetevents just verifies the length isn't too large
+            if (lengthPrefixed) {
+                int size = wrapper.readVarInt();
+                if (size > ByteBufHelper.readableBytes(wrapper.buffer)) {
+                    throw new RuntimeException("Component size " + size + " for " + type.getName() + " out of bounds");
+                }
+            }
+            // read component value and save in component map
+            Object value = type.read(wrapper);
+            components.set((ComponentType<Object>) type, value);
         }
         for (int i = 0; i < absentCount; i++) {
             components.unset(wrapper.readMappedEntity(ComponentTypes.getRegistry()));
@@ -128,8 +150,19 @@ public final class ItemStackSerialization {
     /**
      * Added with 1.20.5
      */
-    @SuppressWarnings("unchecked")
     public static void writeModern(PacketWrapper<?> wrapper, ItemStack stack) {
+        writeModern(wrapper, stack, false);
+    }
+
+    /**
+     * Added with 1.21.5
+     */
+    public static void writeUntrusted(PacketWrapper<?> wrapper, ItemStack stack) {
+        writeModern(wrapper, stack, true);
+    }
+
+    @SuppressWarnings("unchecked")
+    private static void writeModern(PacketWrapper<?> wrapper, ItemStack stack, boolean lengthPrefixed) {
         if (stack.isEmpty()) {
             wrapper.writeByte(0);
             return;
@@ -159,7 +192,23 @@ public final class ItemStackSerialization {
         for (Map.Entry<ComponentType<?>, Optional<?>> patch : allPatches.entrySet()) {
             if (patch.getValue().isPresent()) {
                 wrapper.writeVarInt(patch.getKey().getId(wrapper.getServerVersion().toClientVersion()));
-                ((ComponentType<Object>) patch.getKey()).write(wrapper, patch.getValue().get());
+                Runnable writer = () -> ((ComponentType<Object>) patch.getKey()).write(wrapper, patch.getValue().get());
+                if (lengthPrefixed) {
+                    // easiest solution is to just temporarily replace the buffer
+                    Object originalBuffer = wrapper.buffer;
+                    wrapper.buffer = ByteBufHelper.allocateNewBuffer(wrapper.buffer);
+                    writer.run();
+                    Object componentBuffer = wrapper.buffer;
+                    wrapper.buffer = originalBuffer;
+                    // after writing to new buffer, write length of newly written buffer to original buffer
+                    wrapper.writeVarInt(ByteBufHelper.readableBytes(componentBuffer));
+                    // copy component buffer bytes to original buffer
+                    ByteBufHelper.writeBytes(wrapper.buffer, componentBuffer);
+                    // release component buffer
+                    ByteBufHelper.release(componentBuffer);
+                } else {
+                    writer.run();
+                }
             }
         }
 
