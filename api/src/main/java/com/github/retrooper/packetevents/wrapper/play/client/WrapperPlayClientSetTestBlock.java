@@ -6,7 +6,8 @@ import com.github.retrooper.packetevents.util.Vector3i;
 import com.github.retrooper.packetevents.wrapper.PacketWrapper;
 
 public class WrapperPlayClientSetTestBlock extends PacketWrapper<WrapperPlayClientSetTestBlock> {
-    private Vector3i blockPosition;
+
+    private Vector3i position;
     private TestBlockMode mode;
     private String message;
 
@@ -14,45 +15,44 @@ public class WrapperPlayClientSetTestBlock extends PacketWrapper<WrapperPlayClie
         super(event);
     }
 
-    public WrapperPlayClientSetTestBlock(Vector3i blockPosition, TestBlockMode mode, String message) {
+    public WrapperPlayClientSetTestBlock(Vector3i position, TestBlockMode mode, String message) {
         super(PacketType.Play.Client.SET_TEST_BLOCK);
-        this.blockPosition = blockPosition;
+        this.position = position;
         this.mode = mode;
         this.message = message;
     }
 
     @Override
     public void read() {
-        this.blockPosition = readBlockPosition();
-        this.mode = readEnum(TestBlockMode.class);
-        this.message = readString();
+        this.position = this.readBlockPosition();
+        this.mode = this.readEnum(TestBlockMode.class);
+        this.message = this.readString();
     }
 
     @Override
     public void write() {
-        writeBlockPosition(blockPosition);
-        writeEnum(mode);
-        writeString(message);
+        this.writeBlockPosition(this.position);
+        this.writeEnum(this.mode);
+        this.writeString(this.message);
     }
-
 
     @Override
     public void copy(WrapperPlayClientSetTestBlock wrapper) {
-        this.blockPosition = wrapper.blockPosition;
+        this.position = wrapper.position;
         this.mode = wrapper.mode;
         this.message = wrapper.message;
     }
 
-    public Vector3i getBlockPosition() {
-        return blockPosition;
+    public Vector3i getPosition() {
+        return this.position;
     }
 
-    public void setBlockPosition(Vector3i blockPosition) {
-        this.blockPosition = blockPosition;
+    public void setPosition(Vector3i position) {
+        this.position = position;
     }
 
     public TestBlockMode getMode() {
-        return mode;
+        return this.mode;
     }
 
     public void setMode(TestBlockMode mode) {
@@ -60,7 +60,7 @@ public class WrapperPlayClientSetTestBlock extends PacketWrapper<WrapperPlayClie
     }
 
     public String getMessage() {
-        return message;
+        return this.message;
     }
 
     public void setMessage(String message) {
@@ -68,13 +68,10 @@ public class WrapperPlayClientSetTestBlock extends PacketWrapper<WrapperPlayClie
     }
 
     public enum TestBlockMode {
+
         START,
         LOG,
         FAIL,
-        ACCEPT;
-
-        public String getDisplayName() {
-            return name().toLowerCase();
-        }
+        ACCEPT,
     }
 }
