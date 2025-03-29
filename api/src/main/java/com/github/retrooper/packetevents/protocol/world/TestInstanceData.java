@@ -31,13 +31,13 @@ public class TestInstanceData {
 
     private @Nullable ResourceLocation test;
     private Vector3i size;
-    private Rotation rotation;
+    private StructureRotation rotation;
     private boolean ignoreEntities;
     private Status status;
     private @Nullable Component errorMessage;
 
     public TestInstanceData(
-            @Nullable ResourceLocation test, Vector3i size, Rotation rotation,
+            @Nullable ResourceLocation test, Vector3i size, StructureRotation rotation,
             boolean ignoreEntities, Status status, @Nullable Component errorMessage
     ) {
         this.test = test;
@@ -51,7 +51,7 @@ public class TestInstanceData {
     public static TestInstanceData read(PacketWrapper<?> wrapper) {
         ResourceLocation test = wrapper.readOptional(ResourceLocation::read);
         Vector3i size = Vector3i.read(wrapper);
-        Rotation rotation = wrapper.readEnum(Rotation.class);
+        StructureRotation rotation = wrapper.readEnum(StructureRotation.class);
         boolean ignoreEntities = wrapper.readBoolean();
         Status status = wrapper.readEnum(Status.class);
         Component errorMessage = wrapper.readOptional(PacketWrapper::readComponent);
@@ -83,11 +83,11 @@ public class TestInstanceData {
         this.size = size;
     }
 
-    public Rotation getRotation() {
+    public StructureRotation getRotation() {
         return this.rotation;
     }
 
-    public void setRotation(Rotation rotation) {
+    public void setRotation(StructureRotation rotation) {
         this.rotation = rotation;
     }
 
@@ -113,13 +113,6 @@ public class TestInstanceData {
 
     public void setErrorMessage(@Nullable Component errorMessage) {
         this.errorMessage = errorMessage;
-    }
-
-    public enum Rotation {
-        NONE,
-        CLOCKWISE_90,
-        CLOCKWISE_180,
-        COUNTERCLOCKWISE_90,
     }
 
     public enum Status {
