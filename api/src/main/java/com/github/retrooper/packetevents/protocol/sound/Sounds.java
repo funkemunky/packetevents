@@ -1632,6 +1632,10 @@ public final class Sounds {
     public static final Sound ENTITY_WOLF_AMBIENT = define("entity.wolf.ambient");
     public static final Sound ENTITY_WOLF_DEATH = define("entity.wolf.death");
     public static final Sound ENTITY_WOLF_GROWL = define("entity.wolf.growl");
+    /**
+     * Removed with 1.21.5
+     */
+    @ApiStatus.Obsolete
     public static final Sound ENTITY_WOLF_HOWL = define("entity.wolf.howl");
     public static final Sound ENTITY_WOLF_HURT = define("entity.wolf.hurt");
     public static final Sound ENTITY_WOLF_PANT = define("entity.wolf.pant");
@@ -1740,6 +1744,215 @@ public final class Sounds {
     public static final Sound BLOCK_RESIN_BRICKS_HIT = define("block.resin_bricks.hit");
     public static final Sound BLOCK_RESIN_BRICKS_PLACE = define("block.resin_bricks.place");
     public static final Sound BLOCK_RESIN_BRICKS_STEP = define("block.resin_bricks.step");
+
+    /**
+     * Added with 1.21.5
+     */
+    public static final Sound BLOCK_CACTUS_FLOWER_BREAK = define("block.cactus_flower.break");
+    /**
+     * Added with 1.21.5
+     */
+    public static final Sound BLOCK_CACTUS_FLOWER_PLACE = define("block.cactus_flower.place");
+    /**
+     * Added with 1.21.5
+     */
+    public static final Sound BLOCK_DEADBUSH_IDLE = define("block.deadbush.idle");
+    /**
+     * Added with 1.21.5
+     */
+    public static final Sound BLOCK_FIREFLY_BUSH_IDLE = define("block.firefly_bush.idle");
+    /**
+     * Added with 1.21.5
+     */
+    public static final Sound BLOCK_IRON_BREAK = define("block.iron.break");
+    /**
+     * Added with 1.21.5
+     */
+    public static final Sound BLOCK_IRON_STEP = define("block.iron.step");
+    /**
+     * Added with 1.21.5
+     */
+    public static final Sound BLOCK_IRON_PLACE = define("block.iron.place");
+    /**
+     * Added with 1.21.5
+     */
+    public static final Sound BLOCK_IRON_HIT = define("block.iron.hit");
+    /**
+     * Added with 1.21.5
+     */
+    public static final Sound BLOCK_IRON_FALL = define("block.iron.fall");
+    /**
+     * Added with 1.21.5
+     */
+    public static final Sound BLOCK_LEAF_LITTER_BREAK = define("block.leaf_litter.break");
+    /**
+     * Added with 1.21.5
+     */
+    public static final Sound BLOCK_LEAF_LITTER_STEP = define("block.leaf_litter.step");
+    /**
+     * Added with 1.21.5
+     */
+    public static final Sound BLOCK_LEAF_LITTER_PLACE = define("block.leaf_litter.place");
+    /**
+     * Added with 1.21.5
+     */
+    public static final Sound BLOCK_LEAF_LITTER_HIT = define("block.leaf_litter.hit");
+    /**
+     * Added with 1.21.5
+     */
+    public static final Sound BLOCK_LEAF_LITTER_FALL = define("block.leaf_litter.fall");
+    /**
+     * Added with 1.21.5
+     */
+    public static final Sound BLOCK_SAND_IDLE = define("block.sand.idle");
+    /**
+     * Added with 1.21.5
+     */
+    public static final Sound BLOCK_SAND_WIND = define("block.sand.wind");
+    /**
+     * Added with 1.21.5
+     */
+    public static final Sound ENTITY_WOLF_PUGLIN_AMBIENT = define("entity.wolf_puglin.ambient");
+    /**
+     * Added with 1.21.5
+     */
+    public static final Sound ENTITY_WOLF_PUGLIN_DEATH = define("entity.wolf_puglin.death");
+    /**
+     * Added with 1.21.5
+     */
+    public static final Sound ENTITY_WOLF_PUGLIN_GROWL = define("entity.wolf_puglin.growl");
+    /**
+     * Added with 1.21.5
+     */
+    public static final Sound ENTITY_WOLF_PUGLIN_HURT = define("entity.wolf_puglin.hurt");
+    /**
+     * Added with 1.21.5
+     */
+    public static final Sound ENTITY_WOLF_PUGLIN_PANT = define("entity.wolf_puglin.pant");
+    /**
+     * Added with 1.21.5
+     */
+    public static final Sound ENTITY_WOLF_PUGLIN_WHINE = define("entity.wolf_puglin.whine");
+    /**
+     * Added with 1.21.5
+     */
+    public static final Sound ENTITY_WOLF_SAD_AMBIENT = define("entity.wolf_sad.ambient");
+    /**
+     * Added with 1.21.5
+     */
+    public static final Sound ENTITY_WOLF_SAD_DEATH = define("entity.wolf_sad.death");
+    /**
+     * Added with 1.21.5
+     */
+    public static final Sound ENTITY_WOLF_SAD_GROWL = define("entity.wolf_sad.growl");
+    /**
+     * Added with 1.21.5
+     */
+    public static final Sound ENTITY_WOLF_SAD_HURT = define("entity.wolf_sad.hurt");
+    /**
+     * Added with 1.21.5
+     */
+    public static final Sound ENTITY_WOLF_SAD_PANT = define("entity.wolf_sad.pant");
+    /**
+     * Added with 1.21.5
+     */
+    public static final Sound ENTITY_WOLF_SAD_WHINE = define("entity.wolf_sad.whine");
+    /**
+     * Added with 1.21.5
+     */
+    public static final Sound ENTITY_WOLF_ANGRY_AMBIENT = define("entity.wolf_angry.ambient");
+    /**
+     * Added with 1.21.5
+     */
+    public static final Sound ENTITY_WOLF_ANGRY_DEATH = define("entity.wolf_angry.death");
+    /**
+     * Added with 1.21.5
+     */
+    public static final Sound ENTITY_WOLF_ANGRY_GROWL = define("entity.wolf_angry.growl");
+    /**
+     * Added with 1.21.5
+     */
+    public static final Sound ENTITY_WOLF_ANGRY_HURT = define("entity.wolf_angry.hurt");
+    /**
+     * Added with 1.21.5
+     */
+    public static final Sound ENTITY_WOLF_ANGRY_PANT = define("entity.wolf_angry.pant");
+    /**
+     * Added with 1.21.5
+     */
+    public static final Sound ENTITY_WOLF_ANGRY_WHINE = define("entity.wolf_angry.whine");
+    /**
+     * Added with 1.21.5
+     */
+    public static final Sound ENTITY_WOLF_GRUMPY_AMBIENT = define("entity.wolf_grumpy.ambient");
+    /**
+     * Added with 1.21.5
+     */
+    public static final Sound ENTITY_WOLF_GRUMPY_DEATH = define("entity.wolf_grumpy.death");
+    /**
+     * Added with 1.21.5
+     */
+    public static final Sound ENTITY_WOLF_GRUMPY_GROWL = define("entity.wolf_grumpy.growl");
+    /**
+     * Added with 1.21.5
+     */
+    public static final Sound ENTITY_WOLF_GRUMPY_HURT = define("entity.wolf_grumpy.hurt");
+    /**
+     * Added with 1.21.5
+     */
+    public static final Sound ENTITY_WOLF_GRUMPY_PANT = define("entity.wolf_grumpy.pant");
+    /**
+     * Added with 1.21.5
+     */
+    public static final Sound ENTITY_WOLF_GRUMPY_WHINE = define("entity.wolf_grumpy.whine");
+    /**
+     * Added with 1.21.5
+     */
+    public static final Sound ENTITY_WOLF_BIG_AMBIENT = define("entity.wolf_big.ambient");
+    /**
+     * Added with 1.21.5
+     */
+    public static final Sound ENTITY_WOLF_BIG_DEATH = define("entity.wolf_big.death");
+    /**
+     * Added with 1.21.5
+     */
+    public static final Sound ENTITY_WOLF_BIG_GROWL = define("entity.wolf_big.growl");
+    /**
+     * Added with 1.21.5
+     */
+    public static final Sound ENTITY_WOLF_BIG_HURT = define("entity.wolf_big.hurt");
+    /**
+     * Added with 1.21.5
+     */
+    public static final Sound ENTITY_WOLF_BIG_PANT = define("entity.wolf_big.pant");
+    /**
+     * Added with 1.21.5
+     */
+    public static final Sound ENTITY_WOLF_BIG_WHINE = define("entity.wolf_big.whine");
+    /**
+     * Added with 1.21.5
+     */
+    public static final Sound ENTITY_WOLF_CUTE_AMBIENT = define("entity.wolf_cute.ambient");
+    /**
+     * Added with 1.21.5
+     */
+    public static final Sound ENTITY_WOLF_CUTE_DEATH = define("entity.wolf_cute.death");
+    /**
+     * Added with 1.21.5
+     */
+    public static final Sound ENTITY_WOLF_CUTE_GROWL = define("entity.wolf_cute.growl");
+    /**
+     * Added with 1.21.5
+     */
+    public static final Sound ENTITY_WOLF_CUTE_HURT = define("entity.wolf_cute.hurt");
+    /**
+     * Added with 1.21.5
+     */
+    public static final Sound ENTITY_WOLF_CUTE_PANT = define("entity.wolf_cute.pant");
+    /**
+     * Added with 1.21.5
+     */
+    public static final Sound ENTITY_WOLF_CUTE_WHINE = define("entity.wolf_cute.whine");
 
     /**
      * Returns an immutable view of the sounds.
