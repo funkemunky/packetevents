@@ -26,6 +26,7 @@ import com.github.retrooper.packetevents.protocol.player.User;
 import com.github.retrooper.packetevents.util.PacketTransformationUtil;
 import com.github.retrooper.packetevents.wrapper.PacketWrapper;
 import org.jetbrains.annotations.ApiStatus;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Collection;
 import java.util.Map;
@@ -43,6 +44,10 @@ public interface ProtocolManager {
 
     default Collection<Object> getChannels() {
         return CHANNELS.values();
+    }
+
+    default Collection<Map.Entry<UUID, Object>> getChannelEntries() {
+        return CHANNELS.entrySet();
     }
 
     //Methods to implement
@@ -165,5 +170,17 @@ public interface ProtocolManager {
 
     default Object getChannel(UUID uuid) {
         return CHANNELS.get(uuid);
+    }
+
+    default void setChannel(UUID uuid, Object channel) {
+        CHANNELS.put(uuid, channel);
+    }
+
+    default void removeChannel(UUID uuid) {
+        CHANNELS.remove(uuid);
+    }
+
+    default boolean hasChannel(Object channel) {
+        return CHANNELS.containsValue(channel);
     }
 }
