@@ -27,6 +27,7 @@ import com.github.retrooper.packetevents.protocol.stream.NetStreamOutput;
 import com.github.retrooper.packetevents.protocol.world.chunk.BaseChunk;
 import com.github.retrooper.packetevents.protocol.world.chunk.ChunkBitMask;
 import com.github.retrooper.packetevents.protocol.world.chunk.Column;
+import com.github.retrooper.packetevents.protocol.world.chunk.HeightmapType;
 import com.github.retrooper.packetevents.protocol.world.chunk.LightData;
 import com.github.retrooper.packetevents.protocol.world.chunk.NetworkChunkData;
 import com.github.retrooper.packetevents.protocol.world.chunk.TileEntity;
@@ -47,6 +48,7 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.util.Arrays;
 import java.util.BitSet;
+import java.util.Map;
 import java.util.zip.DataFormatException;
 import java.util.zip.Deflater;
 import java.util.zip.Inflater;
@@ -99,9 +101,14 @@ public class WrapperPlayServerChunkData extends PacketWrapper<WrapperPlayServerC
         // There is no bitset on 1.18 and above, instead the SingletonPalette is used to represent a chunk with all air
         BitSet chunkMask = serverVersion.isNewerThanOrEquals(ServerVersion.V_1_18) ? null : ChunkBitMask.readChunkMask(this);
         boolean hasHeightMaps = serverVersion.isNewerThanOrEquals(ServerVersion.V_1_14);
-        NBTCompound heightMaps = null;
+        NBTCompound heightmapsNbt = null;
+        Map<HeightmapType, long[]> modernHeightmaps = null;
         if (hasHeightMaps) {
-            heightMaps = readNBT();
+            if (this.serverVersion.isNewerThanOrEquals(ServerVersion.V_1_21_5)) {
+                modernHeightmaps = this.readMap(HeightmapType::read, PacketWrapper::readLongArray);
+            } else {
+                heightmapsNbt = this.readNBT();
+            }
         }
 
         // 1.7 sends a secondary bit mask for the block metadata
@@ -201,9 +208,9 @@ public class WrapperPlayServerChunkData extends PacketWrapper<WrapperPlayServerC
         if (hasBiomeData) {
             if (hasHeightMaps) {
                 if (bytesInsteadOfInts) {
-                    column = new Column(chunkX, chunkZ, true, chunks, tileEntities, heightMaps, biomeDataBytes);
+                    column = new Column(chunkX, chunkZ, true, chunks, tileEntities, heightmapsNbt, biomeDataBytes);
                 } else {
-                    column = new Column(chunkX, chunkZ, true, chunks, tileEntities, heightMaps, biomeDataInts);
+                    column = new Column(chunkX, chunkZ, true, chunks, tileEntities, heightmapsNbt, biomeDataInts);
                 }
             } else {
                 if (bytesInsteadOfInts) {
@@ -214,7 +221,11 @@ public class WrapperPlayServerChunkData extends PacketWrapper<WrapperPlayServerC
             }
         } else {
             if (hasHeightMaps) {
-                column = new Column(chunkX, chunkZ, fullChunk, chunks, tileEntities, heightMaps);
+                if (modernHeightmaps != null) {
+                    this.column = new Column(chunkX, chunkZ, fullChunk, chunks, tileEntities, modernHeightmaps);
+                } else {
+                    this.column = new Column(chunkX, chunkZ, fullChunk, chunks, tileEntities, heightmapsNbt);
+                }
             } else {
                 column = new Column(chunkX, chunkZ, fullChunk, chunks, tileEntities);
             }
@@ -343,7 +354,11 @@ public class WrapperPlayServerChunkData extends PacketWrapper<WrapperPlayServerC
 
         boolean hasHeightMaps = serverVersion.isNewerThanOrEquals(ServerVersion.V_1_14);
         if (hasHeightMaps) {
-            writeNBT(column.getHeightMaps());
+            if (this.serverVersion.isNewerThanOrEquals(ServerVersion.V_1_21_5)) {
+                this.writeMap(this.column.getHeightmaps(), HeightmapType::write, PacketWrapper::writeLongArray);
+            } else {
+                this.writeNBT(this.column.getHeightMaps());
+            }
         }
 
         if (column.hasBiomeData() && serverVersion.isNewerThanOrEquals(ServerVersion.V_1_15) && !v1_18) {
