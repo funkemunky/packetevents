@@ -1196,6 +1196,17 @@ public final class StateTypes {
     public static StateType CLOSED_EYEBLOSSOM = StateTypes.builder().name("CLOSED_EYEBLOSSOM").blastResistance(0.0f).hardness(0.0f).isBlocking(false).requiresCorrectTool(false).isSolid(false).setMaterial(MaterialType.PLANT).build();
     public static StateType POTTED_OPEN_EYEBLOSSOM = StateTypes.builder().name("POTTED_OPEN_EYEBLOSSOM").blastResistance(0.0f).hardness(0.0f).isBlocking(false).requiresCorrectTool(false).isSolid(true).setMaterial(MaterialType.DECORATION).build();
     public static StateType POTTED_CLOSED_EYEBLOSSOM = StateTypes.builder().name("POTTED_CLOSED_EYEBLOSSOM").blastResistance(0.0f).hardness(0.0f).isBlocking(false).requiresCorrectTool(false).isSolid(true).setMaterial(MaterialType.DECORATION).build();
+
+    // 1.21.5 added types
+    public static StateType BUSH = StateTypes.builder().name("BUSH").blastResistance(0.0f).hardness(0.0f).isBlocking(false).requiresCorrectTool(false).isSolid(false).setMaterial(MaterialType.REPLACEABLE_PLANT).build();
+    public static StateType SHORT_DRY_GRASS = StateTypes.builder().name("SHORT_DRY_GRASS").blastResistance(0.0f).hardness(0.0f).isBlocking(false).requiresCorrectTool(false).isSolid(false).setMaterial(MaterialType.REPLACEABLE_PLANT).build();
+    public static StateType TALL_DRY_GRASS = StateTypes.builder().name("TALL_DRY_GRASS").blastResistance(0.0f).hardness(0.0f).isBlocking(false).requiresCorrectTool(false).isSolid(false).setMaterial(MaterialType.REPLACEABLE_PLANT).build();
+    public static StateType CACTUS_FLOWER = StateTypes.builder().name("CACTUS_FLOWER").blastResistance(0.0f).hardness(0.0f).isBlocking(false).requiresCorrectTool(false).isSolid(false).setMaterial(MaterialType.PLANT).build();
+    public static StateType TEST_BLOCK = StateTypes.builder().name("TEST_BLOCK").blastResistance(3600000.0f).hardness(-1.0f).isBlocking(true).requiresCorrectTool(false).isSolid(true).setMaterial(MaterialType.METAL).build();
+    public static StateType TEST_INSTANCE_BLOCK = StateTypes.builder().name("TEST_INSTANCE_BLOCK").blastResistance(3600000.0f).hardness(-1.0f).isBlocking(true).requiresCorrectTool(false).isSolid(true).setMaterial(MaterialType.METAL).build();
+    public static StateType WILDFLOWERS = StateTypes.builder().name("WILDFLOWERS").blastResistance(0.0f).hardness(0.0f).isBlocking(false).requiresCorrectTool(false).isSolid(false).setMaterial(MaterialType.PLANT).build();
+    public static StateType LEAF_LITTER = StateTypes.builder().name("LEAF_LITTER").blastResistance(0.0f).hardness(0.0f).isBlocking(false).requiresCorrectTool(false).isSolid(false).setMaterial(MaterialType.REPLACEABLE_PLANT).build();
+    public static StateType FIREFLY_BUSH = StateTypes.builder().name("FIREFLY_BUSH").blastResistance(0.0f).hardness(0.0f).isBlocking(false).requiresCorrectTool(false).isSolid(false).setMaterial(MaterialType.PLANT).build();
     // </editor-fold>
 
     static {
