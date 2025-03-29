@@ -31,6 +31,7 @@ import com.github.retrooper.packetevents.protocol.component.builtin.item.ItemAdv
 import com.github.retrooper.packetevents.protocol.component.builtin.item.ItemAttributeModifiers;
 import com.github.retrooper.packetevents.protocol.component.builtin.item.ItemBees;
 import com.github.retrooper.packetevents.protocol.component.builtin.item.ItemBlockStateProperties;
+import com.github.retrooper.packetevents.protocol.component.builtin.item.ItemBlocksAttack;
 import com.github.retrooper.packetevents.protocol.component.builtin.item.ItemConsumable;
 import com.github.retrooper.packetevents.protocol.component.builtin.item.ItemContainerContents;
 import com.github.retrooper.packetevents.protocol.component.builtin.item.ItemContainerLoot;
@@ -291,6 +292,11 @@ public final class ComponentTypes {
      */
     public static final ComponentType<ItemWeapon> WEAPON = define("weapon",
             ItemWeapon::read, ItemWeapon::write);
+    /**
+     * Added with 1.21.5
+     */
+    public static final ComponentType<ItemBlocksAttack> BLOCKS_ATTACK = define("blocks_attack",
+            ItemBlocksAttack::read, ItemBlocksAttack::write);
 
     /**
      * Returns an immutable view of the component types.
