@@ -23,6 +23,7 @@ import com.github.retrooper.packetevents.protocol.component.ComponentTypes;
 import com.github.retrooper.packetevents.wrapper.PacketWrapper;
 
 import java.util.LinkedHashSet;
+import java.util.Objects;
 import java.util.Set;
 
 public class ItemTooltipDisplay {
@@ -61,5 +62,18 @@ public class ItemTooltipDisplay {
 
     public void setHiddenComponents(Set<ComponentType<?>> hiddenComponents) {
         this.hiddenComponents = hiddenComponents;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (!(obj instanceof ItemTooltipDisplay)) return false;
+        ItemTooltipDisplay that = (ItemTooltipDisplay) obj;
+        if (this.hideTooltip != that.hideTooltip) return false;
+        return this.hiddenComponents.equals(that.hiddenComponents);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(this.hideTooltip, this.hiddenComponents);
     }
 }

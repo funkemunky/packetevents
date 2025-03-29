@@ -59,6 +59,7 @@ import com.github.retrooper.packetevents.protocol.component.builtin.item.ItemToo
 import com.github.retrooper.packetevents.protocol.component.builtin.item.ItemUnbreakable;
 import com.github.retrooper.packetevents.protocol.component.builtin.item.ItemUseCooldown;
 import com.github.retrooper.packetevents.protocol.component.builtin.item.ItemUseRemainder;
+import com.github.retrooper.packetevents.protocol.component.builtin.item.ItemWeapon;
 import com.github.retrooper.packetevents.protocol.component.builtin.item.LodestoneTracker;
 import com.github.retrooper.packetevents.protocol.component.builtin.item.PotDecorations;
 import com.github.retrooper.packetevents.protocol.component.builtin.item.SuspiciousStewEffects;
@@ -285,6 +286,11 @@ public final class ComponentTypes {
      */
     public static final ComponentType<ItemTooltipDisplay> TOOLTIP_DISPLAY = define("tooltip_display",
             ItemTooltipDisplay::read, ItemTooltipDisplay::write);
+    /**
+     * Added with 1.21.5
+     */
+    public static final ComponentType<ItemWeapon> WEAPON = define("weapon",
+            ItemWeapon::read, ItemWeapon::write);
 
     /**
      * Returns an immutable view of the component types.
