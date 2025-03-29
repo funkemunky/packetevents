@@ -24,6 +24,9 @@ import com.github.retrooper.packetevents.wrapper.PacketWrapper;
 import net.kyori.adventure.text.Component;
 import org.jetbrains.annotations.Nullable;
 
+/**
+ * Added with 1.21.5
+ */
 public class TestInstanceData {
 
     private @Nullable ResourceLocation test;
