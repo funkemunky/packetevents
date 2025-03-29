@@ -1151,15 +1151,18 @@ public class PacketWrapper<T extends PacketWrapper<T>> {
     }
 
     public LastSeenMessages.Update readLastSeenMessagesUpdate() {
-        int signedMessages = readVarInt();
-        BitSet seen = BitSet.valueOf(readBytes(3));
-        return new LastSeenMessages.Update(signedMessages, seen);
+        int signedMessages = this.readVarInt();
+        BitSet seen = BitSet.valueOf(this.readBytes(3));
+        byte checksum = this.serverVersion.isNewerThanOrEquals(ServerVersion.V_1_21_5) ? this.readByte() : (byte) 0;
+        return new LastSeenMessages.Update(signedMessages, seen, checksum);
     }
 
     public void writeLastSeenMessagesUpdate(LastSeenMessages.Update update) {
-        writeVarInt(update.getOffset());
-        byte[] lastSeen = Arrays.copyOf(update.getAcknowledged().toByteArray(), 3);
-        writeBytes(lastSeen);
+        this.writeVarInt(update.getOffset());
+        this.writeBytes(Arrays.copyOf(update.getAcknowledged().toByteArray(), 3));
+        if (this.serverVersion.isNewerThanOrEquals(ServerVersion.V_1_21_5)) {
+            this.writeByte(update.getChecksum());
+        }
     }
 
     public LastSeenMessages.LegacyUpdate readLegacyLastSeenMessagesUpdate() {
