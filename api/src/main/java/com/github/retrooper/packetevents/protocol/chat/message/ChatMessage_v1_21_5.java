@@ -12,6 +12,7 @@ import java.util.UUID;
 
 //We'll extend ChatMessage_v1_19_3 for now, hopefully no breaking changes in the future
 public class ChatMessage_v1_21_5 extends ChatMessage_v1_19_3 {
+
     int globalIndex;
 
     public ChatMessage_v1_21_5(int globalIndex, UUID senderUUID, int index, byte[] signature, String plainContent,
@@ -22,7 +23,7 @@ public class ChatMessage_v1_21_5 extends ChatMessage_v1_19_3 {
     }
 
     public int getGlobalIndex() {
-        return globalIndex;
+        return this.globalIndex;
     }
 
     public void setGlobalIndex(int globalIndex) {

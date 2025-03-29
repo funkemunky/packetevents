@@ -4,7 +4,6 @@ import com.github.retrooper.packetevents.protocol.chat.ChatType;
 import com.github.retrooper.packetevents.protocol.chat.LastSeenMessages;
 import com.github.retrooper.packetevents.protocol.chat.filter.FilterMask;
 import com.github.retrooper.packetevents.protocol.chat.message.ChatMessage;
-import com.github.retrooper.packetevents.protocol.chat.message.ChatMessage_v1_19_3;
 import com.github.retrooper.packetevents.protocol.chat.message.ChatMessage_v1_21_5;
 import com.github.retrooper.packetevents.protocol.chat.message.reader.ChatMessageProcessor;
 import com.github.retrooper.packetevents.wrapper.PacketWrapper;
@@ -15,6 +14,7 @@ import java.time.Instant;
 import java.util.UUID;
 
 public class ChatMessageProcessor_v1_21_5 implements ChatMessageProcessor {
+
     @Override
     public ChatMessage readChatMessage(@NotNull PacketWrapper<?> wrapper) {
         int globalIndex = wrapper.readVarInt();
