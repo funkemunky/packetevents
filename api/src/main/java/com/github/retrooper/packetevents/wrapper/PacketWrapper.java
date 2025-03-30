@@ -852,8 +852,9 @@ public class PacketWrapper<T extends PacketWrapper<T>> {
         writeByte(id);
     }
 
-    public List<EntityData> readEntityMetadata() {
-        List<EntityData> list = new ArrayList<>();
+    @SuppressWarnings("unchecked")
+    public List<EntityData<?>> readEntityMetadata() {
+        List<EntityData<?>> list = new ArrayList<>();
         if (serverVersion.isNewerThanOrEquals(ServerVersion.V_1_9)) {
             boolean v1_10 = serverVersion.isNewerThanOrEquals(ServerVersion.V_1_10);
             short index;
@@ -863,43 +864,44 @@ public class PacketWrapper<T extends PacketWrapper<T>> {
                 if (type == null) {
                     throw new IllegalStateException("Unknown entity metadata type id: " + typeID + " version " + serverVersion.toClientVersion());
                 }
-                list.add(new EntityData(index, type, type.read(this)));
+                list.add(new EntityData<>(index, (EntityDataType<Object>) type, type.read(this)));
             }
         } else {
             for (byte data = readByte(); data != Byte.MAX_VALUE; data = readByte()) {
                 int typeID = (data & 0xE0) >> 5;
                 int index = data & 0x1F;
                 EntityDataType<?> type = EntityDataTypes.getById(serverVersion.toClientVersion(), typeID);
-                EntityData entityData = new EntityData(index, type, type.read(this));
+                EntityData<?> entityData = new EntityData<>(index, (EntityDataType<Object>) type, type.read(this));
                 list.add(entityData);
             }
         }
         return list;
     }
 
-    public void writeEntityMetadata(List<EntityData> list) {
+    @SuppressWarnings("unchecked")
+    public void writeEntityMetadata(List<EntityData<?>> list) {
         if (list == null) {
             list = new ArrayList<>();
         }
         if (serverVersion.isNewerThanOrEquals(ServerVersion.V_1_9)) {
             boolean v1_10 = serverVersion.isNewerThanOrEquals(ServerVersion.V_1_10);
-            for (EntityData entityData : list) {
+            for (EntityData<?> entityData : list) {
                 writeByte(entityData.getIndex());
                 if (v1_10) {
                     writeVarInt(entityData.getType().getId(serverVersion.toClientVersion()));
                 } else {
                     writeByte(entityData.getType().getId(serverVersion.toClientVersion()));
                 }
-                ((EntityDataType<? super Object>) entityData.getType()).write(this, entityData.getValue());
+                ((EntityDataType<Object>) entityData.getType()).write(this, entityData.getValue());
             }
             writeByte(255); // End of metadata array
         } else {
-            for (EntityData entityData : list) {
+            for (EntityData<?> entityData : list) {
                 int typeID = entityData.getType().getId(serverVersion.toClientVersion());
                 int index = entityData.getIndex();
                 int data = (typeID << 5 | index & 31) & 255;
                 writeByte(data);
-                ((EntityDataType<? super Object>) entityData.getType()).write(this, entityData.getValue());
+                ((EntityDataType<Object>) entityData.getType()).write(this, entityData.getValue());
             }
             writeByte(127); // End of metadata array
         }
