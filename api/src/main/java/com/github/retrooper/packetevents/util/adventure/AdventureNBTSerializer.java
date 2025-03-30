@@ -18,6 +18,7 @@
 
 package com.github.retrooper.packetevents.util.adventure;
 
+import com.github.retrooper.packetevents.PacketEvents;
 import com.github.retrooper.packetevents.protocol.nbt.NBT;
 import com.github.retrooper.packetevents.protocol.nbt.NBTByte;
 import com.github.retrooper.packetevents.protocol.nbt.NBTByteArray;
@@ -33,6 +34,7 @@ import com.github.retrooper.packetevents.protocol.nbt.NBTNumber;
 import com.github.retrooper.packetevents.protocol.nbt.NBTShort;
 import com.github.retrooper.packetevents.protocol.nbt.NBTString;
 import com.github.retrooper.packetevents.protocol.nbt.NBTType;
+import com.github.retrooper.packetevents.protocol.player.ClientVersion;
 import com.github.retrooper.packetevents.util.UniqueIdUtil;
 import net.kyori.adventure.key.Key;
 import net.kyori.adventure.nbt.api.BinaryTagHolder;
@@ -76,10 +78,17 @@ import static com.github.retrooper.packetevents.util.adventure.AdventureIndexUti
 
 public class AdventureNBTSerializer implements ComponentSerializer<Component, Component, NBT> {
 
+    private final ClientVersion version;
     private final boolean downsampleColor;
 
-    public AdventureNBTSerializer(boolean downsampleColor) {
+    public AdventureNBTSerializer(ClientVersion version, boolean downsampleColor) {
+        this.version = version;
         this.downsampleColor = downsampleColor;
+    }
+
+    @Deprecated
+    public AdventureNBTSerializer(boolean downsampleColor) {
+        this(PacketEvents.getAPI().getServerManager().getVersion().toClientVersion(), downsampleColor);
     }
 
     @Override

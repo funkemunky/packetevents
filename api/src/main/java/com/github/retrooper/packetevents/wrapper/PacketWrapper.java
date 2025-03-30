@@ -554,7 +554,7 @@ public class PacketWrapper<T extends PacketWrapper<T>> {
     @Deprecated
     public String readComponentJSON() {
         // needs to be converted to nbt as of 1.20.3
-        return AdventureSerializer.asVanilla(this.readComponent());
+        return this.getSerializers().asJson(this.readComponent());
     }
 
     public void writeString(String s) {
@@ -578,10 +578,14 @@ public class PacketWrapper<T extends PacketWrapper<T>> {
         }
     }
 
+    public AdventureSerializer getSerializers() {
+        return AdventureSerializer.serializer(this.serverVersion.toClientVersion());
+    }
+
     @Deprecated
     public void writeComponentJSON(String json) {
         // needs to be converted to nbt as of 1.20.3
-        this.writeComponent(AdventureSerializer.parseComponent(json));
+        this.writeComponent(this.getSerializers().fromJson(json));
     }
 
     public Component readComponent() {
@@ -590,12 +594,12 @@ public class PacketWrapper<T extends PacketWrapper<T>> {
     }
 
     public Component readComponentAsNBT() {
-        return AdventureSerializer.fromNbt(readNBTRaw());
+        return this.getSerializers().fromNbtTag(this.readNBTRaw());
     }
 
     public Component readComponentAsJSON() {
         String jsonString = this.readString(this.getMaxMessageLength());
-        return AdventureSerializer.parseComponent(jsonString);
+        return this.getSerializers().fromJson(jsonString);
     }
 
     public void writeComponent(Component component) {
@@ -607,20 +611,20 @@ public class PacketWrapper<T extends PacketWrapper<T>> {
     }
 
     public void writeComponentAsNBT(Component component) {
-        writeNBTRaw(AdventureSerializer.toNbt(component));
+        this.writeNBTRaw(this.getSerializers().asNbtTag(component));
     }
 
     public void writeComponentAsJSON(Component component) {
-        String jsonString = AdventureSerializer.toJson(component);
+        String jsonString = this.getSerializers().asJson(component);
         this.writeString(jsonString, this.getMaxMessageLength());
     }
 
     public Style readStyle() {
-        return AdventureSerializer.getNBTSerializer().deserializeStyle(readNBT());
+        return this.getSerializers().nbt().deserializeStyle(this.readNBT());
     }
 
     public void writeStyle(Style style) {
-        writeNBT(AdventureSerializer.getNBTSerializer().serializeStyle(style));
+        this.writeNBT(this.getSerializers().nbt().serializeStyle(style));
     }
 
     public ResourceLocation readIdentifier(int maxLen) {

@@ -27,6 +27,7 @@ import com.github.retrooper.packetevents.util.adventure.AdventureSerializer;
 import com.github.retrooper.packetevents.wrapper.PacketWrapper;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
+import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
@@ -161,9 +162,10 @@ public class WrapperPlayServerTeams extends PacketWrapper<WrapperPlayServerTeams
             CollisionRule collisionRule = null;
             NamedTextColor color;
             if (serverVersion.isOlderThanOrEquals(ServerVersion.V_1_12_2)) {
-                displayName = AdventureSerializer.fromLegacyFormat(readString(32));
-                prefix = AdventureSerializer.fromLegacyFormat(readString(16));
-                suffix = AdventureSerializer.fromLegacyFormat(readString(16));
+                LegacyComponentSerializer serializer = this.getSerializers().legacy();
+                displayName = serializer.deserialize(this.readString(32));
+                prefix = serializer.deserialize(this.readString(16));
+                suffix = serializer.deserialize(this.readString(16));
                 optionData = OptionData.values()[readByte()];
                 if (serverVersion == ServerVersion.V_1_7_10) {
                     nameTagVisibility = NameTagVisibility.ALWAYS;
@@ -222,9 +224,10 @@ public class WrapperPlayServerTeams extends PacketWrapper<WrapperPlayServerTeams
         if (teamMode == TeamMode.CREATE || teamMode == TeamMode.UPDATE) {
             ScoreBoardTeamInfo info = teamInfo.orElse(new ScoreBoardTeamInfo(Component.empty(), Component.empty(), Component.empty(), NameTagVisibility.ALWAYS, CollisionRule.ALWAYS, NamedTextColor.WHITE, OptionData.NONE));
             if (serverVersion.isOlderThanOrEquals(ServerVersion.V_1_12_2)) {
-                writeString(LegacyFormat.trimLegacyFormat(AdventureSerializer.asVanilla(info.displayName), 32));
-                writeString(LegacyFormat.trimLegacyFormat(AdventureSerializer.asVanilla(info.prefix), 16));
-                writeString(LegacyFormat.trimLegacyFormat(AdventureSerializer.asVanilla(info.suffix), 16));
+                LegacyComponentSerializer serializer = this.getSerializers().legacy();
+                writeString(LegacyFormat.trimLegacyFormat(serializer.serialize(info.displayName), 32));
+                writeString(LegacyFormat.trimLegacyFormat(serializer.serialize(info.prefix), 16));
+                writeString(LegacyFormat.trimLegacyFormat(serializer.serialize(info.suffix), 16));
                 writeByte(info.optionData.ordinal());
                 if (serverVersion == ServerVersion.V_1_7_10) {
                     writeString(NameTagVisibility.ALWAYS.getId(), 32);
