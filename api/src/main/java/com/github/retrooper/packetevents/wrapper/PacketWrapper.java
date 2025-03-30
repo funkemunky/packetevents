@@ -62,9 +62,6 @@ import com.github.retrooper.packetevents.protocol.chat.RemoteChatSession;
 import com.github.retrooper.packetevents.protocol.chat.SignedCommandArgument;
 import com.github.retrooper.packetevents.protocol.chat.filter.FilterMask;
 import com.github.retrooper.packetevents.protocol.chat.filter.FilterMaskType;
-import com.github.retrooper.packetevents.protocol.component.ComponentType;
-import com.github.retrooper.packetevents.protocol.component.ComponentTypes;
-import com.github.retrooper.packetevents.protocol.component.PatchableComponentMap;
 import com.github.retrooper.packetevents.protocol.entity.data.EntityData;
 import com.github.retrooper.packetevents.protocol.entity.data.EntityDataType;
 import com.github.retrooper.packetevents.protocol.entity.data.EntityDataTypes;
@@ -76,8 +73,6 @@ import com.github.retrooper.packetevents.protocol.entity.villager.type.VillagerT
 import com.github.retrooper.packetevents.protocol.entity.villager.type.VillagerTypes;
 import com.github.retrooper.packetevents.protocol.item.ItemStack;
 import com.github.retrooper.packetevents.protocol.item.ItemStackSerialization;
-import com.github.retrooper.packetevents.protocol.item.type.ItemType;
-import com.github.retrooper.packetevents.protocol.item.type.ItemTypes;
 import com.github.retrooper.packetevents.protocol.mapper.MappedEntity;
 import com.github.retrooper.packetevents.protocol.nbt.NBT;
 import com.github.retrooper.packetevents.protocol.nbt.NBTCompound;
@@ -94,6 +89,7 @@ import com.github.retrooper.packetevents.protocol.recipe.data.MerchantOffer;
 import com.github.retrooper.packetevents.protocol.world.Dimension;
 import com.github.retrooper.packetevents.protocol.world.WorldBlockPosition;
 import com.github.retrooper.packetevents.resources.ResourceLocation;
+import com.github.retrooper.packetevents.util.Either;
 import com.github.retrooper.packetevents.util.KnownPack;
 import com.github.retrooper.packetevents.util.MathUtil;
 import com.github.retrooper.packetevents.util.StringUtil;
@@ -1473,6 +1469,22 @@ public class PacketWrapper<T extends PacketWrapper<T>> {
             this.writeVarInt(containerId);
         } else {
             this.writeByte(containerId);
+        }
+    }
+
+    public <L, R> Either<L, R> readEither(Reader<L> leftReader, Reader<R> rightReader) {
+        return this.readBoolean()
+                ? Either.createLeft(leftReader.apply(this))
+                : Either.createRight(rightReader.apply(this));
+    }
+
+    public <L, R> void writeEither(Either<L, R> either, Writer<L> leftWriter, Writer<R> rightWriter) {
+        if (either.isLeft()) {
+            this.writeBoolean(true);
+            leftWriter.accept(this, either.getLeft());
+        } else {
+            this.writeBoolean(false);
+            rightWriter.accept(this, either.getRight());
         }
     }
 

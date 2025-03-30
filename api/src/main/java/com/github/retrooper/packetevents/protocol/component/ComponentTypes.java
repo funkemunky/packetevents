@@ -32,6 +32,7 @@ import com.github.retrooper.packetevents.protocol.component.builtin.item.ItemAtt
 import com.github.retrooper.packetevents.protocol.component.builtin.item.ItemBees;
 import com.github.retrooper.packetevents.protocol.component.builtin.item.ItemBlockStateProperties;
 import com.github.retrooper.packetevents.protocol.component.builtin.item.ItemBlocksAttack;
+import com.github.retrooper.packetevents.protocol.component.builtin.item.ItemBreakSound;
 import com.github.retrooper.packetevents.protocol.component.builtin.item.ItemConsumable;
 import com.github.retrooper.packetevents.protocol.component.builtin.item.ItemContainerContents;
 import com.github.retrooper.packetevents.protocol.component.builtin.item.ItemContainerLoot;
@@ -52,6 +53,8 @@ import com.github.retrooper.packetevents.protocol.component.builtin.item.ItemMod
 import com.github.retrooper.packetevents.protocol.component.builtin.item.ItemPotionContents;
 import com.github.retrooper.packetevents.protocol.component.builtin.item.ItemPotionDurationScale;
 import com.github.retrooper.packetevents.protocol.component.builtin.item.ItemProfile;
+import com.github.retrooper.packetevents.protocol.component.builtin.item.ItemProvidesBannerPatterns;
+import com.github.retrooper.packetevents.protocol.component.builtin.item.ItemProvidesTrimMaterial;
 import com.github.retrooper.packetevents.protocol.component.builtin.item.ItemRarity;
 import com.github.retrooper.packetevents.protocol.component.builtin.item.ItemRecipes;
 import com.github.retrooper.packetevents.protocol.component.builtin.item.ItemRepairable;
@@ -303,6 +306,21 @@ public final class ComponentTypes {
      */
     public static final ComponentType<ItemPotionDurationScale> POTION_DURATION_SCALE = define("potion_duration_scale",
             ItemPotionDurationScale::read, ItemPotionDurationScale::write);
+    /**
+     * Added with 1.21.5
+     */
+    public static final ComponentType<ItemProvidesTrimMaterial> PROVIDES_TRIM_MATERIAL = define("provides_trim_material",
+            ItemProvidesTrimMaterial::read, ItemProvidesTrimMaterial::write);
+    /**
+     * Added with 1.21.5
+     */
+    public static final ComponentType<ItemProvidesBannerPatterns> PROVIDES_BANNER_PATTERNS = define("provides_banner_patterns",
+            ItemProvidesBannerPatterns::read, ItemProvidesBannerPatterns::write);
+    /**
+     * Added with 1.21.5
+     */
+    public static final ComponentType<ItemBreakSound> BREAK_SOUND = define("break_sound",
+            ItemBreakSound::read, ItemBreakSound::write);
 
     /**
      * Returns an immutable view of the component types.
