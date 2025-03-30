@@ -76,6 +76,12 @@ public final class SynchronizedRegistriesHandler {
                 new RegistryEntry<>(TrimPatterns.getRegistry(), TrimPattern::decode),
                 new RegistryEntry<>(TrimMaterials.getRegistry(), TrimMaterial::decode),
                 new RegistryEntry<>(WolfVariants.getRegistry(), WolfVariant::decode),
+                // TODO wolf_sound_variant
+                // TODO pig_variant
+                // TODO frog_variant
+                // TODO cat_variant
+                // TODO cow_variant
+                // TODO chicken_variant
                 new RegistryEntry<>(PaintingVariants.getRegistry(), PaintingVariant::decode),
                 new RegistryEntry<>(DimensionTypes.getRegistry(), DimensionType::decode),
                 new RegistryEntry<>(DamageTypes.getRegistry(), DamageType::decode),
@@ -83,6 +89,8 @@ public final class SynchronizedRegistriesHandler {
                 new RegistryEntry<>(EnchantmentTypes.getRegistry(), EnchantmentType::decode),
                 new RegistryEntry<>(JukeboxSongs.getRegistry(), IJukeboxSong::decode),
                 new RegistryEntry<>(Instruments.getRegistry(), Instrument::decode)
+                // TODO test_environment
+                // TODO test_instance
         ).forEach(entry -> REGISTRY_KEYS.put(entry.getRegistryKey(), entry));
     }
 
