@@ -21,6 +21,8 @@ package com.github.retrooper.packetevents.util.mappings;
 import com.github.retrooper.packetevents.PacketEvents;
 import com.github.retrooper.packetevents.protocol.chat.ChatType;
 import com.github.retrooper.packetevents.protocol.chat.ChatTypes;
+import com.github.retrooper.packetevents.protocol.entity.wolfvariant.WolfSoundVariant;
+import com.github.retrooper.packetevents.protocol.entity.wolfvariant.WolfSoundVariants;
 import com.github.retrooper.packetevents.protocol.entity.wolfvariant.WolfVariant;
 import com.github.retrooper.packetevents.protocol.entity.wolfvariant.WolfVariants;
 import com.github.retrooper.packetevents.protocol.item.banner.BannerPattern;
@@ -70,13 +72,15 @@ public final class SynchronizedRegistriesHandler {
     private static final Map<ResourceLocation, RegistryEntry<?>> REGISTRY_KEYS = new HashMap<>();
 
     static {
+        // packetevents ignores a few unimportant registries which aren't used anywhere else in the protocol:
+        // test_environment, test_instance
         Stream.of(
                 new RegistryEntry<>(Biomes.getRegistry(), Biome::decode),
                 new RegistryEntry<>(ChatTypes.getRegistry(), ChatType::decode),
                 new RegistryEntry<>(TrimPatterns.getRegistry(), TrimPattern::decode),
                 new RegistryEntry<>(TrimMaterials.getRegistry(), TrimMaterial::decode),
                 new RegistryEntry<>(WolfVariants.getRegistry(), WolfVariant::decode),
-                // TODO wolf_sound_variant
+                new RegistryEntry<>(WolfSoundVariants.getRegistry(), WolfSoundVariant::decode),
                 // TODO pig_variant
                 // TODO frog_variant
                 // TODO cat_variant
@@ -89,8 +93,6 @@ public final class SynchronizedRegistriesHandler {
                 new RegistryEntry<>(EnchantmentTypes.getRegistry(), EnchantmentType::decode),
                 new RegistryEntry<>(JukeboxSongs.getRegistry(), IJukeboxSong::decode),
                 new RegistryEntry<>(Instruments.getRegistry(), Instrument::decode)
-                // TODO test_environment
-                // TODO test_instance
         ).forEach(entry -> REGISTRY_KEYS.put(entry.getRegistryKey(), entry));
     }
 
