@@ -125,19 +125,33 @@ public final class ItemStackSerialization {
 
         PatchableComponentMap components = new PatchableComponentMap(
                 itemType.getComponents(wrapper.getServerVersion().toClientVersion()),
-                new HashMap<>(4));
+                new HashMap<>(presentCount + absentCount));
         for (int i = 0; i < presentCount; i++) {
             ComponentType<?> type = wrapper.readMappedEntity(ComponentTypes.getRegistry());
             // this is not 1:1 how vanilla decodes the length prefix, vanilla slices the buffer and
             // restricts reading to only the slice; packetevents just verifies the length isn't too large
+            // and throws an error if we actually read more/less than expected
+            int expectedReaderIndex;
             if (lengthPrefixed) {
                 int size = wrapper.readVarInt();
                 if (size > ByteBufHelper.readableBytes(wrapper.buffer)) {
                     throw new RuntimeException("Component size " + size + " for " + type.getName() + " out of bounds");
                 }
+                expectedReaderIndex = ByteBufHelper.readerIndex(wrapper.buffer) + size;
+            } else {
+                expectedReaderIndex = -1;
             }
-            // read component value and save in component map
+            // read component value
             Object value = type.read(wrapper);
+            // if this component is length-prefixed, verify the reader index changed to the expected value
+            if (expectedReaderIndex != -1) {
+                int readerIndex = ByteBufHelper.readerIndex(wrapper.buffer);
+                if (readerIndex != expectedReaderIndex) {
+                    throw new RuntimeException("Invalid component read for " + type.getName() + "; expected reader index "
+                            + expectedReaderIndex + ", got reader index " + readerIndex);
+                }
+            }
+            // set component value in component patch-map
             components.set((ComponentType<Object>) type, value);
         }
         for (int i = 0; i < absentCount; i++) {
