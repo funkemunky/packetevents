@@ -29,7 +29,8 @@ public class ItemUnbreakable {
     /**
      * Removed with 1.21.5
      */
-    private boolean state;
+    @ApiStatus.Obsolete
+    private boolean showInTooltip;
 
     public ItemUnbreakable() {
         this(true);
@@ -39,20 +40,21 @@ public class ItemUnbreakable {
      * Removed with 1.21.5
      */
     @ApiStatus.Obsolete
-    public ItemUnbreakable(boolean state) {
-        this.state = state;
+    public ItemUnbreakable(boolean showInTooltip) {
+        this.showInTooltip = showInTooltip;
     }
 
     public static ItemUnbreakable read(PacketWrapper<?> wrapper) {
         if (wrapper.getServerVersion().isNewerThanOrEquals(ServerVersion.V_1_21_5)) {
             return new ItemUnbreakable();
         }
-        return new ItemUnbreakable(wrapper.readBoolean());
+        boolean showInTooltip = wrapper.readBoolean();
+        return new ItemUnbreakable(showInTooltip);
     }
 
     public static void write(PacketWrapper<?> wrapper, ItemUnbreakable value) {
         if (wrapper.getServerVersion().isOlderThan(ServerVersion.V_1_21_5)) {
-            wrapper.writeBoolean(value.state);
+            wrapper.writeBoolean(value.showInTooltip);
         }
     }
 
@@ -60,27 +62,27 @@ public class ItemUnbreakable {
      * Removed with 1.21.5
      */
     @ApiStatus.Obsolete
-    public boolean isState() {
-        return this.state;
+    public boolean isShowInTooltip() {
+        return this.showInTooltip;
     }
 
     /**
      * Removed with 1.21.5
      */
     @ApiStatus.Obsolete
-    public void setState(boolean state) {
-        this.state = state;
+    public void setShowInTooltip(boolean showInTooltip) {
+        this.showInTooltip = showInTooltip;
     }
 
     @Override
     public boolean equals(Object obj) {
         if (!(obj instanceof ItemUnbreakable)) return false;
         ItemUnbreakable that = (ItemUnbreakable) obj;
-        return this.state == that.state;
+        return this.showInTooltip == that.showInTooltip;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hashCode(this.state);
+        return Objects.hashCode(this.showInTooltip);
     }
 }

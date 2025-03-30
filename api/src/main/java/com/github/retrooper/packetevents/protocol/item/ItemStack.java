@@ -146,8 +146,7 @@ public class ItemStack {
     public boolean isDamageableItem() {
         return !this.cachedIsEmpty && this.getMaxDamage() > 0
                 && (this.nbt == null || !this.nbt.getBoolean("Unbreakable"))
-                && !this.getComponent(ComponentTypes.UNBREAKABLE_MODERN)
-                .map(ItemUnbreakable::isState).orElse(false);
+                && !this.hasComponent(ComponentTypes.UNBREAKABLE_MODERN);
     }
 
     public boolean isDamaged() {

@@ -138,7 +138,7 @@ public final class ComponentTypes {
      */
     @Deprecated
     public static final ComponentType<Boolean> UNBREAKABLE = UNBREAKABLE_MODERN.legacyMap(
-            ItemUnbreakable::isState, ItemUnbreakable::new);
+            ItemUnbreakable::isShowInTooltip, ItemUnbreakable::new);
     public static final ComponentType<Component> CUSTOM_NAME = define("custom_name",
             PacketWrapper::readComponent, PacketWrapper::writeComponent);
     public static final ComponentType<Component> ITEM_NAME = define("item_name",
