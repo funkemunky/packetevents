@@ -20,6 +20,7 @@ package com.github.retrooper.packetevents.test;
 
 import com.github.retrooper.packetevents.protocol.world.states.type.StateType;
 import com.github.retrooper.packetevents.protocol.world.states.type.StateTypes;
+import com.github.retrooper.packetevents.test.base.BaseDummyAPITest;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 

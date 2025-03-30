@@ -2,6 +2,7 @@ package com.github.retrooper.packetevents.test;
 
 import com.github.retrooper.packetevents.protocol.world.states.defaulttags.BlockTags;
 import com.github.retrooper.packetevents.protocol.world.states.defaulttags.ItemTags;
+import com.github.retrooper.packetevents.test.base.BaseDummyAPITest;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 

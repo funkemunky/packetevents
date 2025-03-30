@@ -21,6 +21,7 @@ package com.github.retrooper.packetevents.test;
 import com.github.retrooper.packetevents.PacketEvents;
 import com.github.retrooper.packetevents.protocol.mapper.AbstractMappedEntity;
 import com.github.retrooper.packetevents.protocol.mapper.MappedEntity;
+import com.github.retrooper.packetevents.test.base.BaseDummyAPITest;
 import com.github.retrooper.packetevents.util.mappings.TypesBuilderData;
 import com.github.retrooper.packetevents.util.mappings.VersionedRegistry;
 import io.github.classgraph.ClassGraph;
