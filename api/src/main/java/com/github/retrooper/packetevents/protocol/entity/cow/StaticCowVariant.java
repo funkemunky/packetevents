@@ -21,6 +21,7 @@ package com.github.retrooper.packetevents.protocol.entity.cow;
 import com.github.retrooper.packetevents.protocol.mapper.AbstractMappedEntity;
 import com.github.retrooper.packetevents.resources.ResourceLocation;
 import com.github.retrooper.packetevents.util.mappings.TypesBuilderData;
+import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Objects;
@@ -30,6 +31,11 @@ public class StaticCowVariant extends AbstractMappedEntity implements CowVariant
     private final ModelType modelType;
     private final ResourceLocation assetId;
 
+    public StaticCowVariant(ModelType modelType, ResourceLocation assetId) {
+        this(null, modelType, assetId);
+    }
+
+    @ApiStatus.Internal
     public StaticCowVariant(@Nullable TypesBuilderData data, ModelType modelType, ResourceLocation assetId) {
         super(data);
         this.modelType = modelType;

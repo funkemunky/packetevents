@@ -21,6 +21,7 @@ package com.github.retrooper.packetevents.protocol.entity.chicken;
 import com.github.retrooper.packetevents.protocol.mapper.AbstractMappedEntity;
 import com.github.retrooper.packetevents.resources.ResourceLocation;
 import com.github.retrooper.packetevents.util.mappings.TypesBuilderData;
+import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Objects;
@@ -30,6 +31,11 @@ public class StaticChickenVariant extends AbstractMappedEntity implements Chicke
     private final ModelType modelType;
     private final ResourceLocation assetId;
 
+    public StaticChickenVariant(ModelType modelType, ResourceLocation assetId) {
+        this(null, modelType, assetId);
+    }
+
+    @ApiStatus.Internal
     public StaticChickenVariant(@Nullable TypesBuilderData data, ModelType modelType, ResourceLocation assetId) {
         super(data);
         this.modelType = modelType;

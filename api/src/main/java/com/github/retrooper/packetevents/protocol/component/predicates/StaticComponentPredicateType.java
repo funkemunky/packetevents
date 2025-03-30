@@ -21,6 +21,7 @@ package com.github.retrooper.packetevents.protocol.component.predicates;
 import com.github.retrooper.packetevents.protocol.mapper.AbstractMappedEntity;
 import com.github.retrooper.packetevents.util.mappings.TypesBuilderData;
 import com.github.retrooper.packetevents.wrapper.PacketWrapper;
+import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Nullable;
 
 public class StaticComponentPredicateType<T extends IComponentPredicate> extends AbstractMappedEntity implements ComponentPredicateType<T> {
@@ -28,6 +29,11 @@ public class StaticComponentPredicateType<T extends IComponentPredicate> extends
     private final PacketWrapper.Reader<T> reader;
     private final PacketWrapper.Writer<T> writer;
 
+    public StaticComponentPredicateType(PacketWrapper.Reader<T> reader, PacketWrapper.Writer<T> writer) {
+        this(null, reader, writer);
+    }
+
+    @ApiStatus.Internal
     public StaticComponentPredicateType(
             @Nullable TypesBuilderData data,
             PacketWrapper.Reader<T> reader,

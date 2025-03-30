@@ -21,6 +21,7 @@ package com.github.retrooper.packetevents.protocol.entity.wolfvariant;
 import com.github.retrooper.packetevents.protocol.mapper.AbstractMappedEntity;
 import com.github.retrooper.packetevents.protocol.sound.Sound;
 import com.github.retrooper.packetevents.util.mappings.TypesBuilderData;
+import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Objects;
@@ -34,6 +35,14 @@ public class StaticWolfSoundVariant extends AbstractMappedEntity implements Wolf
     private final Sound pantSound;
     private final Sound whineSound;
 
+    public StaticWolfSoundVariant(
+            Sound ambientSound, Sound deathSound, Sound growlSound,
+            Sound hurtSound, Sound pantSound, Sound whineSound
+    ) {
+        this(null, ambientSound, deathSound, growlSound, hurtSound, pantSound, whineSound);
+    }
+
+    @ApiStatus.Internal
     public StaticWolfSoundVariant(
             @Nullable TypesBuilderData data, Sound ambientSound, Sound deathSound,
             Sound growlSound, Sound hurtSound, Sound pantSound, Sound whineSound

@@ -21,6 +21,7 @@ package com.github.retrooper.packetevents.protocol.entity.frog;
 import com.github.retrooper.packetevents.protocol.mapper.AbstractMappedEntity;
 import com.github.retrooper.packetevents.resources.ResourceLocation;
 import com.github.retrooper.packetevents.util.mappings.TypesBuilderData;
+import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Objects;
@@ -29,6 +30,11 @@ public class StaticFrogVariant extends AbstractMappedEntity implements FrogVaria
 
     private final ResourceLocation assetId;
 
+    public StaticFrogVariant(ResourceLocation assetId) {
+        this(null, assetId);
+    }
+
+    @ApiStatus.Internal
     public StaticFrogVariant(@Nullable TypesBuilderData data, ResourceLocation assetId) {
         super(data);
         this.assetId = assetId;
