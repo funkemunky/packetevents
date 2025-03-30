@@ -12,7 +12,6 @@ import com.github.retrooper.packetevents.protocol.world.states.enums.Orientation
 import com.github.retrooper.packetevents.protocol.world.states.enums.South;
 import com.github.retrooper.packetevents.protocol.world.states.enums.West;
 import com.github.retrooper.packetevents.protocol.world.states.type.StateTypes;
-import com.github.retrooper.packetevents.test.base.BaseDummyAPITest;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 

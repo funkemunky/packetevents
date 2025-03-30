@@ -22,7 +22,6 @@ import com.github.retrooper.packetevents.protocol.component.ComponentTypes;
 import com.github.retrooper.packetevents.protocol.component.StaticComponentMap;
 import com.github.retrooper.packetevents.protocol.item.type.ItemTypes;
 import com.github.retrooper.packetevents.protocol.player.ClientVersion;
-import com.github.retrooper.packetevents.test.base.BaseDummyAPITest;
 import net.kyori.adventure.text.Component;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
