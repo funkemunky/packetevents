@@ -21,6 +21,8 @@ package com.github.retrooper.packetevents.util.mappings;
 import com.github.retrooper.packetevents.PacketEvents;
 import com.github.retrooper.packetevents.protocol.chat.ChatType;
 import com.github.retrooper.packetevents.protocol.chat.ChatTypes;
+import com.github.retrooper.packetevents.protocol.entity.cat.CatVariant;
+import com.github.retrooper.packetevents.protocol.entity.cat.CatVariants;
 import com.github.retrooper.packetevents.protocol.entity.chicken.ChickenVariant;
 import com.github.retrooper.packetevents.protocol.entity.chicken.ChickenVariants;
 import com.github.retrooper.packetevents.protocol.entity.cow.CowVariant;
@@ -91,7 +93,7 @@ public final class SynchronizedRegistriesHandler {
                 new RegistryEntry<>(WolfSoundVariants.getRegistry(), WolfSoundVariant::decode),
                 new RegistryEntry<>(PigVariants.getRegistry(), PigVariant::decode),
                 new RegistryEntry<>(FrogVariants.getRegistry(), FrogVariant::decode),
-                // TODO cat_variant
+                new RegistryEntry<>(CatVariants.getRegistry(), CatVariant::decode),
                 new RegistryEntry<>(CowVariants.getRegistry(), CowVariant::decode),
                 new RegistryEntry<>(ChickenVariants.getRegistry(), ChickenVariant::decode),
                 new RegistryEntry<>(PaintingVariants.getRegistry(), PaintingVariant::decode),
