@@ -30,6 +30,7 @@ import com.github.retrooper.packetevents.protocol.world.biome.Biome;
 import com.github.retrooper.packetevents.protocol.world.biome.Biomes;
 import com.github.retrooper.packetevents.resources.ResourceLocation;
 import com.github.retrooper.packetevents.util.mappings.TypesBuilderData;
+import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Nullable;
 
 public interface WolfVariant extends MappedEntity, CopyableEntity<WolfVariant>, DeepComparableEntity {
@@ -40,24 +41,44 @@ public interface WolfVariant extends MappedEntity, CopyableEntity<WolfVariant>, 
 
     ResourceLocation getAngryTexture();
 
+    /**
+     * Removed with 1.21.5
+     */
+    @ApiStatus.Obsolete
     MappedEntitySet<Biome> getBiomes();
 
     static WolfVariant decode(NBT nbt, ClientVersion version, @Nullable TypesBuilderData data) {
         NBTCompound compound = (NBTCompound) nbt;
-        ResourceLocation wildTexture = new ResourceLocation(compound.getStringTagValueOrThrow("wild_texture"));
-        ResourceLocation tameTexture = new ResourceLocation(compound.getStringTagValueOrThrow("tame_texture"));
-        ResourceLocation angryTexture = new ResourceLocation(compound.getStringTagValueOrThrow("angry_texture"));
-        MappedEntitySet<Biome> biomes = MappedEntitySet.decode(
-                compound.getTagOrThrow("biomes"), version, Biomes.getRegistry());
-        return new StaticWolfVariant(data, wildTexture, tameTexture, angryTexture, biomes);
+        if (version.isOlderThan(ClientVersion.V_1_21_5)) {
+            ResourceLocation wildTexture = new ResourceLocation(compound.getStringTagValueOrThrow("wild_texture"));
+            ResourceLocation tameTexture = new ResourceLocation(compound.getStringTagValueOrThrow("tame_texture"));
+            ResourceLocation angryTexture = new ResourceLocation(compound.getStringTagValueOrThrow("angry_texture"));
+            MappedEntitySet<Biome> biomes = MappedEntitySet.decode(
+                    compound.getTagOrThrow("biomes"), version, Biomes.getRegistry());
+            return new StaticWolfVariant(data, wildTexture, tameTexture, angryTexture, biomes);
+        }
+        NBTCompound assets = compound.getCompoundTagOrThrow("assets");
+        ResourceLocation wildTexture = new ResourceLocation(assets.getStringTagValueOrThrow("wild"));
+        ResourceLocation tameTexture = new ResourceLocation(assets.getStringTagValueOrThrow("tame"));
+        ResourceLocation angryTexture = new ResourceLocation(assets.getStringTagValueOrThrow("angry"));
+        return new StaticWolfVariant(data, wildTexture, tameTexture,
+                angryTexture, MappedEntitySet.createEmpty());
     }
 
     static NBT encode(WolfVariant variant, ClientVersion version) {
         NBTCompound compound = new NBTCompound();
-        compound.setTag("wild_texture", new NBTString(variant.getWildTexture().toString()));
-        compound.setTag("tame_texture", new NBTString(variant.getTameTexture().toString()));
-        compound.setTag("angry_texture", new NBTString(variant.getAngryTexture().toString()));
-        compound.setTag("biomes", MappedEntitySet.encode(variant.getBiomes(), version));
+        if (version.isOlderThan(ClientVersion.V_1_21_5)) {
+            compound.setTag("wild_texture", new NBTString(variant.getWildTexture().toString()));
+            compound.setTag("tame_texture", new NBTString(variant.getTameTexture().toString()));
+            compound.setTag("angry_texture", new NBTString(variant.getAngryTexture().toString()));
+            compound.setTag("biomes", MappedEntitySet.encode(variant.getBiomes(), version));
+        } else {
+            NBTCompound assets = new NBTCompound();
+            assets.setTag("wild", new NBTString(variant.getWildTexture().toString()));
+            assets.setTag("tame", new NBTString(variant.getWildTexture().toString()));
+            assets.setTag("angry", new NBTString(variant.getWildTexture().toString()));
+            compound.setTag("assets", assets);
+        }
         return compound;
     }
 }
