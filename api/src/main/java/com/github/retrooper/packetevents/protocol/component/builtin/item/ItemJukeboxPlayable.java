@@ -18,10 +18,12 @@
 
 package com.github.retrooper.packetevents.protocol.component.builtin.item;
 
+import com.github.retrooper.packetevents.manager.server.ServerVersion;
 import com.github.retrooper.packetevents.protocol.item.jukebox.IJukeboxSong;
 import com.github.retrooper.packetevents.protocol.item.jukebox.JukeboxSong;
 import com.github.retrooper.packetevents.resources.ResourceLocation;
 import com.github.retrooper.packetevents.wrapper.PacketWrapper;
+import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Objects;
@@ -30,8 +32,20 @@ public class ItemJukeboxPlayable {
 
     private @Nullable IJukeboxSong song;
     private @Nullable ResourceLocation songKey;
+    /**
+     * Removed in 1.21.5
+     */
+    @ApiStatus.Obsolete
     private boolean showInTooltip;
 
+    public ItemJukeboxPlayable(@Nullable IJukeboxSong song, @Nullable ResourceLocation songKey) {
+        this(song, songKey, true);
+    }
+
+    /**
+     * {@link #showInTooltip} has been removed in 1.21.5
+     */
+    @ApiStatus.Obsolete
     public ItemJukeboxPlayable(
             @Nullable JukeboxSong song,
             @Nullable ResourceLocation songKey,
@@ -40,6 +54,10 @@ public class ItemJukeboxPlayable {
         this((IJukeboxSong) song, songKey, showInTooltip);
     }
 
+    /**
+     * {@link #showInTooltip} has been removed in 1.21.5
+     */
+    @ApiStatus.Obsolete
     public ItemJukeboxPlayable(
             @Nullable IJukeboxSong song,
             @Nullable ResourceLocation songKey,
@@ -65,7 +83,7 @@ public class ItemJukeboxPlayable {
             song = null;
             songKey = wrapper.readIdentifier();
         }
-        boolean showInTooltip = wrapper.readBoolean();
+        boolean showInTooltip = wrapper.getServerVersion().isNewerThanOrEquals(ServerVersion.V_1_21_5) || wrapper.readBoolean();
         return new ItemJukeboxPlayable(song, songKey, showInTooltip);
     }
 
@@ -78,7 +96,9 @@ public class ItemJukeboxPlayable {
             wrapper.writeBoolean(false);
             wrapper.writeIdentifier(jukeboxPlayable.songKey);
         }
-        wrapper.writeBoolean(jukeboxPlayable.showInTooltip);
+        if (wrapper.getServerVersion().isOlderThan(ServerVersion.V_1_21_5)) {
+            wrapper.writeBoolean(jukeboxPlayable.showInTooltip);
+        }
     }
 
     public @Nullable IJukeboxSong getJukeboxSong() {
@@ -115,10 +135,18 @@ public class ItemJukeboxPlayable {
         this.songKey = songKey;
     }
 
+    /**
+     * Removed in 1.21.5
+     */
+    @ApiStatus.Obsolete
     public boolean isShowInTooltip() {
         return this.showInTooltip;
     }
 
+    /**
+     * Removed in 1.21.5
+     */
+    @ApiStatus.Obsolete
     public void setShowInTooltip(boolean showInTooltip) {
         this.showInTooltip = showInTooltip;
     }

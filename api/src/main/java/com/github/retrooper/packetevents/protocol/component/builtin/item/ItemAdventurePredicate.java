@@ -45,6 +45,10 @@ public class ItemAdventurePredicate {
         this(predicates, true);
     }
 
+    /**
+     * {@link #showInTooltip} has been removed in 1.21.5
+     */
+    @ApiStatus.Obsolete
     public ItemAdventurePredicate(List<BlockPredicate> predicates, boolean showInTooltip) {
         this.predicates = predicates;
         this.showInTooltip = showInTooltip;
