@@ -90,7 +90,7 @@ public class ItemEquippable {
         boolean dispensable = wrapper.readBoolean();
         boolean swappable = wrapper.readBoolean();
         boolean damageOnHurt = wrapper.readBoolean();
-        boolean equipOnInteract = wrapper.getServerVersion().isNewerThan(ServerVersion.V_1_21_5) && wrapper.readBoolean();
+        boolean equipOnInteract = wrapper.getServerVersion().isNewerThanOrEquals(ServerVersion.V_1_21_5) && wrapper.readBoolean();
         return new ItemEquippable(slot, equipSound, assetId,
                 cameraOverlay, allowedEntities, dispensable, swappable, damageOnHurt, equipOnInteract);
     }
