@@ -44,6 +44,7 @@ import com.github.retrooper.packetevents.protocol.component.builtin.item.ItemEnc
 import com.github.retrooper.packetevents.protocol.component.builtin.item.ItemEnchantments;
 import com.github.retrooper.packetevents.protocol.component.builtin.item.ItemEquippable;
 import com.github.retrooper.packetevents.protocol.component.builtin.item.ItemFireworks;
+import com.github.retrooper.packetevents.protocol.component.builtin.item.ItemInstrument;
 import com.github.retrooper.packetevents.protocol.component.builtin.item.ItemJukeboxPlayable;
 import com.github.retrooper.packetevents.protocol.component.builtin.item.ItemLock;
 import com.github.retrooper.packetevents.protocol.component.builtin.item.ItemLore;
@@ -71,6 +72,7 @@ import com.github.retrooper.packetevents.protocol.component.builtin.item.Suspici
 import com.github.retrooper.packetevents.protocol.component.builtin.item.WritableBookContent;
 import com.github.retrooper.packetevents.protocol.component.builtin.item.WrittenBookContent;
 import com.github.retrooper.packetevents.protocol.item.instrument.Instrument;
+import com.github.retrooper.packetevents.protocol.mapper.MaybeMappedEntity;
 import com.github.retrooper.packetevents.protocol.nbt.NBTCompound;
 import com.github.retrooper.packetevents.protocol.player.ClientVersion;
 import com.github.retrooper.packetevents.resources.ResourceLocation;
@@ -225,8 +227,12 @@ public final class ComponentTypes {
             PacketWrapper::readNBT, PacketWrapper::writeNBT);
     public static final ComponentType<NBTCompound> BLOCK_ENTITY_DATA = define("block_entity_data",
             PacketWrapper::readNBT, PacketWrapper::writeNBT);
-    public static final ComponentType<Instrument> INSTRUMENT = define("instrument",
-            Instrument::read, Instrument::write);
+    public static final ComponentType<ItemInstrument> ITEM_INSTRUMENT = define("instrument",
+            ItemInstrument::read, ItemInstrument::write);
+    @Deprecated
+    public static final ComponentType<Instrument> INSTRUMENT = ITEM_INSTRUMENT.legacyMap(
+            inst -> inst.getInstrument().getValue(),
+            inst -> new ItemInstrument(new MaybeMappedEntity<>(inst)));
     public static final ComponentType<Integer> OMINOUS_BOTTLE_AMPLIFIER = define("ominous_bottle_amplifier",
             PacketWrapper::readVarInt, PacketWrapper::writeVarInt);
     public static final ComponentType<ItemRecipes> RECIPES = define("recipes",

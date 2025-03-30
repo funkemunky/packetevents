@@ -19,35 +19,34 @@
 package com.github.retrooper.packetevents.protocol.component.builtin.item;
 
 import com.github.retrooper.packetevents.protocol.item.trimmaterial.TrimMaterial;
-import com.github.retrooper.packetevents.resources.ResourceLocation;
-import com.github.retrooper.packetevents.util.Either;
+import com.github.retrooper.packetevents.protocol.item.trimmaterial.TrimMaterials;
+import com.github.retrooper.packetevents.protocol.mapper.MaybeMappedEntity;
 import com.github.retrooper.packetevents.wrapper.PacketWrapper;
 
 import java.util.Objects;
 
 public class ItemProvidesTrimMaterial {
 
-    // I am questioning if Mojang understood their own registry system...
-    private Either<TrimMaterial, ResourceLocation> material;
+    private MaybeMappedEntity<TrimMaterial> material;
 
-    public ItemProvidesTrimMaterial(Either<TrimMaterial, ResourceLocation> material) {
+    public ItemProvidesTrimMaterial(MaybeMappedEntity<TrimMaterial> material) {
         this.material = material;
     }
 
     public static ItemProvidesTrimMaterial read(PacketWrapper<?> wrapper) {
-        Either<TrimMaterial, ResourceLocation> material = wrapper.readEither(TrimMaterial::read, PacketWrapper::readIdentifier);
+        MaybeMappedEntity<TrimMaterial> material = MaybeMappedEntity.read(wrapper, TrimMaterials.getRegistry(), TrimMaterial::read);
         return new ItemProvidesTrimMaterial(material);
     }
 
     public static void write(PacketWrapper<?> wrapper, ItemProvidesTrimMaterial material) {
-        wrapper.writeEither(material.material, TrimMaterial::write, PacketWrapper::writeIdentifier);
+        MaybeMappedEntity.write(wrapper, material.material, TrimMaterial::write);
     }
 
-    public Either<TrimMaterial, ResourceLocation> getMaterial() {
+    public MaybeMappedEntity<TrimMaterial> getMaterial() {
         return this.material;
     }
 
-    public void setMaterial(Either<TrimMaterial, ResourceLocation> material) {
+    public void setMaterial(MaybeMappedEntity<TrimMaterial> material) {
         this.material = material;
     }
 
