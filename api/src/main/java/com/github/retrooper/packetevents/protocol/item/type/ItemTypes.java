@@ -1530,7 +1530,6 @@ public final class ItemTypes {
         if (base != null) {
             components.setAll(base);
         }
-        // TODO release buffer helper
         // allocate a buffer once and use it for parsing everything
         Object byteBuf = UnpooledByteBufAllocationHelper.buffer();
         PacketWrapper<?> wrapper = PacketWrapper.createUniversalPacketWrapper(byteBuf, version.toServerVersion());
@@ -1543,20 +1542,30 @@ public final class ItemTypes {
 
             // reset to start of buffer
             ByteBufHelper.resetReaderIndex(byteBuf);
+            ByteBufHelper.resetWriterIndex(byteBuf);
 
             // empty values are serialized as a single byte (smaller than an empty byte array),
             // so just parse byte array tag values
             if (entry.getValue() instanceof NBTByteArray) {
-                byte[] bytes = ((NBTByteArray) entry.getValue()).getValue();
                 // write bytes at beginning of buffer
-                ByteBufHelper.resetWriterIndex(byteBuf);
+                byte[] bytes = ((NBTByteArray) entry.getValue()).getValue();
                 ByteBufHelper.writeBytes(byteBuf, bytes);
             }
 
             // read from shared buffer
             Object compValue = compType.read(wrapper);
             components.set((ComponentType<Object>) compType, compValue);
+
+            // ensure the entire component value has been read
+            int wi = ByteBufHelper.writerIndex(byteBuf);
+            int ri = ByteBufHelper.readerIndex(byteBuf);
+            if (wi != ri) {
+                throw new RuntimeException("Expected reader index (" + ri + ") to match writer index ("
+                        + wi + ") after reading component value for type " + compType.getName() + " in version " + version);
+            }
         }
+
+        ByteBufHelper.release(byteBuf);
         return components;
     }
 
