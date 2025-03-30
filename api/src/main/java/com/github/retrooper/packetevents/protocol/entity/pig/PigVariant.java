@@ -28,6 +28,7 @@ import com.github.retrooper.packetevents.protocol.player.ClientVersion;
 import com.github.retrooper.packetevents.resources.ResourceLocation;
 import com.github.retrooper.packetevents.util.adventure.AdventureIndexUtil;
 import com.github.retrooper.packetevents.util.mappings.TypesBuilderData;
+import com.github.retrooper.packetevents.wrapper.PacketWrapper;
 import net.kyori.adventure.util.Index;
 import org.jetbrains.annotations.Nullable;
 
@@ -36,6 +37,14 @@ public interface PigVariant extends MappedEntity, CopyableEntity<PigVariant>, De
     ModelType getModelType();
 
     ResourceLocation getAssetId();
+
+    static PigVariant read(PacketWrapper<?> wrapper) {
+        return wrapper.readMappedEntity(PigVariants.getRegistry());
+    }
+
+    static void write(PacketWrapper<?> wrapper, PigVariant variant) {
+        wrapper.writeMappedEntity(variant);
+    }
 
     static PigVariant decode(NBT nbt, ClientVersion version, @Nullable TypesBuilderData data) {
         NBTCompound compound = (NBTCompound) nbt;

@@ -26,6 +26,7 @@ import com.github.retrooper.packetevents.protocol.nbt.NBTCompound;
 import com.github.retrooper.packetevents.protocol.player.ClientVersion;
 import com.github.retrooper.packetevents.protocol.sound.Sound;
 import com.github.retrooper.packetevents.util.mappings.TypesBuilderData;
+import com.github.retrooper.packetevents.wrapper.PacketWrapper;
 import org.jetbrains.annotations.Nullable;
 
 public interface WolfSoundVariant extends MappedEntity, CopyableEntity<WolfSoundVariant>, DeepComparableEntity {
@@ -41,6 +42,14 @@ public interface WolfSoundVariant extends MappedEntity, CopyableEntity<WolfSound
     Sound getPantSound();
 
     Sound getWhineSound();
+
+    static WolfSoundVariant read(PacketWrapper<?> wrapper) {
+        return wrapper.readMappedEntity(WolfSoundVariants.getRegistry());
+    }
+
+    static void write(PacketWrapper<?> wrapper, WolfSoundVariant variant) {
+        wrapper.writeMappedEntity(variant);
+    }
 
     static WolfSoundVariant decode(NBT nbt, ClientVersion version, @Nullable TypesBuilderData data) {
         NBTCompound compound = (NBTCompound) nbt;

@@ -28,6 +28,7 @@ import com.github.retrooper.packetevents.protocol.player.ClientVersion;
 import com.github.retrooper.packetevents.resources.ResourceLocation;
 import com.github.retrooper.packetevents.util.adventure.AdventureIndexUtil;
 import com.github.retrooper.packetevents.util.mappings.TypesBuilderData;
+import com.github.retrooper.packetevents.wrapper.PacketWrapper;
 import net.kyori.adventure.util.Index;
 import org.jetbrains.annotations.Nullable;
 
@@ -36,6 +37,14 @@ public interface ChickenVariant extends MappedEntity, CopyableEntity<ChickenVari
     ModelType getModelType();
 
     ResourceLocation getAssetId();
+
+    static ChickenVariant read(PacketWrapper<?> wrapper) {
+        return wrapper.readMappedEntity(ChickenVariants.getRegistry());
+    }
+
+    static void write(PacketWrapper<?> wrapper, ChickenVariant variant) {
+        wrapper.writeMappedEntity(variant);
+    }
 
     static ChickenVariant decode(NBT nbt, ClientVersion version, @Nullable TypesBuilderData data) {
         NBTCompound compound = (NBTCompound) nbt;

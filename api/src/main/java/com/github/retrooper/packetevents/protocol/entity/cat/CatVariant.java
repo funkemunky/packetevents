@@ -27,11 +27,20 @@ import com.github.retrooper.packetevents.protocol.nbt.NBTString;
 import com.github.retrooper.packetevents.protocol.player.ClientVersion;
 import com.github.retrooper.packetevents.resources.ResourceLocation;
 import com.github.retrooper.packetevents.util.mappings.TypesBuilderData;
+import com.github.retrooper.packetevents.wrapper.PacketWrapper;
 import org.jetbrains.annotations.Nullable;
 
 public interface CatVariant extends MappedEntity, CopyableEntity<CatVariant>, DeepComparableEntity {
 
     ResourceLocation getAssetId();
+
+    static CatVariant read(PacketWrapper<?> wrapper) {
+        return wrapper.readMappedEntity(CatVariants.getRegistry());
+    }
+
+    static void write(PacketWrapper<?> wrapper, CatVariant variant) {
+        wrapper.writeMappedEntity(variant);
+    }
 
     static CatVariant decode(NBT nbt, ClientVersion version, @Nullable TypesBuilderData data) {
         NBTCompound compound = (NBTCompound) nbt;
