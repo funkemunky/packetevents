@@ -25,6 +25,7 @@
 package com.github.retrooper.packetevents.protocol.world.chunk.palette;
 
 import com.github.retrooper.packetevents.protocol.stream.NetStreamInput;
+import com.github.retrooper.packetevents.wrapper.PacketWrapper;
 
 import java.util.HashMap;
 
@@ -45,12 +46,25 @@ public class MapPalette implements Palette {
         this.idToState = new int[this.maxId + 1];
     }
 
+    @Deprecated
     public MapPalette(int bitsPerEntry, NetStreamInput in) {
         this(bitsPerEntry);
 
         int paletteLength = in.readVarInt();
         for (int i = 0; i < paletteLength; i++) {
             int state = in.readVarInt();
+            this.idToState[i] = state;
+            this.stateToId.putIfAbsent(state, i);
+        }
+        this.nextId = paletteLength;
+    }
+
+    public MapPalette(int bitsPerEntry, PacketWrapper<?> wrapper) {
+        this(bitsPerEntry);
+
+        int paletteLength = wrapper.readVarInt();
+        for (int i = 0; i < paletteLength; i++) {
+            int state = wrapper.readVarInt();
             this.idToState[i] = state;
             this.stateToId.putIfAbsent(state, i);
         }

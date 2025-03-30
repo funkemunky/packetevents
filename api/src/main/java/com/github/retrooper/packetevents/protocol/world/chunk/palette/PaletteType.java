@@ -18,9 +18,16 @@
 
 package com.github.retrooper.packetevents.protocol.world.chunk.palette;
 
+import com.github.retrooper.packetevents.manager.server.ServerVersion;
+import com.github.retrooper.packetevents.protocol.stream.NetStreamInputWrapper;
+import com.github.retrooper.packetevents.protocol.stream.NetStreamOutputWrapper;
+import com.github.retrooper.packetevents.protocol.world.chunk.storage.BitStorage;
+import com.github.retrooper.packetevents.wrapper.PacketWrapper;
+
 public enum PaletteType {
-    BIOME(1, 3, 2, 64),
-    CHUNK(4, 8, 4, 4096);
+
+    BIOME(1, 3, 2, 4 * 4 * 4),
+    CHUNK(4, 8, 4, 16 * 16 * 16);
 
     private final int minBitsPerEntry;
     private final int maxBitsPerEntry;
@@ -32,6 +39,24 @@ public enum PaletteType {
         this.maxBitsPerEntry = maxBitsPerEntry;
         this.bitShift = bitShift;
         this.storageSize = storageSize;
+    }
+
+    public static void write(PacketWrapper<?> wrapper, DataPalette palette) {
+        DataPalette.write(new NetStreamOutputWrapper(wrapper), palette);
+    }
+
+    public DataPalette read(PacketWrapper<?> wrapper) {
+        if (wrapper.getServerVersion().isNewerThanOrEquals(ServerVersion.V_1_16)) {
+            boolean allowSingletonPalette = wrapper.getServerVersion().isNewerThanOrEquals(ServerVersion.V_1_18);
+            return DataPalette.read(new NetStreamInputWrapper(wrapper), this, allowSingletonPalette);
+        }
+        return DataPalette.readLegacy(new NetStreamInputWrapper(wrapper));
+    }
+
+    public DataPalette create() {
+        ListPalette palette = new ListPalette(this.minBitsPerEntry);
+        BitStorage storage = new BitStorage(this.minBitsPerEntry, this.storageSize);
+        return new DataPalette(palette, storage, this);
     }
 
     public int getMaxBitsPerEntry() {

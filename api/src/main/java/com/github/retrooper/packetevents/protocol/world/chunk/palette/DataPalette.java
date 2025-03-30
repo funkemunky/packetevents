@@ -23,41 +23,51 @@ import com.github.retrooper.packetevents.protocol.stream.NetStreamOutput;
 import com.github.retrooper.packetevents.protocol.world.chunk.storage.BaseStorage;
 import com.github.retrooper.packetevents.protocol.world.chunk.storage.BitStorage;
 import com.github.retrooper.packetevents.protocol.world.chunk.storage.LegacyFlexibleStorage;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import com.github.retrooper.packetevents.wrapper.PacketWrapper;
 
 public class DataPalette {
 
     // this is the amount of bits required to store the biggest state id number
     public static final int GLOBAL_PALETTE_BITS_PER_ENTRY = 15;
 
-    public @NotNull Palette palette;
-    public BaseStorage storage;
     public final PaletteType paletteType;
+    public Palette palette;
+    public BaseStorage storage;
 
-    public static DataPalette createForChunk() {
-        return createEmpty(PaletteType.CHUNK);
-    }
-
-    public static DataPalette createForBiome() {
-        return createEmpty(PaletteType.BIOME);
-    }
-
-    public static DataPalette createEmpty(PaletteType paletteType) {
-        return new DataPalette(new ListPalette(paletteType.getMinBitsPerEntry()),
-                new BitStorage(paletteType.getMinBitsPerEntry(), paletteType.getStorageSize()), paletteType);
-    }
-
-    public DataPalette(@NotNull Palette palette, @Nullable BaseStorage storage, PaletteType paletteType) {
+    public DataPalette(Palette palette, BaseStorage storage, PaletteType paletteType) {
         this.palette = palette;
         this.storage = storage;
         this.paletteType = paletteType;
     }
 
+    public static DataPalette createForChunk() {
+        return PaletteType.CHUNK.create();
+    }
+
+    public static DataPalette createForBiome() {
+        return PaletteType.BIOME.create();
+    }
+
+    /**
+     * @deprecated use {@link PaletteType#create()} instead
+     */
+    @Deprecated
+    public static DataPalette createEmpty(PaletteType paletteType) {
+        return paletteType.create();
+    }
+
+    /**
+     * @deprecated use {@link PaletteType#read(PacketWrapper)} instead
+     */
+    @Deprecated
     public static DataPalette read(NetStreamInput in, PaletteType paletteType) {
         return read(in, paletteType, true);
     }
 
+    /**
+     * @deprecated use {@link PaletteType#read(PacketWrapper)} instead
+     */
+    @Deprecated
     public static DataPalette read(NetStreamInput in, PaletteType paletteType, boolean allowSingletonPalette) {
         int bitsPerEntry = in.readByte();
         Palette palette = readPalette(paletteType, bitsPerEntry, in, allowSingletonPalette);
@@ -73,6 +83,10 @@ public class DataPalette {
         return new DataPalette(palette, storage, paletteType);
     }
 
+    /**
+     * @deprecated use {@link PaletteType#write(PacketWrapper, DataPalette)} instead
+     */
+    @Deprecated
     public static void write(NetStreamOutput out, DataPalette palette) {
         if (palette.palette instanceof SingletonPalette) {
             out.writeByte(0); // Bits per entry
@@ -96,17 +110,14 @@ public class DataPalette {
         out.writeLongs(data);
     }
 
+    /**
+     * @deprecated use {@link PaletteType#read(PacketWrapper)} instead
+     */
+    @Deprecated
     public static DataPalette readLegacy(NetStreamInput in) {
         int bitsPerEntry = in.readByte() & 0xff;
         Palette palette = readPalette(PaletteType.CHUNK, bitsPerEntry, in, false);
-        BaseStorage storage;
-        if (!(palette instanceof SingletonPalette)) {
-            int length = in.readVarInt();
-            storage = new LegacyFlexibleStorage(bitsPerEntry, in.readLongs(length));
-        } else {
-            in.readVarInt();
-            storage = null;
-        }
+        BaseStorage storage = new LegacyFlexibleStorage(bitsPerEntry, in.readLongs(in.readVarInt()));
         return new DataPalette(palette, storage, PaletteType.CHUNK);
     }
 
@@ -141,6 +152,7 @@ public class DataPalette {
         }
     }
 
+    @Deprecated
     private static Palette readPalette(
             PaletteType paletteType,
             int bitsPerEntry,
@@ -149,11 +161,9 @@ public class DataPalette {
     ) {
         if (bitsPerEntry > paletteType.getMaxBitsPerEntry()) {
             return new GlobalPalette();
-        }
-        if (bitsPerEntry == 0 && allowSingletonPalette) {
+        } else if (bitsPerEntry == 0 && allowSingletonPalette) {
             return new SingletonPalette(in);
-        }
-        if (bitsPerEntry <= paletteType.getMinBitsPerEntry()) {
+        } else if (bitsPerEntry <= paletteType.getMinBitsPerEntry()) {
             return new ListPalette(bitsPerEntry, in);
         } else {
             return new MapPalette(bitsPerEntry, in);

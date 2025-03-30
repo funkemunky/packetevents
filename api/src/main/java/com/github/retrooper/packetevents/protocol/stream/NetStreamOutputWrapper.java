@@ -1,6 +1,6 @@
 /*
  * This file is part of packetevents - https://github.com/retrooper/packetevents
- * Copyright (C) 2022 retrooper and contributors
+ * Copyright (C) 2025 retrooper and contributors
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,45 +16,44 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.github.retrooper.packetevents.protocol.world.chunk.palette;
+package com.github.retrooper.packetevents.protocol.stream;
 
-import com.github.retrooper.packetevents.protocol.stream.NetStreamInput;
+import com.github.retrooper.packetevents.netty.buffer.ByteBufHelper;
 import com.github.retrooper.packetevents.wrapper.PacketWrapper;
+import org.jetbrains.annotations.ApiStatus;
 
-/**
- * A palette containing one state.
- * Credit to MCProtocolLib
- */
-public class SingletonPalette implements Palette {
-    private final int state;
+@ApiStatus.Internal
+public class NetStreamOutputWrapper extends NetStreamOutput {
 
-    @Deprecated
-    public SingletonPalette(NetStreamInput in) {
-        this.state = in.readVarInt();
-    }
+    private final PacketWrapper<?> wrapper;
 
-    public SingletonPalette(PacketWrapper<?> wrapper) {
-        this.state = wrapper.readVarInt();
+    public NetStreamOutputWrapper(PacketWrapper<?> wrapper) {
+        super(null);
+        this.wrapper = wrapper;
     }
 
     @Override
-    public int size() {
-        return 1;
+    public void write(int b) {
+        this.wrapper.writeByte(b);
     }
 
     @Override
-    public int stateToId(int state) {
-        if (this.state == state) {
-            return 0;
-        }
-        return -1;
+    public void write(byte[] b) {
+        this.write(b, 0, b.length);
     }
 
     @Override
-    public int idToState(int id) {
-        if (id == 0) {
-            return this.state;
-        }
-        return 0;
+    public void write(byte[] b, int off, int len) {
+        ByteBufHelper.writeBytes(this.wrapper.buffer, b, off, len);
+    }
+
+    @Override
+    public void flush() {
+        // NO-OP
+    }
+
+    @Override
+    public void close() {
+        // NO-OP
     }
 }

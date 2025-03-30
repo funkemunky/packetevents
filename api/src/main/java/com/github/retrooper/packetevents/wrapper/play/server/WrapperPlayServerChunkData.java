@@ -20,10 +20,10 @@ package com.github.retrooper.packetevents.wrapper.play.server;
 
 import com.github.retrooper.packetevents.event.PacketSendEvent;
 import com.github.retrooper.packetevents.manager.server.ServerVersion;
+import com.github.retrooper.packetevents.netty.buffer.ByteBufHelper;
+import com.github.retrooper.packetevents.netty.buffer.UnpooledByteBufAllocationHelper;
 import com.github.retrooper.packetevents.protocol.nbt.NBTCompound;
 import com.github.retrooper.packetevents.protocol.packettype.PacketType;
-import com.github.retrooper.packetevents.protocol.stream.NetStreamInput;
-import com.github.retrooper.packetevents.protocol.stream.NetStreamOutput;
 import com.github.retrooper.packetevents.protocol.world.chunk.BaseChunk;
 import com.github.retrooper.packetevents.protocol.world.chunk.ChunkBitMask;
 import com.github.retrooper.packetevents.protocol.world.chunk.Column;
@@ -41,12 +41,8 @@ import com.github.retrooper.packetevents.protocol.world.chunk.reader.impl.ChunkR
 import com.github.retrooper.packetevents.protocol.world.chunk.reader.impl.ChunkReader_v1_7;
 import com.github.retrooper.packetevents.protocol.world.chunk.reader.impl.ChunkReader_v1_8;
 import com.github.retrooper.packetevents.protocol.world.chunk.reader.impl.ChunkReader_v1_9;
-import com.github.retrooper.packetevents.protocol.world.dimension.DimensionTypes;
 import com.github.retrooper.packetevents.wrapper.PacketWrapper;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.util.Arrays;
 import java.util.BitSet;
 import java.util.Map;
 import java.util.zip.DataFormatException;
@@ -152,36 +148,60 @@ public class WrapperPlayServerChunkData extends PacketWrapper<WrapperPlayServerC
             }
         }
 
-        byte[] data = readByteArray();
-        data = deflate(data, chunkMask, fullChunk);
-
-        boolean hasBlocklight = (serverVersion.isNewerThanOrEquals(ServerVersion.V_1_16) || serverVersion.isOlderThan(ServerVersion.V_1_14))
+        boolean hasBlockLight = (serverVersion.isNewerThanOrEquals(ServerVersion.V_1_16) || serverVersion.isOlderThan(ServerVersion.V_1_14))
                 && !serverVersion.isOlderThanOrEquals(ServerVersion.V_1_8_8);
-        boolean checkForSky = this.serverVersion.isNewerThanOrEquals(ServerVersion.V_1_16)
+        boolean hasSkyLight = this.serverVersion.isNewerThanOrEquals(ServerVersion.V_1_16)
                 || this.serverVersion.isOlderThanOrEquals(ServerVersion.V_1_8_8)
-                || this.user != null && this.user.getDimensionType().equals(DimensionTypes.OVERWORLD)
+                || this.user != null && this.user.getDimensionType().hasSkyLight()
                 && this.serverVersion.isOlderThan(ServerVersion.V_1_14);
 
-        // 1.7/1.8 don't use this NetStreamInput
-        NetStreamInput dataIn = serverVersion.isNewerThanOrEquals(ServerVersion.V_1_9) ? new NetStreamInput(new ByteArrayInputStream(data)) : null;
-        BaseChunk[] chunks = getChunkReader().read(this.user.getDimensionType(), chunkMask, secondaryChunkMask, fullChunk, hasBlocklight, checkForSky, chunkSize, data, dataIn);
+        Object originalBuffer = this.buffer;
+        int dataLength;
+        if (this.serverVersion.isOlderThanOrEquals(ServerVersion.V_1_7_10)) {
+            // decompress data and replace contents of this packet wrapper with the chunk data temporarily
+            byte[] data = this.inflate(this.readByteArray(), chunkMask, fullChunk);
+            this.buffer = UnpooledByteBufAllocationHelper.wrappedBuffer(data);
+            dataLength = data.length;
+        } else {
+            // let the chunk reader decide how to handle reading
+            dataLength = this.readVarInt();
+        }
+        BaseChunk[] chunks;
+        try {
+            int expectedReaderIndex = ByteBufHelper.readerIndex(this.buffer) + dataLength;
+            chunks = this.getChunkReader().read(this.user.getDimensionType(), chunkMask, secondaryChunkMask,
+                    fullChunk, hasBlockLight, hasSkyLight, chunkSize, dataLength, this);
 
-        if (hasBiomeData && serverVersion.isOlderThan(ServerVersion.V_1_15)) {
-            if (serverVersion.isNewerThanOrEquals(ServerVersion.V_1_13)) { // Uses ints
-                biomeDataInts = new int[256];
-                for (int i = 0; i < biomeDataInts.length; i++) {
-                    biomeDataInts[i] = dataIn.readInt();
+            if (hasBiomeData && this.serverVersion.isOlderThan(ServerVersion.V_1_15)) {
+                if (this.serverVersion.isNewerThanOrEquals(ServerVersion.V_1_13)) { // Uses ints
+                    biomeDataInts = new int[16 * 16];
+                    for (int i = 0; i < biomeDataInts.length; i++) {
+                        biomeDataInts[i] = this.readInt();
+                    }
+                } else if (this.serverVersion.isNewerThanOrEquals(ServerVersion.V_1_9)) { // Uses bytes
+                    biomeDataBytes = new byte[16 * 16];
+                    for (int i = 0; i < biomeDataBytes.length; i++) {
+                        biomeDataBytes[i] = this.readByte();
+                    }
+                } else if (dataLength == 0) {
+                    // if cache-chunk-maps is enabled in paper, paper doesn't send any biome data on chunk unload
+                    biomeDataBytes = new byte[0];
+                } else {
+                    biomeDataBytes = this.readBytes(16 * 16);
                 }
-            } else if (serverVersion.isNewerThanOrEquals(ServerVersion.V_1_9)) { // Uses bytes
-                biomeDataBytes = new byte[256];
-                for (int i = 0; i < biomeDataBytes.length; i++) {
-                    biomeDataBytes[i] = dataIn.readByte();
-                }
-            } else if (data.length == 0) {
-                // if cache-chunk-maps is enabled in paper, paper doesn't send any biome data on chunk unload
-                biomeDataBytes = data; // empty array
-            } else {
-                biomeDataBytes = Arrays.copyOfRange(data, data.length - 256, data.length);
+            }
+
+            // verify the full chunk has been read
+            int readerIndex = ByteBufHelper.readerIndex(this.buffer);
+            if (expectedReaderIndex != readerIndex) {
+                throw new RuntimeException("Error while decoding chunk at " + chunkX + " " + chunkZ
+                        + "; expected reader index " + expectedReaderIndex + ", got " + readerIndex);
+            }
+        } finally {
+            // change buffer back if it has been switched
+            if (this.buffer != originalBuffer) {
+                ByteBufHelper.release(this.buffer);
+                this.buffer = originalBuffer;
             }
         }
 
@@ -232,12 +252,8 @@ public class WrapperPlayServerChunkData extends PacketWrapper<WrapperPlayServerC
         }
     }
 
-    private byte[] deflate(byte[] toDeflate, BitSet mask, boolean fullChunk) {
-        // The data is already decompressed! (step only needed for 1.7.x)
-        if (serverVersion.isNewerThan(ServerVersion.V_1_7_10)) {
-            return toDeflate;
-        }
-
+    // this step is only needed for 1.7.x
+    private byte[] inflate(byte[] input, BitSet mask, boolean fullChunk) {
         // Determine inflated data length.
         int chunkCount = 0;
 
@@ -253,7 +269,7 @@ public class WrapperPlayServerChunkData extends PacketWrapper<WrapperPlayServerC
         byte[] data = new byte[len];
         // Inflate chunk data.
         Inflater inflater = new Inflater();
-        inflater.setInput(toDeflate, 0, toDeflate.length);
+        inflater.setInput(input, 0, input.length);
 
         try {
             inflater.inflate(data);
@@ -289,25 +305,28 @@ public class WrapperPlayServerChunkData extends PacketWrapper<WrapperPlayServerC
             writeBoolean(ignoreOldData);
         }
 
-        //TODO Decompress data on 1.7.10
-        //https://github.com/retrooper/packetevents/blob/794ad6b042c1c89a931d322f4f83317b573e891a/src/main/java/io/github/retrooper/packetevents/wrapper/play/server/WrapperPlayServerChunkData.java
-
-        ByteArrayOutputStream dataBytes = new ByteArrayOutputStream();
-        NetStreamOutput dataOut = new NetStreamOutput(dataBytes);
-
         BitSet chunkMask = new BitSet();
         BaseChunk[] chunks = column.getChunks();
 
-        if (serverVersion.isNewerThanOrEquals(ServerVersion.V_1_9)) {
+        Object dataBuffer; // chunk data holder
+        if (this.serverVersion.isNewerThanOrEquals(ServerVersion.V_1_9)) {
+            // allocate new buffer which holds all chunk data
+            Object originalBuffer = this.buffer;
+            dataBuffer = ByteBufHelper.allocateNewBuffer(this.buffer);
+            // temporarily replace backing buffer of wrapper
+            this.buffer = dataBuffer;
+
             for (int index = 0; index < chunks.length; index++) {
                 BaseChunk chunk = chunks[index];
                 if (v1_18) {
-                    Chunk_v1_18.write(dataOut, (Chunk_v1_18) chunk);
+                    Chunk_v1_18.write(this, (Chunk_v1_18) chunk);
                 } else if (v1_9 && chunk != null) {
                     chunkMask.set(index);
-                    Chunk_v1_9.write(dataOut, (Chunk_v1_9) chunk);
+                    Chunk_v1_9.write(this, (Chunk_v1_9) chunk);
                 }
             }
+            // switch backing buffer back
+            this.buffer = originalBuffer;
         } else if (v1_8) {
             NetworkChunkData data = ChunkReader_v1_8.chunksToData((Chunk_v1_8[]) chunks, column.getBiomeDataBytes());
             writeShort(data.getMask());
@@ -317,8 +336,8 @@ public class WrapperPlayServerChunkData extends PacketWrapper<WrapperPlayServerC
             NetworkChunkData data = ChunkReader_v1_7.chunksToData((Chunk_v1_7[]) chunks, column.getBiomeDataBytes());
             Deflater deflater = new Deflater(-1);
 
-            byte deflated[] = new byte[data.getData().length];
-            int len = deflated.length;
+            byte[] deflated = new byte[data.getData().length];
+            int len;
             try {
                 deflater.setInput(data.getData(), 0, data.getData().length);
                 deflater.finish();
@@ -329,20 +348,18 @@ public class WrapperPlayServerChunkData extends PacketWrapper<WrapperPlayServerC
             writeShort(data.getMask());
             writeShort(data.getExtendedChunkMask());
             writeInt(len);
-            for (int i = 0; i < len; i++) {
-                dataOut.writeByte(deflated[i]);
-            }
+            ByteBufHelper.writeBytes(this.buffer, deflated, 0, len);
             return;
         }
 
         if (column.isFullChunk() && serverVersion.isOlderThan(ServerVersion.V_1_15)) {
             if (serverVersion.isNewerThanOrEquals(ServerVersion.V_1_13)) {
                 for (int i : column.getBiomeDataInts()) {
-                    dataOut.writeInt(i);
+                    ByteBufHelper.writeInt(dataBuffer, i);
                 }
             } else {
                 for (byte i : column.getBiomeDataBytes()) {
-                    dataOut.writeByte(i);
+                    ByteBufHelper.writeByte(dataBuffer, i);
                 }
             }
             hasWrittenBiomeData = true;
@@ -383,8 +400,10 @@ public class WrapperPlayServerChunkData extends PacketWrapper<WrapperPlayServerC
             hasWrittenBiomeData = true;
         }
 
-        byte[] data = dataBytes.toByteArray();
-        writeByteArray(data);
+        // copy data buffer to this buffer
+        this.writeVarInt(ByteBufHelper.readableBytes(dataBuffer));
+        ByteBufHelper.writeBytes(this.buffer, dataBuffer);
+        ByteBufHelper.release(dataBuffer);
 
         if (column.hasBiomeData() && !hasWrittenBiomeData) {
             byte[] biomeDataBytes = new byte[256];

@@ -210,7 +210,7 @@ public final class ItemStackSerialization {
                 if (lengthPrefixed) {
                     // easiest solution is to just temporarily replace the buffer
                     Object originalBuffer = wrapper.buffer;
-                    wrapper.buffer = ByteBufHelper.allocateNewBuffer(wrapper.buffer);
+                    wrapper.buffer = ByteBufHelper.allocateNewBuffer(originalBuffer);
                     writer.run();
                     Object componentBuffer = wrapper.buffer;
                     wrapper.buffer = originalBuffer;

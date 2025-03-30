@@ -25,6 +25,7 @@
 package com.github.retrooper.packetevents.protocol.world.chunk.palette;
 
 import com.github.retrooper.packetevents.protocol.stream.NetStreamInput;
+import com.github.retrooper.packetevents.wrapper.PacketWrapper;
 
 /**
  * A palette backed by a List.
@@ -42,12 +43,23 @@ public class ListPalette implements Palette {
         this.data = new int[this.maxId + 1];
     }
 
+    @Deprecated
     public ListPalette(int bitsPerEntry, NetStreamInput in) {
         this(bitsPerEntry);
 
         int paletteLength = in.readVarInt();
         for (int i = 0; i < paletteLength; i++) {
             this.data[i] = in.readVarInt();
+        }
+        this.nextId = paletteLength;
+    }
+
+    public ListPalette(int bitsPerEntry, PacketWrapper<?> wrapper) {
+        this(bitsPerEntry);
+
+        int paletteLength = wrapper.readVarInt();
+        for (int i = 0; i < paletteLength; i++) {
+            this.data[i] = wrapper.readVarInt();
         }
         this.nextId = paletteLength;
     }
