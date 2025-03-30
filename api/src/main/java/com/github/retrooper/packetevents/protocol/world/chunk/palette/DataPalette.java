@@ -40,10 +40,18 @@ public class DataPalette {
         this.paletteType = paletteType;
     }
 
+    /**
+     * @deprecated use {@link PaletteType#create()} instead
+     */
+    @Deprecated
     public static DataPalette createForChunk() {
         return PaletteType.CHUNK.create();
     }
 
+    /**
+     * @deprecated use {@link PaletteType#create()} instead
+     */
+    @Deprecated
     public static DataPalette createForBiome() {
         return PaletteType.BIOME.create();
     }
@@ -136,7 +144,7 @@ public class DataPalette {
     public int set(int x, int y, int z, int state) {
         int id = this.palette.stateToId(state);
         if (id == -1) {
-            resize();
+            this.resizeOneUp();
             id = this.palette.stateToId(state);
         }
 
@@ -171,34 +179,34 @@ public class DataPalette {
     }
 
     private int sanitizeBitsPerEntry(int bitsPerEntry) {
-        if (bitsPerEntry <= this.paletteType.getMaxBitsPerEntry()) {
-            return Math.max(this.paletteType.getMinBitsPerEntry(), bitsPerEntry);
-        } else {
+        if (bitsPerEntry > this.paletteType.getMaxBitsPerEntryForMap()) {
             return GLOBAL_PALETTE_BITS_PER_ENTRY;
         }
+        return bitsPerEntry;
     }
 
-    private void resize() {
+    private void resizeOneUp() {
         Palette oldPalette = this.palette;
         BaseStorage oldData = this.storage;
 
-        int bitsPerEntry = sanitizeBitsPerEntry(oldPalette instanceof SingletonPalette ? 1 : oldData.getBitsPerEntry() + 1);
-        this.palette = createPalette(bitsPerEntry, paletteType);
-        this.storage = new BitStorage(bitsPerEntry, paletteType.getStorageSize());
+        int prevBitsPerEntry = oldPalette instanceof SingletonPalette ? 0 : oldData.getBitsPerEntry();
+        int bitsPerEntry = this.sanitizeBitsPerEntry(prevBitsPerEntry + 1);
+        this.palette = createPalette(bitsPerEntry, this.paletteType);
+        this.storage = new BitStorage(bitsPerEntry, this.paletteType.getStorageSize());
 
         if (oldPalette instanceof SingletonPalette) {
             this.palette.stateToId(oldPalette.idToState(0));
         } else {
-            for (int i = 0; i < paletteType.getStorageSize(); i++) {
+            for (int i = 0, len = this.paletteType.getStorageSize(); i < len; i++) {
                 this.storage.set(i, this.palette.stateToId(oldPalette.idToState(oldData.get(i))));
             }
         }
     }
 
     private static Palette createPalette(int bitsPerEntry, PaletteType paletteType) {
-        if (bitsPerEntry <= paletteType.getMinBitsPerEntry()) {
+        if (bitsPerEntry <= paletteType.getMaxBitsPerEntryForList()) {
             return new ListPalette(bitsPerEntry);
-        } else if (bitsPerEntry <= paletteType.getMaxBitsPerEntry()) {
+        } else if (bitsPerEntry <= paletteType.getMaxBitsPerEntryForMap()) {
             return new MapPalette(bitsPerEntry);
         } else {
             return new GlobalPalette();

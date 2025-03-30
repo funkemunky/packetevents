@@ -22,19 +22,26 @@ import com.github.retrooper.packetevents.protocol.stream.NetStreamInput;
 import com.github.retrooper.packetevents.wrapper.PacketWrapper;
 
 /**
+ * Added with 1.18
+ * <p>
  * A palette containing one state.
  * Credit to MCProtocolLib
  */
 public class SingletonPalette implements Palette {
+
     private final int state;
 
     @Deprecated
     public SingletonPalette(NetStreamInput in) {
-        this.state = in.readVarInt();
+        this(in.readVarInt());
     }
 
     public SingletonPalette(PacketWrapper<?> wrapper) {
-        this.state = wrapper.readVarInt();
+        this(wrapper.readVarInt());
+    }
+
+    public SingletonPalette(int state) {
+        this.state = state;
     }
 
     @Override

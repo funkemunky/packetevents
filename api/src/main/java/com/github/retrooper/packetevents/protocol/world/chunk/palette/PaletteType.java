@@ -26,17 +26,39 @@ import com.github.retrooper.packetevents.wrapper.PacketWrapper;
 
 public enum PaletteType {
 
-    BIOME(1, 3, 2, 4 * 4 * 4),
+    /**
+     * Added with 1.18:
+     * <ul>
+     * <li>0 bits → {@link SingletonPalette}</li>
+     * <li>1, 2 or 3 bits → {@link ListPalette}</li>
+     * <li>else → {@link GlobalPalette}</li>
+     * </ul>
+     */
+    BIOME(3, 0, 2, 4 * 4 * 4),
+    /**
+     * <ul>
+     * <li>0, 1, 2, 3 or 4 bits → {@link ListPalette}</li>
+     * <li>5, 6, 7 or 8 bits → {@link MapPalette}</li>
+     * <li>else → {@link GlobalPalette}</li>
+     * </ul>
+     * Changed with 1.18:
+     * <ul>
+     * <li>0 bits → {@link SingletonPalette}</li>
+     * <li>1, 2, 3 or 4 bits → {@link ListPalette}</li>
+     * <li>5, 6, 7 or 8 bits → {@link MapPalette}</li>
+     * <li>else → {@link GlobalPalette}</li>
+     * </ul>
+     */
     CHUNK(4, 8, 4, 16 * 16 * 16);
 
-    private final int minBitsPerEntry;
-    private final int maxBitsPerEntry;
+    private final int maxBitsPerEntryForList;
+    private final int maxBitsPerEntryForMap;
     private final int bitShift;
     private final int storageSize;
 
-    PaletteType(int minBitsPerEntry, int maxBitsPerEntry, int bitShift, int storageSize) {
-        this.minBitsPerEntry = minBitsPerEntry;
-        this.maxBitsPerEntry = maxBitsPerEntry;
+    PaletteType(int maxBitsPerEntryForList, int maxBitsPerEntryForMap, int bitShift, int storageSize) {
+        this.maxBitsPerEntryForList = maxBitsPerEntryForList;
+        this.maxBitsPerEntryForMap = maxBitsPerEntryForMap;
         this.bitShift = bitShift;
         this.storageSize = storageSize;
     }
@@ -54,24 +76,35 @@ public enum PaletteType {
     }
 
     public DataPalette create() {
-        ListPalette palette = new ListPalette(this.minBitsPerEntry);
-        BitStorage storage = new BitStorage(this.minBitsPerEntry, this.storageSize);
+        int bitsPerEntry = this.getMaxBitsPerEntryForList();
+        Palette palette = new ListPalette(bitsPerEntry);
+        BitStorage storage = new BitStorage(bitsPerEntry, this.getStorageSize());
         return new DataPalette(palette, storage, this);
     }
 
-    public int getMaxBitsPerEntry() {
-        return maxBitsPerEntry;
+    public int getMaxBitsPerEntryForList() {
+        return this.maxBitsPerEntryForList;
     }
 
-    public int getMinBitsPerEntry() {
-        return minBitsPerEntry;
+    public int getMaxBitsPerEntryForMap() {
+        return this.maxBitsPerEntryForMap;
     }
 
     public int getBitShift() {
-        return bitShift;
+        return this.bitShift;
     }
 
     public int getStorageSize() {
-        return storageSize;
+        return this.storageSize;
+    }
+
+    @Deprecated
+    public int getMaxBitsPerEntry() {
+        return this.maxBitsPerEntryForMap;
+    }
+
+    @Deprecated
+    public int getMinBitsPerEntry() {
+        return this.maxBitsPerEntryForList;
     }
 }

@@ -36,7 +36,8 @@ public class Chunk_v1_18 implements BaseChunk {
     private final DataPalette biomeData;
 
     public Chunk_v1_18() {
-        this(0, DataPalette.createForChunk(), DataPalette.createForBiome());
+        this.chunkData = PaletteType.CHUNK.create();
+        this.biomeData = PaletteType.BIOME.create();
     }
 
     public Chunk_v1_18(int blockCount, DataPalette chunkData, DataPalette biomeData) {
