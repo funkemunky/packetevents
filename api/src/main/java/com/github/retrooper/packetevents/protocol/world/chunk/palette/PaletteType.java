@@ -64,15 +64,17 @@ public enum PaletteType {
     }
 
     public static void write(PacketWrapper<?> wrapper, DataPalette palette) {
-        DataPalette.write(new NetStreamOutputWrapper(wrapper), palette);
+        boolean lengthPrefix = wrapper.getServerVersion().isOlderThan(ServerVersion.V_1_21_5);
+        DataPalette.write(new NetStreamOutputWrapper(wrapper), palette, lengthPrefix);
     }
 
     public DataPalette read(PacketWrapper<?> wrapper) {
-        if (wrapper.getServerVersion().isNewerThanOrEquals(ServerVersion.V_1_16)) {
-            boolean allowSingletonPalette = wrapper.getServerVersion().isNewerThanOrEquals(ServerVersion.V_1_18);
-            return DataPalette.read(new NetStreamInputWrapper(wrapper), this, allowSingletonPalette);
+        if (wrapper.getServerVersion().isOlderThan(ServerVersion.V_1_16)) {
+            return DataPalette.readLegacy(new NetStreamInputWrapper(wrapper));
         }
-        return DataPalette.readLegacy(new NetStreamInputWrapper(wrapper));
+        boolean allowSingletonPalette = wrapper.getServerVersion().isNewerThanOrEquals(ServerVersion.V_1_18);
+        boolean lengthPrefix = wrapper.getServerVersion().isOlderThan(ServerVersion.V_1_21_5);
+        return DataPalette.read(new NetStreamInputWrapper(wrapper), this, allowSingletonPalette, lengthPrefix);
     }
 
     public DataPalette create() {

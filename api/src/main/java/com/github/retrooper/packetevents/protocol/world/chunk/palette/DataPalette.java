@@ -77,14 +77,30 @@ public class DataPalette {
      */
     @Deprecated
     public static DataPalette read(NetStreamInput in, PaletteType paletteType, boolean allowSingletonPalette) {
+        return read(in, paletteType, allowSingletonPalette, true);
+    }
+
+    /**
+     * @deprecated use {@link PaletteType#read(PacketWrapper)} instead
+     */
+    @Deprecated
+    public static DataPalette read(
+            NetStreamInput in, PaletteType paletteType,
+            boolean allowSingletonPalette, boolean lengthPrefix
+    ) {
         int bitsPerEntry = in.readByte();
         Palette palette = readPalette(paletteType, bitsPerEntry, in, allowSingletonPalette);
         BitStorage storage;
         if (!(palette instanceof SingletonPalette)) {
-            int length = in.readVarInt();
-            storage = new BitStorage(bitsPerEntry, paletteType.getStorageSize(), in.readLongs(length));
+            long[] data = lengthPrefix ? in.readLongs(in.readVarInt()) : null;
+            storage = new BitStorage(bitsPerEntry, paletteType.getStorageSize(), data);
+            if (!lengthPrefix) {
+                in.readLongs(storage.getData());
+            }
         } else {
-            in.readVarInt();
+            if (lengthPrefix) {
+                in.readLongs(in.readVarInt());
+            }
             storage = null;
         }
 
@@ -96,10 +112,20 @@ public class DataPalette {
      */
     @Deprecated
     public static void write(NetStreamOutput out, DataPalette palette) {
+        write(out, palette, true);
+    }
+
+    /**
+     * @deprecated use {@link PaletteType#write(PacketWrapper, DataPalette)} instead
+     */
+    @Deprecated
+    public static void write(NetStreamOutput out, DataPalette palette, boolean lengthPrefix) {
         if (palette.palette instanceof SingletonPalette) {
             out.writeByte(0); // Bits per entry
-            out.writeVarInt(palette.palette.idToState(0));
-            out.writeVarInt(0); // Data length
+            out.writeVarInt(palette.palette.idToState(0)); // data value
+            if (lengthPrefix) {
+                out.writeVarInt(0); // Data length
+            }
             return;
         }
 
@@ -114,7 +140,9 @@ public class DataPalette {
         }
 
         long[] data = palette.storage.getData();
-        out.writeVarInt(data.length);
+        if (lengthPrefix) {
+            out.writeVarInt(data.length);
+        }
         out.writeLongs(data);
     }
 
