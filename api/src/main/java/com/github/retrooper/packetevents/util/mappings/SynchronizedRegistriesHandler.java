@@ -21,6 +21,14 @@ package com.github.retrooper.packetevents.util.mappings;
 import com.github.retrooper.packetevents.PacketEvents;
 import com.github.retrooper.packetevents.protocol.chat.ChatType;
 import com.github.retrooper.packetevents.protocol.chat.ChatTypes;
+import com.github.retrooper.packetevents.protocol.entity.chicken.ChickenVariant;
+import com.github.retrooper.packetevents.protocol.entity.chicken.ChickenVariants;
+import com.github.retrooper.packetevents.protocol.entity.cow.CowVariant;
+import com.github.retrooper.packetevents.protocol.entity.cow.CowVariants;
+import com.github.retrooper.packetevents.protocol.entity.frog.FrogVariant;
+import com.github.retrooper.packetevents.protocol.entity.frog.FrogVariants;
+import com.github.retrooper.packetevents.protocol.entity.pig.PigVariant;
+import com.github.retrooper.packetevents.protocol.entity.pig.PigVariants;
 import com.github.retrooper.packetevents.protocol.entity.wolfvariant.WolfSoundVariant;
 import com.github.retrooper.packetevents.protocol.entity.wolfvariant.WolfSoundVariants;
 import com.github.retrooper.packetevents.protocol.entity.wolfvariant.WolfVariant;
@@ -81,11 +89,11 @@ public final class SynchronizedRegistriesHandler {
                 new RegistryEntry<>(TrimMaterials.getRegistry(), TrimMaterial::decode),
                 new RegistryEntry<>(WolfVariants.getRegistry(), WolfVariant::decode),
                 new RegistryEntry<>(WolfSoundVariants.getRegistry(), WolfSoundVariant::decode),
-                // TODO pig_variant
-                // TODO frog_variant
+                new RegistryEntry<>(PigVariants.getRegistry(), PigVariant::decode),
+                new RegistryEntry<>(FrogVariants.getRegistry(), FrogVariant::decode),
                 // TODO cat_variant
-                // TODO cow_variant
-                // TODO chicken_variant
+                new RegistryEntry<>(CowVariants.getRegistry(), CowVariant::decode),
+                new RegistryEntry<>(ChickenVariants.getRegistry(), ChickenVariant::decode),
                 new RegistryEntry<>(PaintingVariants.getRegistry(), PaintingVariant::decode),
                 new RegistryEntry<>(DimensionTypes.getRegistry(), DimensionType::decode),
                 new RegistryEntry<>(DamageTypes.getRegistry(), DamageType::decode),
