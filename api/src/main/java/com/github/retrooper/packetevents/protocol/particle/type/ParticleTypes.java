@@ -231,8 +231,21 @@ public final class ParticleTypes {
             ParticleBlockStateData::read, ParticleBlockStateData::write,
             ParticleBlockStateData::decode, ParticleBlockStateData::encode);
 
-    // added with 1.21.4
+    /**
+     * Added with 1.21.4
+     */
     public static final ParticleType<ParticleData> PALE_OAK_LEAVES = define("pale_oak_leaves");
+
+    /**
+     * Added with 1.21.5
+     */
+    public static final ParticleType<ParticleColorData> TINTED_LEAVES = define("tinted_leaves",
+            ParticleColorData::read, ParticleColorData::write,
+            ParticleColorData::decode, ParticleColorData::encode);
+    /**
+     * Added with 1.21.5
+     */
+    public static final ParticleType<ParticleData> FIREFLY = define("firefly");
 
     /**
      * Returns an immutable view of the particle types.
