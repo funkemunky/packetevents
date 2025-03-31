@@ -243,6 +243,15 @@ public class ByteBufHelper {
         return PacketEvents.getAPI().getNettyManager().getByteBufOperator().allocateNewBuffer(buffer);
     }
 
+    public static int getByteSize(int value) {
+        for (int i = 1; i < 5; ++i) {
+            if ((value & -1 << i * 7) == 0) {
+                return i;
+            }
+        }
+        return 5;
+    }
+
     public static int readVarInt(Object buffer) {
         int value = 0;
         int length = 0;

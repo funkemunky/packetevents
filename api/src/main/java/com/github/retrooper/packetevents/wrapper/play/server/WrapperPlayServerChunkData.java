@@ -327,6 +327,13 @@ public class WrapperPlayServerChunkData extends PacketWrapper<WrapperPlayServerC
             }
             // switch backing buffer back
             this.buffer = originalBuffer;
+
+            // write the same amount of zero bytes mojang also writes
+            if (this.serverVersion.isNewerThanOrEquals(ServerVersion.V_1_21_5)) {
+                int zeroBytes = ChunkReader_v1_18.getMojangZeroByteSuffixLength(chunks);
+                int newWriterIndex = ByteBufHelper.writerIndex(dataBuffer) + zeroBytes;
+                ByteBufHelper.writerIndex(dataBuffer, newWriterIndex);
+            }
         } else if (v1_8) {
             NetworkChunkData data = ChunkReader_v1_8.chunksToData((Chunk_v1_8[]) chunks, column.getBiomeDataBytes());
             writeShort(data.getMask());
