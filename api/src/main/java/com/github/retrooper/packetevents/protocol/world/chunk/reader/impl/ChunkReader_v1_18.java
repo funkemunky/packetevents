@@ -51,11 +51,14 @@ public class ChunkReader_v1_18 implements ChunkReader {
             DimensionType dimensionType, BitSet chunkMask, BitSet secondaryChunkMask, boolean fullChunk,
             boolean hasBlockLight, boolean hasSkyLight, int chunkSize, int arrayLength, PacketWrapper<?> wrapper
     ) {
+        int ri = ByteBufHelper.readerIndex(wrapper.buffer);
         BaseChunk[] chunks = new BaseChunk[chunkSize];
         for (int i = 0; i < chunkSize; ++i) {
             chunks[i] = Chunk_v1_18.read(wrapper);
         }
-        if (wrapper.getServerVersion().isNewerThanOrEquals(ServerVersion.V_1_21_5)) {
+        if (wrapper.getServerVersion().isNewerThanOrEquals(ServerVersion.V_1_21_5)
+                // viaversion doesn't add this zero-byte-prefix; only skip it if we are missing bytes
+                && ByteBufHelper.readerIndex(wrapper.buffer) - ri < arrayLength) {
             ByteBufHelper.skipBytes(wrapper.buffer, getMojangZeroByteSuffixLength(chunks));
         }
         return chunks;
