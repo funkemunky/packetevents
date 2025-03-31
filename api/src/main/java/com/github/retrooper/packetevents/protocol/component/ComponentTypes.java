@@ -19,6 +19,30 @@
 package com.github.retrooper.packetevents.protocol.component;
 
 import com.github.retrooper.packetevents.protocol.color.DyeColor;
+import com.github.retrooper.packetevents.protocol.component.builtin.AxolotlVariantComponent;
+import com.github.retrooper.packetevents.protocol.component.builtin.CatCollarComponent;
+import com.github.retrooper.packetevents.protocol.component.builtin.CatVariantComponent;
+import com.github.retrooper.packetevents.protocol.component.builtin.ChickenVariantComponent;
+import com.github.retrooper.packetevents.protocol.component.builtin.CowVariantComponent;
+import com.github.retrooper.packetevents.protocol.component.builtin.FoxVariantComponent;
+import com.github.retrooper.packetevents.protocol.component.builtin.FrogVariantComponent;
+import com.github.retrooper.packetevents.protocol.component.builtin.HorseVariantComponent;
+import com.github.retrooper.packetevents.protocol.component.builtin.LlamaVariantComponent;
+import com.github.retrooper.packetevents.protocol.component.builtin.MooshroomVariantComponent;
+import com.github.retrooper.packetevents.protocol.component.builtin.PaintingVariantComponent;
+import com.github.retrooper.packetevents.protocol.component.builtin.ParrotVariantComponent;
+import com.github.retrooper.packetevents.protocol.component.builtin.PigVariantComponent;
+import com.github.retrooper.packetevents.protocol.component.builtin.RabbitVariantComponent;
+import com.github.retrooper.packetevents.protocol.component.builtin.SalmonSizeComponent;
+import com.github.retrooper.packetevents.protocol.component.builtin.SheepColorComponent;
+import com.github.retrooper.packetevents.protocol.component.builtin.ShulkerColorComponent;
+import com.github.retrooper.packetevents.protocol.component.builtin.TropicalFishBaseColorComponent;
+import com.github.retrooper.packetevents.protocol.component.builtin.TropicalFishPatternColorComponent;
+import com.github.retrooper.packetevents.protocol.component.builtin.TropicalFishPatternComponent;
+import com.github.retrooper.packetevents.protocol.component.builtin.VillagerVariantComponent;
+import com.github.retrooper.packetevents.protocol.component.builtin.WolfCollarComponent;
+import com.github.retrooper.packetevents.protocol.component.builtin.WolfSoundVariantComponent;
+import com.github.retrooper.packetevents.protocol.component.builtin.WolfVariantComponent;
 import com.github.retrooper.packetevents.protocol.component.builtin.item.ArmorTrim;
 import com.github.retrooper.packetevents.protocol.component.builtin.item.BannerLayers;
 import com.github.retrooper.packetevents.protocol.component.builtin.item.BundleContents;
@@ -327,6 +351,126 @@ public final class ComponentTypes {
      */
     public static final ComponentType<ItemBreakSound> BREAK_SOUND = define("break_sound",
             ItemBreakSound::read, ItemBreakSound::write);
+    /**
+     * Added with 1.21.5
+     */
+    public static final ComponentType<VillagerVariantComponent> VILLAGER_VARIANT = define("villager/variant",
+            VillagerVariantComponent::read, VillagerVariantComponent::write);
+    /**
+     * Added with 1.21.5
+     */
+    public static final ComponentType<WolfVariantComponent> WOLF_VARIANT = define("wolf/variant",
+            WolfVariantComponent::read, WolfVariantComponent::write);
+    /**
+     * Added with 1.21.5
+     */
+    public static final ComponentType<WolfSoundVariantComponent> WOLF_SOUND_VARIANT = define("wolf/sound_variant",
+            WolfSoundVariantComponent::read, WolfSoundVariantComponent::write);
+    /**
+     * Added with 1.21.5
+     */
+    public static final ComponentType<WolfCollarComponent> WOLF_COLLAR = define("wolf/collar",
+            WolfCollarComponent::read, WolfCollarComponent::write);
+    /**
+     * Added with 1.21.5
+     */
+    public static final ComponentType<FoxVariantComponent> FOX_VARIANT = define("fox/variant",
+            FoxVariantComponent::read, FoxVariantComponent::write);
+    /**
+     * Added with 1.21.5
+     */
+    public static final ComponentType<SalmonSizeComponent> SALMON_SIZE = define("salmon/size",
+            SalmonSizeComponent::read, SalmonSizeComponent::write);
+    /**
+     * Added with 1.21.5
+     */
+    public static final ComponentType<ParrotVariantComponent> PARROT_VARIANT = define("parrot/variant",
+            ParrotVariantComponent::read, ParrotVariantComponent::write);
+    /**
+     * Added with 1.21.5
+     */
+    public static final ComponentType<TropicalFishPatternComponent> TROPICAL_FISH_PATTERN = define("tropical_fish/pattern",
+            TropicalFishPatternComponent::read, TropicalFishPatternComponent::write);
+    /**
+     * Added with 1.21.5
+     */
+    public static final ComponentType<TropicalFishBaseColorComponent> TROPICAL_FISH_BASE_COLOR = define("tropical_fish/base_color",
+            TropicalFishBaseColorComponent::read, TropicalFishBaseColorComponent::write);
+    /**
+     * Added with 1.21.5
+     */
+    public static final ComponentType<TropicalFishPatternColorComponent> TROPICAL_FISH_PATTERN_COLOR = define("tropical_fish/pattern_color",
+            TropicalFishPatternColorComponent::read, TropicalFishPatternColorComponent::write);
+    /**
+     * Added with 1.21.5
+     */
+    public static final ComponentType<MooshroomVariantComponent> MOOSHROOM_VARIANT = define("mooshroom/variant",
+            MooshroomVariantComponent::read, MooshroomVariantComponent::write);
+    /**
+     * Added with 1.21.5
+     */
+    public static final ComponentType<RabbitVariantComponent> RABBIT_VARIANT = define("rabbit/variant",
+            RabbitVariantComponent::read, RabbitVariantComponent::write);
+    /**
+     * Added with 1.21.5
+     */
+    public static final ComponentType<PigVariantComponent> PIG_VARIANT = define("pig/variant",
+            PigVariantComponent::read, PigVariantComponent::write);
+    /**
+     * Added with 1.21.5
+     */
+    public static final ComponentType<CowVariantComponent> COW_VARIANT = define("cow/variant",
+            CowVariantComponent::read, CowVariantComponent::write);
+    /**
+     * Added with 1.21.5
+     */
+    public static final ComponentType<ChickenVariantComponent> CHICKEN_VARIANT = define("chicken/variant",
+            ChickenVariantComponent::read, ChickenVariantComponent::write);
+    /**
+     * Added with 1.21.5
+     */
+    public static final ComponentType<FrogVariantComponent> FROG_VARIANT = define("frog/variant",
+            FrogVariantComponent::read, FrogVariantComponent::write);
+    /**
+     * Added with 1.21.5
+     */
+    public static final ComponentType<HorseVariantComponent> HORSE_VARIANT = define("horse/variant",
+            HorseVariantComponent::read, HorseVariantComponent::write);
+    /**
+     * Added with 1.21.5
+     */
+    public static final ComponentType<PaintingVariantComponent> PAINTING_VARIANT = define("painting/variant",
+            PaintingVariantComponent::read, PaintingVariantComponent::write);
+    /**
+     * Added with 1.21.5
+     */
+    public static final ComponentType<LlamaVariantComponent> LLAMA_VARIANT = define("llama/variant",
+            LlamaVariantComponent::read, LlamaVariantComponent::write);
+    /**
+     * Added with 1.21.5
+     */
+    public static final ComponentType<AxolotlVariantComponent> AXOLOTL_VARIANT = define("axolotl/variant",
+            AxolotlVariantComponent::read, AxolotlVariantComponent::write);
+    /**
+     * Added with 1.21.5
+     */
+    public static final ComponentType<CatVariantComponent> CAT_VARIANT = define("cat/variant",
+            CatVariantComponent::read, CatVariantComponent::write);
+    /**
+     * Added with 1.21.5
+     */
+    public static final ComponentType<CatCollarComponent> CAT_COLLAR = define("cat/collar",
+            CatCollarComponent::read, CatCollarComponent::write);
+    /**
+     * Added with 1.21.5
+     */
+    public static final ComponentType<SheepColorComponent> SHEEP_COLOR = define("sheep/color",
+            SheepColorComponent::read, SheepColorComponent::write);
+    /**
+     * Added with 1.21.5
+     */
+    public static final ComponentType<ShulkerColorComponent> SHULKER_COLOR = define("shulker/color",
+            ShulkerColorComponent::read, ShulkerColorComponent::write);
 
     /**
      * Returns an immutable view of the component types.
