@@ -195,14 +195,16 @@ public class DataPalette {
             NetStreamInput in,
             boolean allowSingletonPalette
     ) {
-        if (bitsPerEntry > paletteType.getMaxBitsPerEntry()) {
-            return new GlobalPalette();
-        } else if (bitsPerEntry == 0 && allowSingletonPalette) {
+        if (bitsPerEntry == 0 && allowSingletonPalette) {
             return new SingletonPalette(in);
-        } else if (bitsPerEntry <= paletteType.getMinBitsPerEntry()) {
-            return new ListPalette(bitsPerEntry, in);
-        } else {
+        } else if (bitsPerEntry <= paletteType.getMaxBitsPerEntryForList()) {
+            // vanilla forces a blockstate-list-palette to always be the maximum size
+            int bits = paletteType.isForceMaxListPaletteSize() ? paletteType.getMaxBitsPerEntryForList() : bitsPerEntry;
+            return new ListPalette(bits, in);
+        } else if (bitsPerEntry <= paletteType.getMaxBitsPerEntryForMap()) {
             return new MapPalette(bitsPerEntry, in);
+        } else {
+            return GlobalPalette.INSTANCE;
         }
     }
 
@@ -233,7 +235,8 @@ public class DataPalette {
 
     private static Palette createPalette(int bitsPerEntry, PaletteType paletteType) {
         if (bitsPerEntry <= paletteType.getMaxBitsPerEntryForList()) {
-            return new ListPalette(bitsPerEntry);
+            int bits = paletteType.isForceMaxListPaletteSize() ? paletteType.getMaxBitsPerEntryForList() : bitsPerEntry;
+            return new ListPalette(bits);
         } else if (bitsPerEntry <= paletteType.getMaxBitsPerEntryForMap()) {
             return new MapPalette(bitsPerEntry);
         } else {

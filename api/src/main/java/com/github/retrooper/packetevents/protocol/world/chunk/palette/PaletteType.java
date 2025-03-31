@@ -34,7 +34,7 @@ public enum PaletteType {
      * <li>else → {@link GlobalPalette}</li>
      * </ul>
      */
-    BIOME(3, 0, 2, 4 * 4 * 4),
+    BIOME(3, 3, false, 2),
     /**
      * <ul>
      * <li>0, 1, 2, 3 or 4 bits → {@link ListPalette}</li>
@@ -49,18 +49,25 @@ public enum PaletteType {
      * <li>else → {@link GlobalPalette}</li>
      * </ul>
      */
-    CHUNK(4, 8, 4, 16 * 16 * 16);
+    CHUNK(4, 8, true, 4);
 
     private final int maxBitsPerEntryForList;
     private final int maxBitsPerEntryForMap;
+    private final boolean forceMaxListPaletteSize;
     private final int bitShift;
     private final int storageSize;
 
-    PaletteType(int maxBitsPerEntryForList, int maxBitsPerEntryForMap, int bitShift, int storageSize) {
+    PaletteType(
+            int maxBitsPerEntryForList,
+            int maxBitsPerEntryForMap,
+            boolean forceMaxListPaletteSize,
+            int bitShift
+    ) {
         this.maxBitsPerEntryForList = maxBitsPerEntryForList;
         this.maxBitsPerEntryForMap = maxBitsPerEntryForMap;
+        this.forceMaxListPaletteSize = forceMaxListPaletteSize;
         this.bitShift = bitShift;
-        this.storageSize = storageSize;
+        this.storageSize = 1 << bitShift * 3;
     }
 
     public static void write(PacketWrapper<?> wrapper, DataPalette palette) {
@@ -90,6 +97,10 @@ public enum PaletteType {
 
     public int getMaxBitsPerEntryForMap() {
         return this.maxBitsPerEntryForMap;
+    }
+
+    public boolean isForceMaxListPaletteSize() {
+        return this.forceMaxListPaletteSize;
     }
 
     public int getBitShift() {

@@ -29,6 +29,9 @@ package com.github.retrooper.packetevents.protocol.world.chunk.palette;
  */
 //TODO Equals & hashcode
 public class GlobalPalette implements Palette {
+
+    public static final GlobalPalette INSTANCE = new GlobalPalette();
+
     @Override
     public int size() {
         return Integer.MAX_VALUE;
