@@ -66,13 +66,16 @@ public class Chunk_v1_9 implements BaseChunk {
      */
     @Deprecated
     public Chunk_v1_9(NetStreamInput in, boolean hasBlockLight, boolean hasSkyLight) {
-        boolean isFourteen = PacketEvents.getAPI().getServerManager().getVersion().isNewerThanOrEquals(ServerVersion.V_1_14);
-        boolean isSixteen = PacketEvents.getAPI().getServerManager().getVersion().isNewerThanOrEquals(ServerVersion.V_1_16);
+        this(in, hasBlockLight, hasSkyLight, PacketEvents.getAPI().getServerManager().getVersion());
+    }
 
+    @Deprecated
+    private Chunk_v1_9(NetStreamInput in, boolean hasBlockLight, boolean hasSkyLight, ServerVersion version) {
         // 1.14+ includes block count in chunk data
-        this.blockCount = isFourteen ? in.readShort() : Integer.MAX_VALUE;
+        this.blockCount = version.isNewerThanOrEquals(ServerVersion.V_1_14)
+                ? in.readShort() : Integer.MAX_VALUE;
         // singleton palette got added with 1.18 which isn't supported by this chunk section implementation
-        this.dataPalette = isSixteen
+        this.dataPalette = version.isNewerThanOrEquals(ServerVersion.V_1_16)
                 ? DataPalette.read(in, PaletteType.CHUNK, false)
                 : DataPalette.readLegacy(in);
 
@@ -82,7 +85,7 @@ public class Chunk_v1_9 implements BaseChunk {
 
     public static Chunk_v1_9 read(PacketWrapper<?> wrapper, boolean hasBlockLight, boolean hasSkyLight) {
         NetStreamInputWrapper legacyInput = new NetStreamInputWrapper(wrapper);
-        return new Chunk_v1_9(legacyInput, hasBlockLight, hasSkyLight);
+        return new Chunk_v1_9(legacyInput, hasBlockLight, hasSkyLight, wrapper.getServerVersion());
     }
 
     public static void write(PacketWrapper<?> wrapper, Chunk_v1_9 chunk) {
@@ -95,10 +98,13 @@ public class Chunk_v1_9 implements BaseChunk {
      */
     @Deprecated
     public static void write(NetStreamOutput out, Chunk_v1_9 chunk) {
-        boolean isFourteen = PacketEvents.getAPI().getServerManager().getVersion().isNewerThanOrEquals(ServerVersion.V_1_14);
+        write(out, chunk, PacketEvents.getAPI().getServerManager().getVersion());
+    }
 
+    @Deprecated
+    private static void write(NetStreamOutput out, Chunk_v1_9 chunk, ServerVersion version) {
         // 1.14+ includes block count in chunk data
-        if (isFourteen) {
+        if (version.isNewerThanOrEquals(ServerVersion.V_1_14)) {
             out.writeShort(chunk.blockCount);
         }
 
