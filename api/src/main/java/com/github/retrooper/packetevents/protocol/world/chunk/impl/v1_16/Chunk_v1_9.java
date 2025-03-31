@@ -90,7 +90,7 @@ public class Chunk_v1_9 implements BaseChunk {
 
     public static void write(PacketWrapper<?> wrapper, Chunk_v1_9 chunk) {
         NetStreamOutputWrapper legacyOutput = new NetStreamOutputWrapper(wrapper);
-        write(legacyOutput, chunk);
+        write(legacyOutput, chunk, wrapper.getServerVersion());
     }
 
     /**
