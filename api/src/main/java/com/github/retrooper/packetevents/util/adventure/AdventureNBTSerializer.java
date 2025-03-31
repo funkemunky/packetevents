@@ -387,7 +387,7 @@ public class AdventureNBTSerializer implements ComponentSerializer<Component, Co
             HoverEvent.Action action = hoverEvent.readUTF("action", HoverEvent.Action.NAMES::value);
             switch (action.toString()) {
                 case "show_text":
-                    style.hoverEvent(HoverEvent.showText(hoverEvent.read("contents", this::deserialize)));
+                    style.hoverEvent(HoverEvent.showText(hoverEvent.read(modernEvents ? "value" : "contents", this::deserialize)));
                     break;
                 case "show_item":
                     if (!modernEvents && hoverEvent.type("contents") == NBTType.STRING) {
