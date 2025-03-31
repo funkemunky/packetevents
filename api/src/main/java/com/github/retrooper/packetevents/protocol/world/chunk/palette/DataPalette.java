@@ -149,7 +149,7 @@ public class DataPalette {
      */
     @Deprecated
     public static DataPalette readLegacy(NetStreamInput in) {
-        int bitsPerEntry = in.readByte() & 0xff;
+        int bitsPerEntry = Math.max(4, in.readByte() & 0xff);
         Palette palette = readPalette(PaletteType.CHUNK, bitsPerEntry, in, false);
         BaseStorage storage = new LegacyFlexibleStorage(bitsPerEntry, in.readLongs(in.readVarInt()));
         return new DataPalette(palette, storage, PaletteType.CHUNK);
