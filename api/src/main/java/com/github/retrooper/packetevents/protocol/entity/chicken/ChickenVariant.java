@@ -49,7 +49,7 @@ public interface ChickenVariant extends MappedEntity, CopyableEntity<ChickenVari
     static ChickenVariant decode(NBT nbt, ClientVersion version, @Nullable TypesBuilderData data) {
         NBTCompound compound = (NBTCompound) nbt;
         String modelTypeString = compound.getStringTagValueOrNull("model");
-        ModelType modelType = modelTypeString != null ? ModelType.getByName(modelTypeString) : null;
+        ModelType modelType = modelTypeString != null ? ModelType.getByName(modelTypeString) : ModelType.NORMAL;
         ResourceLocation assetId = new ResourceLocation(compound.getStringTagValueOrThrow("asset_id"));
         return new StaticChickenVariant(data, modelType, assetId);
     }

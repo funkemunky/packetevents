@@ -49,7 +49,7 @@ public interface CowVariant extends MappedEntity, CopyableEntity<CowVariant>, De
     static CowVariant decode(NBT nbt, ClientVersion version, @Nullable TypesBuilderData data) {
         NBTCompound compound = (NBTCompound) nbt;
         String modelTypeString = compound.getStringTagValueOrNull("model");
-        ModelType modelType = modelTypeString != null ? ModelType.getByName(modelTypeString) : null;
+        ModelType modelType = modelTypeString != null ? ModelType.getByName(modelTypeString) : ModelType.NORMAL;
         ResourceLocation assetId = new ResourceLocation(compound.getStringTagValueOrThrow("asset_id"));
         return new StaticCowVariant(data, modelType, assetId);
     }

@@ -49,7 +49,7 @@ public interface PigVariant extends MappedEntity, CopyableEntity<PigVariant>, De
     static PigVariant decode(NBT nbt, ClientVersion version, @Nullable TypesBuilderData data) {
         NBTCompound compound = (NBTCompound) nbt;
         String modelTypeString = compound.getStringTagValueOrNull("model");
-        ModelType modelType = modelTypeString != null ? ModelType.getByName(modelTypeString) : null;
+        ModelType modelType = modelTypeString != null ? ModelType.getByName(modelTypeString) : ModelType.NORMAL;
         ResourceLocation assetId = new ResourceLocation(compound.getStringTagValueOrThrow("asset_id"));
         return new StaticPigVariant(data, modelType, assetId);
     }
