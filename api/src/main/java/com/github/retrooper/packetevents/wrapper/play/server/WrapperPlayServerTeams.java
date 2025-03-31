@@ -23,7 +23,6 @@ import com.github.retrooper.packetevents.manager.server.ServerVersion;
 import com.github.retrooper.packetevents.protocol.packettype.PacketType;
 import com.github.retrooper.packetevents.util.ColorUtil;
 import com.github.retrooper.packetevents.util.LegacyFormat;
-import com.github.retrooper.packetevents.util.adventure.AdventureSerializer;
 import com.github.retrooper.packetevents.wrapper.PacketWrapper;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
@@ -42,7 +41,10 @@ public class WrapperPlayServerTeams extends PacketWrapper<WrapperPlayServerTeams
     private Optional<ScoreBoardTeamInfo> teamInfo;
 
     public enum OptionData {
-        NONE((byte) 0x00), FRIENDLY_FIRE((byte) 0x01), FRIENDLY_CAN_SEE_INVISIBLE((byte) 0x02), ALL((byte) 0x03);
+        NONE((byte) 0x00),
+        FRIENDLY_FIRE((byte) 0x01),
+        FRIENDLY_CAN_SEE_INVISIBLE((byte) 0x02),
+        ALL((byte) 0x03);
 
         private static final OptionData[] VALUES = values();
         private final byte byteValue;
@@ -67,7 +69,10 @@ public class WrapperPlayServerTeams extends PacketWrapper<WrapperPlayServerTeams
     }
 
     public enum NameTagVisibility {
-        ALWAYS("always"), NEVER("never"), HIDE_FOR_OTHER_TEAMS("hideForOtherTeams"), HIDE_FOR_OWN_TEAM("hideForOwnTeam");
+        ALWAYS("always"),
+        NEVER("never"),
+        HIDE_FOR_OTHER_TEAMS("hideForOtherTeams"),
+        HIDE_FOR_OWN_TEAM("hideForOwnTeam");
 
         private final String id;
 
@@ -91,7 +96,10 @@ public class WrapperPlayServerTeams extends PacketWrapper<WrapperPlayServerTeams
     }
 
     public enum CollisionRule {
-        ALWAYS("always"), NEVER("never"), PUSH_OTHER_TEAMS("pushOtherTeams"), PUSH_OWN_TEAM("pushOwnTeam");
+        ALWAYS("always"),
+        NEVER("never"),
+        PUSH_OTHER_TEAMS("pushOtherTeams"),
+        PUSH_OWN_TEAM("pushOwnTeam");
 
         private final String id;
 
@@ -116,7 +124,11 @@ public class WrapperPlayServerTeams extends PacketWrapper<WrapperPlayServerTeams
     }
 
     public enum TeamMode {
-        CREATE, REMOVE, UPDATE, ADD_ENTITIES, REMOVE_ENTITIES;
+        CREATE,
+        REMOVE,
+        UPDATE,
+        ADD_ENTITIES,
+        REMOVE_ENTITIES;
     }
 
     public WrapperPlayServerTeams(PacketSendEvent event) {
@@ -171,14 +183,9 @@ public class WrapperPlayServerTeams extends PacketWrapper<WrapperPlayServerTeams
                     nameTagVisibility = NameTagVisibility.ALWAYS;
                     color = NamedTextColor.WHITE;
                 } else {
-                    if (serverVersion.isNewerThanOrEquals(ServerVersion.V_1_21_5)) {
-                        nameTagVisibility = readEnum(NameTagVisibility.class);
-                        collisionRule = readEnum(CollisionRule.class);
-                    } else {
-                        nameTagVisibility = NameTagVisibility.fromID(readString(32));
-                        if (serverVersion.isNewerThanOrEquals(ServerVersion.V_1_9)) {
-                            collisionRule = CollisionRule.fromID(readString(32));
-                        }
+                    nameTagVisibility = NameTagVisibility.fromID(readString(32));
+                    if (serverVersion.isNewerThanOrEquals(ServerVersion.V_1_9)) {
+                        collisionRule = CollisionRule.fromID(readString(32));
                     }
                     if (serverVersion.isNewerThanOrEquals(ServerVersion.V_1_17)) {
                         // starting from 1.17, the color is sent with ColorFormatting enum ordinal
@@ -193,8 +200,13 @@ public class WrapperPlayServerTeams extends PacketWrapper<WrapperPlayServerTeams
             } else {
                 displayName = readComponent();
                 optionData = OptionData.fromValue(readByte());
-                nameTagVisibility = NameTagVisibility.fromID(readString(40));
-                collisionRule = CollisionRule.fromID(readString(40));
+                if (this.serverVersion.isNewerThanOrEquals(ServerVersion.V_1_21_5)) {
+                    nameTagVisibility = this.readEnum(NameTagVisibility.class);
+                    collisionRule = this.readEnum(CollisionRule.class);
+                } else {
+                    nameTagVisibility = NameTagVisibility.fromID(this.readString(40));
+                    collisionRule = CollisionRule.fromID(this.readString(40));
+                }
                 color = ColorUtil.fromId(readByte());
                 prefix = readComponent();
                 suffix = readComponent();
