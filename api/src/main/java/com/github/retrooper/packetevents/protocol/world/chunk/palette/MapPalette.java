@@ -33,17 +33,16 @@ import java.util.HashMap;
  * A palette backed by a map.
  */
 public class MapPalette implements Palette {
-    private final int maxId;
 
+    private final int bits;
     private final int[] idToState;
     // TODO: Can we use fastutils here?
     private final HashMap<Object, Integer> stateToId = new HashMap<>();
     private int nextId = 0;
 
     public MapPalette(int bitsPerEntry) {
-        this.maxId = (1 << bitsPerEntry) - 1;
-
-        this.idToState = new int[this.maxId + 1];
+        this.bits = bitsPerEntry;
+        this.idToState = new int[1 << bitsPerEntry];
     }
 
     @Deprecated
@@ -79,7 +78,7 @@ public class MapPalette implements Palette {
     @Override
     public int stateToId(int state) {
         Integer id = this.stateToId.get(state);
-        if (id == null && this.size() < this.maxId + 1) {
+        if (id == null && this.size() < this.idToState.length) {
             id = this.nextId++;
             this.idToState[id] = state;
             this.stateToId.put(state, id);
@@ -99,5 +98,10 @@ public class MapPalette implements Palette {
         } else {
             return 0;
         }
+    }
+
+    @Override
+    public int getBits() {
+        return this.bits;
     }
 }

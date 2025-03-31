@@ -32,15 +32,14 @@ import com.github.retrooper.packetevents.wrapper.PacketWrapper;
  */
 //TODO Equals & hashcode
 public class ListPalette implements Palette {
-    private final int maxId;
 
+    private final int bits;
     private final int[] data;
     private int nextId = 0;
 
     public ListPalette(int bitsPerEntry) {
-        this.maxId = (1 << bitsPerEntry) - 1;
-
-        this.data = new int[this.maxId + 1];
+        this.bits = bitsPerEntry;
+        this.data = new int[1 << bitsPerEntry];
     }
 
     @Deprecated
@@ -78,7 +77,7 @@ public class ListPalette implements Palette {
                 break;
             }
         }
-        if (id == -1 && this.size() < this.maxId + 1) {
+        if (id == -1 && this.size() < this.data.length) {
             id = this.nextId++;
             this.data[id] = state;
         }
@@ -93,5 +92,10 @@ public class ListPalette implements Palette {
         } else {
             return 0;
         }
+    }
+
+    @Override
+    public int getBits() {
+        return this.bits;
     }
 }

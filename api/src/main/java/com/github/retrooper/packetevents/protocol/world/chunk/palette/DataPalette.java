@@ -27,9 +27,6 @@ import com.github.retrooper.packetevents.wrapper.PacketWrapper;
 
 public class DataPalette {
 
-    // this is the amount of bits required to store the biggest state id number
-    public static final int GLOBAL_PALETTE_BITS_PER_ENTRY = 15;
-
     public final PaletteType paletteType;
     public Palette palette;
     public BaseStorage storage;
@@ -95,6 +92,7 @@ public class DataPalette {
             long[] data = lengthPrefix ? in.readLongs(in.readVarInt()) : null;
             storage = new BitStorage(bitsPerEntry, paletteType.getStorageSize(), data);
             if (!lengthPrefix) {
+                // TODO what happens if "bitsPerEntry" != "palette.getBits()"?
                 in.readLongs(storage.getData());
             }
         } else {
@@ -208,28 +206,21 @@ public class DataPalette {
         }
     }
 
-    private int sanitizeBitsPerEntry(int bitsPerEntry) {
-        if (bitsPerEntry > this.paletteType.getMaxBitsPerEntryForMap()) {
-            return GLOBAL_PALETTE_BITS_PER_ENTRY;
-        }
-        return bitsPerEntry;
-    }
-
     private void resizeOneUp() {
         Palette oldPalette = this.palette;
         BaseStorage oldData = this.storage;
 
-        int prevBitsPerEntry = oldPalette instanceof SingletonPalette ? 0 : oldData.getBitsPerEntry();
-        int bitsPerEntry = this.sanitizeBitsPerEntry(prevBitsPerEntry + 1);
-        this.palette = createPalette(bitsPerEntry, this.paletteType);
-        this.storage = new BitStorage(bitsPerEntry, this.paletteType.getStorageSize());
+        int prevBitsPerEntry = oldData != null ? oldData.getBitsPerEntry() : 0;
+        this.palette = createPalette(prevBitsPerEntry + 1, this.paletteType);
+        this.storage = new BitStorage(this.palette.getBits(), this.paletteType.getStorageSize());
 
-        if (oldPalette instanceof SingletonPalette) {
-            this.palette.stateToId(oldPalette.idToState(0));
-        } else {
-            for (int i = 0, len = this.paletteType.getStorageSize(); i < len; i++) {
+        if (oldData != null) {
+            // copy over storage
+            for (int i = 0, len = this.paletteType.getStorageSize(); i < len; ++i) {
                 this.storage.set(i, this.palette.stateToId(oldPalette.idToState(oldData.get(i))));
             }
+        } else {
+            this.palette.stateToId(oldPalette.idToState(0));
         }
     }
 
@@ -240,7 +231,7 @@ public class DataPalette {
         } else if (bitsPerEntry <= paletteType.getMaxBitsPerEntryForMap()) {
             return new MapPalette(bitsPerEntry);
         } else {
-            return new GlobalPalette();
+            return GlobalPalette.INSTANCE;
         }
     }
 

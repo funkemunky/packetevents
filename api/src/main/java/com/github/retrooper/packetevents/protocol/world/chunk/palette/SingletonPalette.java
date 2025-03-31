@@ -64,4 +64,9 @@ public class SingletonPalette implements Palette {
         }
         return 0;
     }
+
+    @Override
+    public int getBits() {
+        return 0;
+    }
 }
