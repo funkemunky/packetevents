@@ -45,6 +45,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.EnumMap;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Objects;
@@ -380,7 +381,7 @@ public class WrappedBlockState {
                     SequentialNBTReader.Compound dataContent = (SequentialNBTReader.Compound) element.getValue();
                     StateCacheValue stateCache;
                     if (dataContent.hasNext()) { // only try to read if there is data available
-                        Map<StateValue, Object> dataMap = new HashMap<>(3);
+                        Map<StateValue, Object> dataMap = new LinkedHashMap<>(3);
                         for (Map.Entry<String, NBT> props : dataContent) {
                             StateValue state = StateValue.byName(props.getKey());
                             if (state == null) {
@@ -482,7 +483,7 @@ public class WrappedBlockState {
                     SequentialNBTReader.Compound dataContent = (SequentialNBTReader.Compound) nbt;
                     StateCacheValue stateCache;
                     if (dataContent.hasNext()) { // only try to read if there is data available
-                        Map<StateValue, Object> dataMap = new HashMap<>(3);
+                        Map<StateValue, Object> dataMap = new LinkedHashMap<>(3);
                         for (Map.Entry<String, NBT> props : dataContent) {
                             StateValue state = StateValue.byName(props.getKey());
                             if (state == null) {
