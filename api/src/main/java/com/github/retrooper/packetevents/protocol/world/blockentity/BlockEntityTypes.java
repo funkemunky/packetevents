@@ -20,6 +20,7 @@ package com.github.retrooper.packetevents.protocol.world.blockentity;
 
 import com.github.retrooper.packetevents.protocol.player.ClientVersion;
 import com.github.retrooper.packetevents.util.mappings.VersionedRegistry;
+import org.jetbrains.annotations.ApiStatus;
 
 import java.util.Collection;
 
@@ -85,6 +86,8 @@ public final class BlockEntityTypes {
     public static final BlockEntityType SCULK_CATALYST = define("sculk_catalyst");
     public static final BlockEntityType SCULK_SHRIEKER = define("sculk_shrieker");
     public static final BlockEntityType CHISELED_BOOKSHELF = define("chiseled_bookshelf");
+    @ApiStatus.Obsolete
+    public static final BlockEntityType SUSPICIOUS_SAND = define("suspicious_sand");
     public static final BlockEntityType BRUSHABLE_BLOCK = define("brushable_block");
     public static final BlockEntityType DECORATED_POT = define("decorated_pot");
     public static final BlockEntityType CRAFTER = define("crafter");

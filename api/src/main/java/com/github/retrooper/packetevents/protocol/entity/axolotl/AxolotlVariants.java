@@ -42,7 +42,7 @@ public final class AxolotlVariants {
     public static final AxolotlVariant WILD = define("wild");
     public static final AxolotlVariant GOLD = define("gold");
     public static final AxolotlVariant CYAN = define("cyan");
-    public static final AxolotlVariant BROWN = define("brown");
+    public static final AxolotlVariant BLUE = define("blue");
 
     static {
         REGISTRY.unloadMappings();

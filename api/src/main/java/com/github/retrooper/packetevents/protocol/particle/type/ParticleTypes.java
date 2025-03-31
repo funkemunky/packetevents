@@ -82,6 +82,19 @@ public final class ParticleTypes {
     public static final ParticleType<ParticleBlockStateData> BLOCK = define("block",
             ParticleBlockStateData::read, ParticleBlockStateData::write,
             ParticleBlockStateData::decode, ParticleBlockStateData::encode);
+    /**
+     * Removed with 1.18
+     */
+    @ApiStatus.Obsolete
+    public static final ParticleType<ParticleData> BARRIER = define("barrier");
+    /**
+     * Removed with 1.18
+     */
+    @ApiStatus.Obsolete
+    public static final ParticleType<ParticleData> LIGHT = define("light");
+    /**
+     * Added with 1.18
+     */
     public static final ParticleType<ParticleBlockStateData> BLOCK_MARKER = define("block_marker",
             ParticleBlockStateData::read, ParticleBlockStateData::write,
             ParticleBlockStateData::decode, ParticleBlockStateData::encode);

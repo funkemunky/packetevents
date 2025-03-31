@@ -189,6 +189,7 @@ public class ClassStructureTest extends BaseDummyAPITest {
                     assert entries != null; // ensured above
                     String invalidEntries = entries.values().stream()
                             .flatMap(map -> map.keySet().stream())
+                            .filter(name -> !name.startsWith("__missing_"))
                             .map(ResourceLocation::normString)
                             .distinct()
                             .filter(name -> registry.getByName(name) == null)

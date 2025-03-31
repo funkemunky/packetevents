@@ -29,7 +29,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.List;
 import java.util.Objects;
 
-public class ItemBlocksAttack {
+public class ItemBlocksAttacks {
 
     private float blockDelaySeconds;
     private float disableCooldownScale;
@@ -39,7 +39,7 @@ public class ItemBlocksAttack {
     private @Nullable Sound blockSound;
     private @Nullable Sound disableSound;
 
-    public ItemBlocksAttack(
+    public ItemBlocksAttacks(
             float blockDelaySeconds, float disableCooldownScale, List<DamageReduction> damageReductions,
             ItemDamageFunction itemDamage, @Nullable ResourceLocation bypassedBy,
             @Nullable Sound blockSound, @Nullable Sound disableSound
@@ -53,7 +53,7 @@ public class ItemBlocksAttack {
         this.disableSound = disableSound;
     }
 
-    public static ItemBlocksAttack read(PacketWrapper<?> wrapper) {
+    public static ItemBlocksAttacks read(PacketWrapper<?> wrapper) {
         float blockDelaySeconds = wrapper.readFloat();
         float disableCooldownScale = wrapper.readFloat();
         List<DamageReduction> damageReductions = wrapper.readList(DamageReduction::read);
@@ -61,12 +61,12 @@ public class ItemBlocksAttack {
         ResourceLocation bypassedBy = wrapper.readOptional(PacketWrapper::readIdentifier);
         Sound blockSound = wrapper.readOptional(Sound::read);
         Sound disableSound = wrapper.readOptional(Sound::read);
-        return new ItemBlocksAttack(
+        return new ItemBlocksAttacks(
                 blockDelaySeconds, disableCooldownScale, damageReductions,
                 itemDamage, bypassedBy, blockSound, disableSound);
     }
 
-    public static void write(PacketWrapper<?> wrapper, ItemBlocksAttack attack) {
+    public static void write(PacketWrapper<?> wrapper, ItemBlocksAttacks attack) {
         wrapper.writeFloat(attack.blockDelaySeconds);
         wrapper.writeFloat(attack.disableCooldownScale);
         wrapper.writeList(attack.damageReductions, DamageReduction::write);
@@ -134,8 +134,8 @@ public class ItemBlocksAttack {
 
     @Override
     public boolean equals(Object obj) {
-        if (!(obj instanceof ItemBlocksAttack)) return false;
-        ItemBlocksAttack that = (ItemBlocksAttack) obj;
+        if (!(obj instanceof ItemBlocksAttacks)) return false;
+        ItemBlocksAttacks that = (ItemBlocksAttacks) obj;
         if (Float.compare(that.blockDelaySeconds, this.blockDelaySeconds) != 0) return false;
         if (Float.compare(that.disableCooldownScale, this.disableCooldownScale) != 0) return false;
         if (!this.damageReductions.equals(that.damageReductions)) return false;

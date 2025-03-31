@@ -536,6 +536,8 @@ public final class ItemTypes {
     public static final ItemType QUARTZ_STAIRS = builder("quartz_stairs").setMaxAmount(64).setPlacedType(StateTypes.QUARTZ_STAIRS).build();
     public static final ItemType RAIL = builder("rail").setMaxAmount(64).setPlacedType(StateTypes.RAIL).build();
     public static final ItemType WHITE_BANNER = builder("white_banner").setMaxAmount(16).setPlacedType(StateTypes.WHITE_BANNER).setAttributes(ItemAttribute.FUEL).build();
+    @ApiStatus.Obsolete
+    public static final ItemType WHITE_WALL_BANNER = builder("white_wall_banner").setMaxAmount(16).setPlacedType(StateTypes.WHITE_WALL_BANNER).setAttributes(ItemAttribute.FUEL).build();
     public static final ItemType MOSS_BLOCK = builder("moss_block").setMaxAmount(64).setPlacedType(StateTypes.MOSS_BLOCK).build();
     public static final ItemType BLUE_STAINED_GLASS = builder("blue_stained_glass").setMaxAmount(64).setPlacedType(StateTypes.BLUE_STAINED_GLASS).build();
     public static final ItemType GREEN_TERRACOTTA = builder("green_terracotta").setMaxAmount(64).setPlacedType(StateTypes.GREEN_TERRACOTTA).build();

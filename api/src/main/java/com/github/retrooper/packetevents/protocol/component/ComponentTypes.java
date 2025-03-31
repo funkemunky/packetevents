@@ -55,7 +55,7 @@ import com.github.retrooper.packetevents.protocol.component.builtin.item.ItemAdv
 import com.github.retrooper.packetevents.protocol.component.builtin.item.ItemAttributeModifiers;
 import com.github.retrooper.packetevents.protocol.component.builtin.item.ItemBees;
 import com.github.retrooper.packetevents.protocol.component.builtin.item.ItemBlockStateProperties;
-import com.github.retrooper.packetevents.protocol.component.builtin.item.ItemBlocksAttack;
+import com.github.retrooper.packetevents.protocol.component.builtin.item.ItemBlocksAttacks;
 import com.github.retrooper.packetevents.protocol.component.builtin.item.ItemBreakSound;
 import com.github.retrooper.packetevents.protocol.component.builtin.item.ItemConsumable;
 import com.github.retrooper.packetevents.protocol.component.builtin.item.ItemContainerContents;
@@ -329,8 +329,8 @@ public final class ComponentTypes {
     /**
      * Added with 1.21.5
      */
-    public static final ComponentType<ItemBlocksAttack> BLOCKS_ATTACK = define("blocks_attack",
-            ItemBlocksAttack::read, ItemBlocksAttack::write);
+    public static final ComponentType<ItemBlocksAttacks> BLOCKS_ATTACKS = define("blocks_attacks",
+            ItemBlocksAttacks::read, ItemBlocksAttacks::write);
     /**
      * Added with 1.21.5
      */
