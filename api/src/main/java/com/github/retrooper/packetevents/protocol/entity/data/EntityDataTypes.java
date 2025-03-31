@@ -266,12 +266,12 @@ public final class EntityDataTypes {
      * Added with 1.21.5
      */
     public static final EntityDataType<PigVariant> PIG_VARIANT =
-            define("pig_variant", PigVariant::read, PigVariant::write);
+            define("pig_variant_type", PigVariant::read, PigVariant::write);
     /**
      * Added with 1.21.5
      */
     public static final EntityDataType<ChickenVariant> CHICKEN_VARIANT =
-            define("chicken_variant", ChickenVariant::read, ChickenVariant::write);
+            define("chicken_variant_type", ChickenVariant::read, ChickenVariant::write);
 
     private EntityDataTypes() {
     }
