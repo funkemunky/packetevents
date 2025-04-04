@@ -22,6 +22,7 @@ import com.github.retrooper.packetevents.protocol.player.ClientVersion;
 import com.github.retrooper.packetevents.protocol.world.MaterialType;
 import com.github.retrooper.packetevents.resources.ResourceLocation;
 import com.github.retrooper.packetevents.util.mappings.VersionedRegistry;
+import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
@@ -524,6 +525,8 @@ public final class StateTypes {
     public static StateType BLACK_CARPET = StateTypes.builder().name("BLACK_CARPET").blastResistance(0.1f).hardness(0.1f).isBlocking(false).requiresCorrectTool(false).isSolid(true).setMaterial(MaterialType.CLOTH_DECORATION).build();
     public static StateType TERRACOTTA = StateTypes.builder().name("TERRACOTTA").blastResistance(4.2f).hardness(1.25f).isBlocking(true).requiresCorrectTool(true).isSolid(true).setMaterial(MaterialType.STONE).build();
     public static StateType PACKED_ICE = StateTypes.builder().name("PACKED_ICE").blastResistance(0.5f).hardness(0.5f).isBlocking(true).requiresCorrectTool(false).isSolid(true).setMaterial(MaterialType.ICE_SOLID).build();
+    @ApiStatus.Obsolete
+    public static StateType GRASS_PATH = StateTypes.builder().name("GRASS_PATH").blastResistance(0.65f).hardness(0.65f).isBlocking(true).requiresCorrectTool(false).isSolid(true).setMaterial(MaterialType.DIRT).build();
     public static StateType DIRT_PATH = StateTypes.builder().name("DIRT_PATH").blastResistance(0.65f).hardness(0.65f).isBlocking(true).requiresCorrectTool(false).isSolid(true).setMaterial(MaterialType.DIRT).build();
     public static StateType SUNFLOWER = StateTypes.builder().name("SUNFLOWER").blastResistance(0.0f).hardness(0.0f).isBlocking(false).requiresCorrectTool(false).isSolid(false).setMaterial(MaterialType.REPLACEABLE_PLANT).build();
     public static StateType LILAC = StateTypes.builder().name("LILAC").blastResistance(0.0f).hardness(0.0f).isBlocking(false).requiresCorrectTool(false).isSolid(false).setMaterial(MaterialType.REPLACEABLE_PLANT).build();
@@ -1196,6 +1199,17 @@ public final class StateTypes {
     public static StateType CLOSED_EYEBLOSSOM = StateTypes.builder().name("CLOSED_EYEBLOSSOM").blastResistance(0.0f).hardness(0.0f).isBlocking(false).requiresCorrectTool(false).isSolid(false).setMaterial(MaterialType.PLANT).build();
     public static StateType POTTED_OPEN_EYEBLOSSOM = StateTypes.builder().name("POTTED_OPEN_EYEBLOSSOM").blastResistance(0.0f).hardness(0.0f).isBlocking(false).requiresCorrectTool(false).isSolid(true).setMaterial(MaterialType.DECORATION).build();
     public static StateType POTTED_CLOSED_EYEBLOSSOM = StateTypes.builder().name("POTTED_CLOSED_EYEBLOSSOM").blastResistance(0.0f).hardness(0.0f).isBlocking(false).requiresCorrectTool(false).isSolid(true).setMaterial(MaterialType.DECORATION).build();
+
+    // 1.21.5 added types
+    public static StateType BUSH = StateTypes.builder().name("BUSH").blastResistance(0.0f).hardness(0.0f).isBlocking(false).requiresCorrectTool(false).isSolid(false).setMaterial(MaterialType.REPLACEABLE_PLANT).build();
+    public static StateType SHORT_DRY_GRASS = StateTypes.builder().name("SHORT_DRY_GRASS").blastResistance(0.0f).hardness(0.0f).isBlocking(false).requiresCorrectTool(false).isSolid(false).setMaterial(MaterialType.REPLACEABLE_PLANT).build();
+    public static StateType TALL_DRY_GRASS = StateTypes.builder().name("TALL_DRY_GRASS").blastResistance(0.0f).hardness(0.0f).isBlocking(false).requiresCorrectTool(false).isSolid(false).setMaterial(MaterialType.REPLACEABLE_PLANT).build();
+    public static StateType CACTUS_FLOWER = StateTypes.builder().name("CACTUS_FLOWER").blastResistance(0.0f).hardness(0.0f).isBlocking(false).requiresCorrectTool(false).isSolid(false).setMaterial(MaterialType.PLANT).build();
+    public static StateType TEST_BLOCK = StateTypes.builder().name("TEST_BLOCK").blastResistance(3600000.0f).hardness(-1.0f).isBlocking(true).requiresCorrectTool(false).isSolid(true).setMaterial(MaterialType.METAL).build();
+    public static StateType TEST_INSTANCE_BLOCK = StateTypes.builder().name("TEST_INSTANCE_BLOCK").blastResistance(3600000.0f).hardness(-1.0f).isBlocking(true).requiresCorrectTool(false).isSolid(true).setMaterial(MaterialType.METAL).build();
+    public static StateType WILDFLOWERS = StateTypes.builder().name("WILDFLOWERS").blastResistance(0.0f).hardness(0.0f).isBlocking(false).requiresCorrectTool(false).isSolid(false).setMaterial(MaterialType.PLANT).build();
+    public static StateType LEAF_LITTER = StateTypes.builder().name("LEAF_LITTER").blastResistance(0.0f).hardness(0.0f).isBlocking(false).requiresCorrectTool(false).isSolid(false).setMaterial(MaterialType.REPLACEABLE_PLANT).build();
+    public static StateType FIREFLY_BUSH = StateTypes.builder().name("FIREFLY_BUSH").blastResistance(0.0f).hardness(0.0f).isBlocking(false).requiresCorrectTool(false).isSolid(false).setMaterial(MaterialType.PLANT).build();
     // </editor-fold>
 
     static {
