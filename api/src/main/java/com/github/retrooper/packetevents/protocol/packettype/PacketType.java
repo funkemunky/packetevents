@@ -20,75 +20,50 @@ package com.github.retrooper.packetevents.protocol.packettype;
 
 import com.github.retrooper.packetevents.protocol.ConnectionState;
 import com.github.retrooper.packetevents.protocol.PacketSide;
-import com.github.retrooper.packetevents.protocol.packettype.clientbound.ClientboundPacketType_1_12;
-import com.github.retrooper.packetevents.protocol.packettype.clientbound.ClientboundPacketType_1_12_1;
-import com.github.retrooper.packetevents.protocol.packettype.clientbound.ClientboundPacketType_1_13;
-import com.github.retrooper.packetevents.protocol.packettype.clientbound.ClientboundPacketType_1_14;
-import com.github.retrooper.packetevents.protocol.packettype.clientbound.ClientboundPacketType_1_14_4;
-import com.github.retrooper.packetevents.protocol.packettype.clientbound.ClientboundPacketType_1_15;
-import com.github.retrooper.packetevents.protocol.packettype.clientbound.ClientboundPacketType_1_15_2;
-import com.github.retrooper.packetevents.protocol.packettype.clientbound.ClientboundPacketType_1_16;
-import com.github.retrooper.packetevents.protocol.packettype.clientbound.ClientboundPacketType_1_16_2;
-import com.github.retrooper.packetevents.protocol.packettype.clientbound.ClientboundPacketType_1_17;
-import com.github.retrooper.packetevents.protocol.packettype.clientbound.ClientboundPacketType_1_18;
-import com.github.retrooper.packetevents.protocol.packettype.clientbound.ClientboundPacketType_1_19;
-import com.github.retrooper.packetevents.protocol.packettype.clientbound.ClientboundPacketType_1_19_1;
-import com.github.retrooper.packetevents.protocol.packettype.clientbound.ClientboundPacketType_1_19_3;
-import com.github.retrooper.packetevents.protocol.packettype.clientbound.ClientboundPacketType_1_19_4;
-import com.github.retrooper.packetevents.protocol.packettype.clientbound.ClientboundPacketType_1_20_2;
-import com.github.retrooper.packetevents.protocol.packettype.clientbound.ClientboundPacketType_1_20_3;
-import com.github.retrooper.packetevents.protocol.packettype.clientbound.ClientboundPacketType_1_20_5;
-import com.github.retrooper.packetevents.protocol.packettype.clientbound.ClientboundPacketType_1_21;
-import com.github.retrooper.packetevents.protocol.packettype.clientbound.ClientboundPacketType_1_21_2;
-import com.github.retrooper.packetevents.protocol.packettype.clientbound.ClientboundPacketType_1_7_10;
-import com.github.retrooper.packetevents.protocol.packettype.clientbound.ClientboundPacketType_1_8;
-import com.github.retrooper.packetevents.protocol.packettype.clientbound.ClientboundPacketType_1_9;
-import com.github.retrooper.packetevents.protocol.packettype.clientbound.ClientboundPacketType_1_9_3;
+import com.github.retrooper.packetevents.protocol.packettype.clientbound.*;
 import com.github.retrooper.packetevents.protocol.packettype.config.clientbound.ClientboundConfigPacketType_1_20_2;
 import com.github.retrooper.packetevents.protocol.packettype.config.clientbound.ClientboundConfigPacketType_1_20_3;
 import com.github.retrooper.packetevents.protocol.packettype.config.clientbound.ClientboundConfigPacketType_1_20_5;
 import com.github.retrooper.packetevents.protocol.packettype.config.clientbound.ClientboundConfigPacketType_1_21;
 import com.github.retrooper.packetevents.protocol.packettype.config.serverbound.ServerboundConfigPacketType_1_20_2;
 import com.github.retrooper.packetevents.protocol.packettype.config.serverbound.ServerboundConfigPacketType_1_20_5;
-import com.github.retrooper.packetevents.protocol.packettype.serverbound.ServerboundPacketType_1_12;
-import com.github.retrooper.packetevents.protocol.packettype.serverbound.ServerboundPacketType_1_12_1;
-import com.github.retrooper.packetevents.protocol.packettype.serverbound.ServerboundPacketType_1_13;
-import com.github.retrooper.packetevents.protocol.packettype.serverbound.ServerboundPacketType_1_14;
-import com.github.retrooper.packetevents.protocol.packettype.serverbound.ServerboundPacketType_1_15_2;
-import com.github.retrooper.packetevents.protocol.packettype.serverbound.ServerboundPacketType_1_16;
-import com.github.retrooper.packetevents.protocol.packettype.serverbound.ServerboundPacketType_1_16_2;
-import com.github.retrooper.packetevents.protocol.packettype.serverbound.ServerboundPacketType_1_17;
-import com.github.retrooper.packetevents.protocol.packettype.serverbound.ServerboundPacketType_1_19;
-import com.github.retrooper.packetevents.protocol.packettype.serverbound.ServerboundPacketType_1_19_1;
-import com.github.retrooper.packetevents.protocol.packettype.serverbound.ServerboundPacketType_1_19_3;
-import com.github.retrooper.packetevents.protocol.packettype.serverbound.ServerboundPacketType_1_19_4;
-import com.github.retrooper.packetevents.protocol.packettype.serverbound.ServerboundPacketType_1_20_2;
-import com.github.retrooper.packetevents.protocol.packettype.serverbound.ServerboundPacketType_1_20_3;
-import com.github.retrooper.packetevents.protocol.packettype.serverbound.ServerboundPacketType_1_20_5;
-import com.github.retrooper.packetevents.protocol.packettype.serverbound.ServerboundPacketType_1_21_2;
-import com.github.retrooper.packetevents.protocol.packettype.serverbound.ServerboundPacketType_1_21_4;
-import com.github.retrooper.packetevents.protocol.packettype.serverbound.ServerboundPacketType_1_7_10;
-import com.github.retrooper.packetevents.protocol.packettype.serverbound.ServerboundPacketType_1_8;
-import com.github.retrooper.packetevents.protocol.packettype.serverbound.ServerboundPacketType_1_9;
+import com.github.retrooper.packetevents.protocol.packettype.serverbound.*;
 import com.github.retrooper.packetevents.protocol.player.ClientVersion;
 import com.github.retrooper.packetevents.util.VersionMapper;
+import com.github.retrooper.packetevents.wrapper.PacketWrapper;
+import com.github.retrooper.packetevents.wrapper.configuration.client.WrapperConfigClientConfigurationEndAck;
+import com.github.retrooper.packetevents.wrapper.configuration.client.WrapperConfigClientCookieResponse;
+import com.github.retrooper.packetevents.wrapper.configuration.client.WrapperConfigClientKeepAlive;
+import com.github.retrooper.packetevents.wrapper.configuration.client.WrapperConfigClientPluginMessage;
+import com.github.retrooper.packetevents.wrapper.configuration.client.WrapperConfigClientPong;
+import com.github.retrooper.packetevents.wrapper.configuration.client.WrapperConfigClientResourcePackStatus;
+import com.github.retrooper.packetevents.wrapper.configuration.client.WrapperConfigClientSelectKnownPacks;
+import com.github.retrooper.packetevents.wrapper.configuration.client.WrapperConfigClientSettings;
+import com.github.retrooper.packetevents.wrapper.configuration.server.*;
+import com.github.retrooper.packetevents.wrapper.handshaking.client.WrapperHandshakingClientHandshake;
+import com.github.retrooper.packetevents.wrapper.login.client.WrapperLoginClientCookieResponse;
+import com.github.retrooper.packetevents.wrapper.login.client.WrapperLoginClientEncryptionResponse;
+import com.github.retrooper.packetevents.wrapper.login.client.WrapperLoginClientLoginStart;
+import com.github.retrooper.packetevents.wrapper.login.client.WrapperLoginClientLoginSuccessAck;
+import com.github.retrooper.packetevents.wrapper.login.client.WrapperLoginClientPluginResponse;
+import com.github.retrooper.packetevents.wrapper.login.server.WrapperLoginServerCookieRequest;
+import com.github.retrooper.packetevents.wrapper.login.server.WrapperLoginServerDisconnect;
+import com.github.retrooper.packetevents.wrapper.login.server.WrapperLoginServerEncryptionRequest;
+import com.github.retrooper.packetevents.wrapper.login.server.WrapperLoginServerLoginSuccess;
+import com.github.retrooper.packetevents.wrapper.login.server.WrapperLoginServerPluginRequest;
+import com.github.retrooper.packetevents.wrapper.login.server.WrapperLoginServerSetCompression;
+import com.github.retrooper.packetevents.wrapper.play.client.*;
+import com.github.retrooper.packetevents.wrapper.play.server.*;
+import com.github.retrooper.packetevents.wrapper.status.client.WrapperStatusClientPing;
+import com.github.retrooper.packetevents.wrapper.status.client.WrapperStatusClientRequest;
+import com.github.retrooper.packetevents.wrapper.status.server.WrapperStatusServerPong;
+import com.github.retrooper.packetevents.wrapper.status.server.WrapperStatusServerResponse;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
-
-import com.github.retrooper.packetevents.wrapper.*;
-import com.github.retrooper.packetevents.wrapper.configuration.client.*;
-import com.github.retrooper.packetevents.wrapper.configuration.server.*;
-import com.github.retrooper.packetevents.wrapper.handshaking.client.*;
-import com.github.retrooper.packetevents.wrapper.login.client.*;
-import com.github.retrooper.packetevents.wrapper.login.server.*;
-import com.github.retrooper.packetevents.wrapper.play.client.*;
-import com.github.retrooper.packetevents.wrapper.play.server.*;
-import com.github.retrooper.packetevents.wrapper.status.client.*;
-import com.github.retrooper.packetevents.wrapper.status.server.*;
 
 public final class PacketType {
 
@@ -119,7 +94,8 @@ public final class PacketType {
             ClientVersion.V_1_20_3,
             ClientVersion.V_1_20_5,
             ClientVersion.V_1_21,
-            ClientVersion.V_1_21_2);
+            ClientVersion.V_1_21_2,
+            ClientVersion.V_1_21_5);
 
     //TODO UPDATE Update packet type mappings (serverbound pt. 1)
     private static final VersionMapper SERVERBOUND_PLAY_VERSION_MAPPER = new VersionMapper(
@@ -142,7 +118,8 @@ public final class PacketType {
             ClientVersion.V_1_20_3,
             ClientVersion.V_1_20_5,
             ClientVersion.V_1_21_2,
-            ClientVersion.V_1_21_4);
+            ClientVersion.V_1_21_4,
+            ClientVersion.V_1_21_5);
 
     // TODO UPDATE Update packet type mappings (config clientbound pt. 1)
     private static final VersionMapper CLIENTBOUND_CONFIG_VERSION_MAPPER = new VersionMapper(
@@ -797,6 +774,15 @@ public final class PacketType {
              * Added with 1.21.4
              */
             PLAYER_LOADED(WrapperPlayClientPlayerLoaded.class),
+
+            /**
+             * Added with 1.21.5
+             */
+            SET_TEST_BLOCK(WrapperPlayClientSetTestBlock.class),
+            /**
+             * Added with 1.21.5
+             */
+            TEST_INSTANCE_BLOCK_ACTION(WrapperPlayClientTestInstanceBlockAction.class),
             ;
 
             private static int INDEX = 0;
@@ -860,6 +846,7 @@ public final class PacketType {
                 loadPacketIds(ServerboundPacketType_1_20_5.values());
                 loadPacketIds(ServerboundPacketType_1_21_2.values());
                 loadPacketIds(ServerboundPacketType_1_21_4.values());
+                loadPacketIds(ServerboundPacketType_1_21_5.values());
                 //TODO UPDATE Update packet type mappings (serverbound pt. 2)
             }
 
@@ -905,6 +892,10 @@ public final class PacketType {
             // Still existing packets
             WINDOW_CONFIRMATION(WrapperPlayServerWindowConfirmation.class),
             SPAWN_ENTITY(WrapperPlayServerSpawnEntity.class),
+            /**
+             * Removed with 1.21.5
+             */
+            @ApiStatus.Obsolete
             SPAWN_EXPERIENCE_ORB(WrapperPlayServerSpawnExperienceOrb.class),
             ENTITY_ANIMATION(WrapperPlayServerEntityAnimation.class),
             STATISTICS(null),
@@ -1054,6 +1045,11 @@ public final class PacketType {
             RECIPE_BOOK_ADD(WrapperPlayServerRecipeBookAdd.class),
             RECIPE_BOOK_REMOVE(WrapperPlayServerRecipeBookRemove.class),
             RECIPE_BOOK_SETTINGS(WrapperPlayServerRecipeBookSettings.class),
+
+            /**
+             * Added with 1.21.5
+             */
+            TEST_INSTANCE_BLOCK_STATUS(WrapperPlayServerTestInstanceBlockStatus.class),
             ;
 
             private static int INDEX = 0;
@@ -1133,6 +1129,7 @@ public final class PacketType {
                 loadPacketIds(ClientboundPacketType_1_20_5.values());
                 loadPacketIds(ClientboundPacketType_1_21.values());
                 loadPacketIds(ClientboundPacketType_1_21_2.values());
+                loadPacketIds(ClientboundPacketType_1_21_5.values());
                 //TODO UPDATE Update packet type mappings (clientbound pt. 2)
             }
         }
