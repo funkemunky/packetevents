@@ -31,7 +31,7 @@ import java.util.Objects;
 public class StaticTrimPattern extends AbstractMappedEntity implements TrimPattern {
 
     private final ResourceLocation assetId;
-    private final ItemType templateItem;
+    private final @Nullable ItemType templateItem;
     private final Component description;
     private final boolean decal;
 
