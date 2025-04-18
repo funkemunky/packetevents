@@ -24,6 +24,7 @@ import com.github.retrooper.packetevents.resources.ResourceLocation;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.VisibleForTesting;
+import org.jspecify.annotations.NullMarked;
 
 import java.util.Collection;
 import java.util.Collections;
@@ -31,6 +32,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Function;
 
+@NullMarked
 public final class VersionedRegistry<T extends MappedEntity> implements IRegistry<T> {
 
     private final ResourceLocation registryKey;
@@ -55,15 +57,16 @@ public final class VersionedRegistry<T extends MappedEntity> implements IRegistr
 
     @ApiStatus.Internal
     public <Z extends T> Z define(String name, Function<TypesBuilderData, Z> builder) {
-        Z instance = builder.apply(this.typesBuilder.define(name));
-        MappingHelper.registerMapping(this.typesBuilder, this.typeMap, this.typeIdMap, instance);
+        TypesBuilderData typeData = this.typesBuilder.define(name);
+        Z instance = builder.apply(typeData);
+        MappingHelper.registerMapping(this.typesBuilder, this.typeMap, this.typeIdMap, typeData, instance);
         return instance;
     }
 
     @VisibleForTesting
     @ApiStatus.Internal
-    public boolean isMappingDataLoaded() {
-        return this.typesBuilder.isMappingDataLoaded();
+    public TypesBuilder getTypesBuilder() {
+        return this.typesBuilder;
     }
 
     @ApiStatus.Internal

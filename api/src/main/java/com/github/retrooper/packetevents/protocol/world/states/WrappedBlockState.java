@@ -45,6 +45,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.EnumMap;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Objects;
@@ -71,6 +72,7 @@ public class WrappedBlockState {
             ClientVersion.V_1_16, ClientVersion.V_1_16_2, ClientVersion.V_1_17, ClientVersion.V_1_19,
             ClientVersion.V_1_19_3, ClientVersion.V_1_19_4, ClientVersion.V_1_20, ClientVersion.V_1_20_2,
             ClientVersion.V_1_20_3, ClientVersion.V_1_20_5, ClientVersion.V_1_21_2, ClientVersion.V_1_21_4,
+            ClientVersion.V_1_21_5,
     };
     private static final byte[] MAPPING_INDEXES;
     private static final ClientVersion[] MAPPING_VERSIONS;
@@ -379,7 +381,7 @@ public class WrappedBlockState {
                     SequentialNBTReader.Compound dataContent = (SequentialNBTReader.Compound) element.getValue();
                     StateCacheValue stateCache;
                     if (dataContent.hasNext()) { // only try to read if there is data available
-                        Map<StateValue, Object> dataMap = new HashMap<>(3);
+                        Map<StateValue, Object> dataMap = new LinkedHashMap<>(3);
                         for (Map.Entry<String, NBT> props : dataContent) {
                             StateValue state = StateValue.byName(props.getKey());
                             if (state == null) {
@@ -481,7 +483,7 @@ public class WrappedBlockState {
                     SequentialNBTReader.Compound dataContent = (SequentialNBTReader.Compound) nbt;
                     StateCacheValue stateCache;
                     if (dataContent.hasNext()) { // only try to read if there is data available
-                        Map<StateValue, Object> dataMap = new HashMap<>(3);
+                        Map<StateValue, Object> dataMap = new LinkedHashMap<>(3);
                         for (Map.Entry<String, NBT> props : dataContent) {
                             StateValue state = StateValue.byName(props.getKey());
                             if (state == null) {
@@ -1419,15 +1421,17 @@ public class WrappedBlockState {
     }
 
     /**
-     * Added with 1.21.4
+     * Added with 1.21.4, removed with 1.21.5
      */
+    @ApiStatus.Obsolete
     public boolean isActive() {
         return (boolean) this.data.get(StateValue.ACTIVE);
     }
 
     /**
-     * Added with 1.21.4
+     * Added with 1.21.4, removed with 1.21.5
      */
+    @ApiStatus.Obsolete
     public void setActive(boolean active) {
         this.checkIfCloneNeeded();
         this.data.put(StateValue.ACTIVE, active);
@@ -1447,6 +1451,54 @@ public class WrappedBlockState {
     public void setNatural(boolean natural) {
         this.checkIfCloneNeeded();
         this.data.put(StateValue.NATURAL, natural);
+        this.checkIsStillValid();
+    }
+
+    /**
+     * Added with 1.21.5
+     */
+    public int getSegmentAmount() {
+        return (int) this.data.get(StateValue.SEGMENT_AMOUNT);
+    }
+
+    /**
+     * Added with 1.21.5
+     */
+    public void setSegmentAmount(int segmentAmount) {
+        this.checkIfCloneNeeded();
+        this.data.put(StateValue.SEGMENT_AMOUNT, segmentAmount);
+        this.checkIsStillValid();
+    }
+
+    /**
+     * Added with 1.21.5
+     */
+    public CreakingHeartState getCreakingHeartState() {
+        return (CreakingHeartState) this.data.get(StateValue.CREAKING_HEART_STATE);
+    }
+
+    /**
+     * Added with 1.21.5
+     */
+    public void setCreakingHeartState(CreakingHeartState creakingHeartState) {
+        this.checkIfCloneNeeded();
+        this.data.put(StateValue.CREAKING_HEART_STATE, creakingHeartState);
+        this.checkIsStillValid();
+    }
+
+    /**
+     * Added with 1.21.5
+     */
+    public boolean isMap() {
+        return (boolean) this.data.get(StateValue.MAP);
+    }
+
+    /**
+     * Added with 1.21.5
+     */
+    public void setMap(boolean map) {
+        this.checkIfCloneNeeded();
+        this.data.put(StateValue.MAP, map);
         this.checkIsStillValid();
     }
 
@@ -1561,7 +1613,14 @@ public class WrappedBlockState {
             if (this.string == null) {
                 StringBuilder builder = new StringBuilder();
                 for (Map.Entry<StateValue, Object> entry : this.map.entrySet()) {
-                    builder.append(entry.getKey()).append('=').append(entry.getValue()).append(',');
+                    builder
+                            .append(entry.getKey().getName())
+                            .append('=')
+                            // this is technically incorrect as block property values are case-sensitive, but it
+                            // doesn't matter for this use case as we do String#toUpperCase while reading anyway;
+                            // the current block state property system is already enough of a mess
+                            .append(String.valueOf(entry.getValue()).toLowerCase(Locale.ROOT))
+                            .append(',');
                 }
                 this.string = builder.length() == 0 ? "" : '[' + builder.substring(0, builder.length() - 1) + ']';
             }
