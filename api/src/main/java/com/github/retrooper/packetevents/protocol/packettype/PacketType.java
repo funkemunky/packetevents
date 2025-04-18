@@ -20,14 +20,58 @@ package com.github.retrooper.packetevents.protocol.packettype;
 
 import com.github.retrooper.packetevents.protocol.ConnectionState;
 import com.github.retrooper.packetevents.protocol.PacketSide;
-import com.github.retrooper.packetevents.protocol.packettype.clientbound.*;
+import com.github.retrooper.packetevents.protocol.packettype.clientbound.ClientboundPacketType_1_12;
+import com.github.retrooper.packetevents.protocol.packettype.clientbound.ClientboundPacketType_1_12_1;
+import com.github.retrooper.packetevents.protocol.packettype.clientbound.ClientboundPacketType_1_13;
+import com.github.retrooper.packetevents.protocol.packettype.clientbound.ClientboundPacketType_1_14;
+import com.github.retrooper.packetevents.protocol.packettype.clientbound.ClientboundPacketType_1_14_4;
+import com.github.retrooper.packetevents.protocol.packettype.clientbound.ClientboundPacketType_1_15;
+import com.github.retrooper.packetevents.protocol.packettype.clientbound.ClientboundPacketType_1_15_2;
+import com.github.retrooper.packetevents.protocol.packettype.clientbound.ClientboundPacketType_1_16;
+import com.github.retrooper.packetevents.protocol.packettype.clientbound.ClientboundPacketType_1_16_2;
+import com.github.retrooper.packetevents.protocol.packettype.clientbound.ClientboundPacketType_1_17;
+import com.github.retrooper.packetevents.protocol.packettype.clientbound.ClientboundPacketType_1_18;
+import com.github.retrooper.packetevents.protocol.packettype.clientbound.ClientboundPacketType_1_19;
+import com.github.retrooper.packetevents.protocol.packettype.clientbound.ClientboundPacketType_1_19_1;
+import com.github.retrooper.packetevents.protocol.packettype.clientbound.ClientboundPacketType_1_19_3;
+import com.github.retrooper.packetevents.protocol.packettype.clientbound.ClientboundPacketType_1_19_4;
+import com.github.retrooper.packetevents.protocol.packettype.clientbound.ClientboundPacketType_1_20_2;
+import com.github.retrooper.packetevents.protocol.packettype.clientbound.ClientboundPacketType_1_20_3;
+import com.github.retrooper.packetevents.protocol.packettype.clientbound.ClientboundPacketType_1_20_5;
+import com.github.retrooper.packetevents.protocol.packettype.clientbound.ClientboundPacketType_1_21;
+import com.github.retrooper.packetevents.protocol.packettype.clientbound.ClientboundPacketType_1_21_2;
+import com.github.retrooper.packetevents.protocol.packettype.clientbound.ClientboundPacketType_1_21_5;
+import com.github.retrooper.packetevents.protocol.packettype.clientbound.ClientboundPacketType_1_7_10;
+import com.github.retrooper.packetevents.protocol.packettype.clientbound.ClientboundPacketType_1_8;
+import com.github.retrooper.packetevents.protocol.packettype.clientbound.ClientboundPacketType_1_9;
+import com.github.retrooper.packetevents.protocol.packettype.clientbound.ClientboundPacketType_1_9_3;
 import com.github.retrooper.packetevents.protocol.packettype.config.clientbound.ClientboundConfigPacketType_1_20_2;
 import com.github.retrooper.packetevents.protocol.packettype.config.clientbound.ClientboundConfigPacketType_1_20_3;
 import com.github.retrooper.packetevents.protocol.packettype.config.clientbound.ClientboundConfigPacketType_1_20_5;
 import com.github.retrooper.packetevents.protocol.packettype.config.clientbound.ClientboundConfigPacketType_1_21;
 import com.github.retrooper.packetevents.protocol.packettype.config.serverbound.ServerboundConfigPacketType_1_20_2;
 import com.github.retrooper.packetevents.protocol.packettype.config.serverbound.ServerboundConfigPacketType_1_20_5;
-import com.github.retrooper.packetevents.protocol.packettype.serverbound.*;
+import com.github.retrooper.packetevents.protocol.packettype.serverbound.ServerboundPacketType_1_12;
+import com.github.retrooper.packetevents.protocol.packettype.serverbound.ServerboundPacketType_1_12_1;
+import com.github.retrooper.packetevents.protocol.packettype.serverbound.ServerboundPacketType_1_13;
+import com.github.retrooper.packetevents.protocol.packettype.serverbound.ServerboundPacketType_1_14;
+import com.github.retrooper.packetevents.protocol.packettype.serverbound.ServerboundPacketType_1_15_2;
+import com.github.retrooper.packetevents.protocol.packettype.serverbound.ServerboundPacketType_1_16;
+import com.github.retrooper.packetevents.protocol.packettype.serverbound.ServerboundPacketType_1_16_2;
+import com.github.retrooper.packetevents.protocol.packettype.serverbound.ServerboundPacketType_1_17;
+import com.github.retrooper.packetevents.protocol.packettype.serverbound.ServerboundPacketType_1_19;
+import com.github.retrooper.packetevents.protocol.packettype.serverbound.ServerboundPacketType_1_19_1;
+import com.github.retrooper.packetevents.protocol.packettype.serverbound.ServerboundPacketType_1_19_3;
+import com.github.retrooper.packetevents.protocol.packettype.serverbound.ServerboundPacketType_1_19_4;
+import com.github.retrooper.packetevents.protocol.packettype.serverbound.ServerboundPacketType_1_20_2;
+import com.github.retrooper.packetevents.protocol.packettype.serverbound.ServerboundPacketType_1_20_3;
+import com.github.retrooper.packetevents.protocol.packettype.serverbound.ServerboundPacketType_1_20_5;
+import com.github.retrooper.packetevents.protocol.packettype.serverbound.ServerboundPacketType_1_21_2;
+import com.github.retrooper.packetevents.protocol.packettype.serverbound.ServerboundPacketType_1_21_4;
+import com.github.retrooper.packetevents.protocol.packettype.serverbound.ServerboundPacketType_1_21_5;
+import com.github.retrooper.packetevents.protocol.packettype.serverbound.ServerboundPacketType_1_7_10;
+import com.github.retrooper.packetevents.protocol.packettype.serverbound.ServerboundPacketType_1_8;
+import com.github.retrooper.packetevents.protocol.packettype.serverbound.ServerboundPacketType_1_9;
 import com.github.retrooper.packetevents.protocol.player.ClientVersion;
 import com.github.retrooper.packetevents.util.VersionMapper;
 import com.github.retrooper.packetevents.wrapper.PacketWrapper;
@@ -39,7 +83,21 @@ import com.github.retrooper.packetevents.wrapper.configuration.client.WrapperCon
 import com.github.retrooper.packetevents.wrapper.configuration.client.WrapperConfigClientResourcePackStatus;
 import com.github.retrooper.packetevents.wrapper.configuration.client.WrapperConfigClientSelectKnownPacks;
 import com.github.retrooper.packetevents.wrapper.configuration.client.WrapperConfigClientSettings;
-import com.github.retrooper.packetevents.wrapper.configuration.server.*;
+import com.github.retrooper.packetevents.wrapper.configuration.server.WrapperConfigServerConfigurationEnd;
+import com.github.retrooper.packetevents.wrapper.configuration.server.WrapperConfigServerCookieRequest;
+import com.github.retrooper.packetevents.wrapper.configuration.server.WrapperConfigServerCustomReportDetails;
+import com.github.retrooper.packetevents.wrapper.configuration.server.WrapperConfigServerDisconnect;
+import com.github.retrooper.packetevents.wrapper.configuration.server.WrapperConfigServerKeepAlive;
+import com.github.retrooper.packetevents.wrapper.configuration.server.WrapperConfigServerPluginMessage;
+import com.github.retrooper.packetevents.wrapper.configuration.server.WrapperConfigServerRegistryData;
+import com.github.retrooper.packetevents.wrapper.configuration.server.WrapperConfigServerResetChat;
+import com.github.retrooper.packetevents.wrapper.configuration.server.WrapperConfigServerResourcePackRemove;
+import com.github.retrooper.packetevents.wrapper.configuration.server.WrapperConfigServerResourcePackSend;
+import com.github.retrooper.packetevents.wrapper.configuration.server.WrapperConfigServerSelectKnownPacks;
+import com.github.retrooper.packetevents.wrapper.configuration.server.WrapperConfigServerServerLinks;
+import com.github.retrooper.packetevents.wrapper.configuration.server.WrapperConfigServerStoreCookie;
+import com.github.retrooper.packetevents.wrapper.configuration.server.WrapperConfigServerTransfer;
+import com.github.retrooper.packetevents.wrapper.configuration.server.WrapperConfigServerUpdateEnabledFeatures;
 import com.github.retrooper.packetevents.wrapper.handshaking.client.WrapperHandshakingClientHandshake;
 import com.github.retrooper.packetevents.wrapper.login.client.WrapperLoginClientCookieResponse;
 import com.github.retrooper.packetevents.wrapper.login.client.WrapperLoginClientEncryptionResponse;
@@ -52,7 +110,73 @@ import com.github.retrooper.packetevents.wrapper.login.server.WrapperLoginServer
 import com.github.retrooper.packetevents.wrapper.login.server.WrapperLoginServerLoginSuccess;
 import com.github.retrooper.packetevents.wrapper.login.server.WrapperLoginServerPluginRequest;
 import com.github.retrooper.packetevents.wrapper.login.server.WrapperLoginServerSetCompression;
-import com.github.retrooper.packetevents.wrapper.play.client.*;
+import com.github.retrooper.packetevents.wrapper.play.client.WrapperPlayClientAdvancementTab;
+import com.github.retrooper.packetevents.wrapper.play.client.WrapperPlayClientAnimation;
+import com.github.retrooper.packetevents.wrapper.play.client.WrapperPlayClientChatAck;
+import com.github.retrooper.packetevents.wrapper.play.client.WrapperPlayClientChatCommand;
+import com.github.retrooper.packetevents.wrapper.play.client.WrapperPlayClientChatCommandUnsigned;
+import com.github.retrooper.packetevents.wrapper.play.client.WrapperPlayClientChatMessage;
+import com.github.retrooper.packetevents.wrapper.play.client.WrapperPlayClientChatPreview;
+import com.github.retrooper.packetevents.wrapper.play.client.WrapperPlayClientChatSessionUpdate;
+import com.github.retrooper.packetevents.wrapper.play.client.WrapperPlayClientChunkBatchAck;
+import com.github.retrooper.packetevents.wrapper.play.client.WrapperPlayClientClickWindow;
+import com.github.retrooper.packetevents.wrapper.play.client.WrapperPlayClientClickWindowButton;
+import com.github.retrooper.packetevents.wrapper.play.client.WrapperPlayClientClientStatus;
+import com.github.retrooper.packetevents.wrapper.play.client.WrapperPlayClientClientTickEnd;
+import com.github.retrooper.packetevents.wrapper.play.client.WrapperPlayClientCloseWindow;
+import com.github.retrooper.packetevents.wrapper.play.client.WrapperPlayClientConfigurationAck;
+import com.github.retrooper.packetevents.wrapper.play.client.WrapperPlayClientCookieResponse;
+import com.github.retrooper.packetevents.wrapper.play.client.WrapperPlayClientCraftRecipeRequest;
+import com.github.retrooper.packetevents.wrapper.play.client.WrapperPlayClientCreativeInventoryAction;
+import com.github.retrooper.packetevents.wrapper.play.client.WrapperPlayClientDebugPing;
+import com.github.retrooper.packetevents.wrapper.play.client.WrapperPlayClientDebugSampleSubscription;
+import com.github.retrooper.packetevents.wrapper.play.client.WrapperPlayClientEditBook;
+import com.github.retrooper.packetevents.wrapper.play.client.WrapperPlayClientEntityAction;
+import com.github.retrooper.packetevents.wrapper.play.client.WrapperPlayClientGenerateStructure;
+import com.github.retrooper.packetevents.wrapper.play.client.WrapperPlayClientHeldItemChange;
+import com.github.retrooper.packetevents.wrapper.play.client.WrapperPlayClientInteractEntity;
+import com.github.retrooper.packetevents.wrapper.play.client.WrapperPlayClientKeepAlive;
+import com.github.retrooper.packetevents.wrapper.play.client.WrapperPlayClientLockDifficulty;
+import com.github.retrooper.packetevents.wrapper.play.client.WrapperPlayClientNameItem;
+import com.github.retrooper.packetevents.wrapper.play.client.WrapperPlayClientPickItem;
+import com.github.retrooper.packetevents.wrapper.play.client.WrapperPlayClientPickItemFromBlock;
+import com.github.retrooper.packetevents.wrapper.play.client.WrapperPlayClientPickItemFromEntity;
+import com.github.retrooper.packetevents.wrapper.play.client.WrapperPlayClientPlayerAbilities;
+import com.github.retrooper.packetevents.wrapper.play.client.WrapperPlayClientPlayerBlockPlacement;
+import com.github.retrooper.packetevents.wrapper.play.client.WrapperPlayClientPlayerDigging;
+import com.github.retrooper.packetevents.wrapper.play.client.WrapperPlayClientPlayerFlying;
+import com.github.retrooper.packetevents.wrapper.play.client.WrapperPlayClientPlayerInput;
+import com.github.retrooper.packetevents.wrapper.play.client.WrapperPlayClientPlayerLoaded;
+import com.github.retrooper.packetevents.wrapper.play.client.WrapperPlayClientPlayerPosition;
+import com.github.retrooper.packetevents.wrapper.play.client.WrapperPlayClientPlayerPositionAndRotation;
+import com.github.retrooper.packetevents.wrapper.play.client.WrapperPlayClientPlayerRotation;
+import com.github.retrooper.packetevents.wrapper.play.client.WrapperPlayClientPluginMessage;
+import com.github.retrooper.packetevents.wrapper.play.client.WrapperPlayClientPong;
+import com.github.retrooper.packetevents.wrapper.play.client.WrapperPlayClientQueryBlockNBT;
+import com.github.retrooper.packetevents.wrapper.play.client.WrapperPlayClientQueryEntityNBT;
+import com.github.retrooper.packetevents.wrapper.play.client.WrapperPlayClientResourcePackStatus;
+import com.github.retrooper.packetevents.wrapper.play.client.WrapperPlayClientSelectBundleItem;
+import com.github.retrooper.packetevents.wrapper.play.client.WrapperPlayClientSelectTrade;
+import com.github.retrooper.packetevents.wrapper.play.client.WrapperPlayClientSetBeaconEffect;
+import com.github.retrooper.packetevents.wrapper.play.client.WrapperPlayClientSetDifficulty;
+import com.github.retrooper.packetevents.wrapper.play.client.WrapperPlayClientSetDisplayedRecipe;
+import com.github.retrooper.packetevents.wrapper.play.client.WrapperPlayClientSetRecipeBookState;
+import com.github.retrooper.packetevents.wrapper.play.client.WrapperPlayClientSetTestBlock;
+import com.github.retrooper.packetevents.wrapper.play.client.WrapperPlayClientSettings;
+import com.github.retrooper.packetevents.wrapper.play.client.WrapperPlayClientSlotStateChange;
+import com.github.retrooper.packetevents.wrapper.play.client.WrapperPlayClientSpectate;
+import com.github.retrooper.packetevents.wrapper.play.client.WrapperPlayClientSteerBoat;
+import com.github.retrooper.packetevents.wrapper.play.client.WrapperPlayClientSteerVehicle;
+import com.github.retrooper.packetevents.wrapper.play.client.WrapperPlayClientTabComplete;
+import com.github.retrooper.packetevents.wrapper.play.client.WrapperPlayClientTeleportConfirm;
+import com.github.retrooper.packetevents.wrapper.play.client.WrapperPlayClientTestInstanceBlockAction;
+import com.github.retrooper.packetevents.wrapper.play.client.WrapperPlayClientUpdateCommandBlock;
+import com.github.retrooper.packetevents.wrapper.play.client.WrapperPlayClientUpdateCommandBlockMinecart;
+import com.github.retrooper.packetevents.wrapper.play.client.WrapperPlayClientUpdateJigsawBlock;
+import com.github.retrooper.packetevents.wrapper.play.client.WrapperPlayClientUpdateSign;
+import com.github.retrooper.packetevents.wrapper.play.client.WrapperPlayClientUseItem;
+import com.github.retrooper.packetevents.wrapper.play.client.WrapperPlayClientVehicleMove;
+import com.github.retrooper.packetevents.wrapper.play.client.WrapperPlayClientWindowConfirmation;
 import com.github.retrooper.packetevents.wrapper.play.server.*;
 import com.github.retrooper.packetevents.wrapper.status.client.WrapperStatusClientPing;
 import com.github.retrooper.packetevents.wrapper.status.client.WrapperStatusClientRequest;
@@ -190,7 +314,8 @@ public final class PacketType {
              * Technically not part of the current protocol, but clients older than 1.7 will send this to initiate Server List Ping.
              * 1.8 and newer servers will handle it correctly though.
              */
-            LEGACY_SERVER_LIST_PING(0xFE, null);
+            LEGACY_SERVER_LIST_PING(0xFE, null),
+            ;
 
             private final int id;
             private final Class<? extends PacketWrapper<?>> wrapperClass;
@@ -228,7 +353,8 @@ public final class PacketType {
 
         public enum Server implements PacketTypeConstant, ClientBoundPacket {
 
-            LEGACY_SERVER_LIST_RESPONSE(0xFE, null);
+            LEGACY_SERVER_LIST_RESPONSE(0xFE, null),
+            ;
 
             private final int id;
             private final Class<? extends PacketWrapper<?>> wrapperClass;
@@ -264,7 +390,8 @@ public final class PacketType {
         public enum Client implements PacketTypeConstant, ServerBoundPacket {
 
             REQUEST(0x00, WrapperStatusClientRequest.class),
-            PING(0x01, WrapperStatusClientPing.class);
+            PING(0x01, WrapperStatusClientPing.class),
+            ;
 
             private final int id;
             private final Class<? extends PacketWrapper<?>> wrapperClass;
@@ -303,7 +430,8 @@ public final class PacketType {
         public enum Server implements PacketTypeConstant, ClientBoundPacket {
 
             RESPONSE(0x00, WrapperStatusServerResponse.class),
-            PONG(0x01, WrapperStatusServerPong.class);
+            PONG(0x01, WrapperStatusServerPong.class),
+            ;
 
             private final int id;
             private final Class<? extends PacketWrapper<?>> wrapperClass;
@@ -354,7 +482,8 @@ public final class PacketType {
             LOGIN_SUCCESS_ACK(0x03, WrapperLoginClientLoginSuccessAck.class),
 
             // Added in 1.20.5
-            COOKIE_RESPONSE(0x04, WrapperLoginClientCookieResponse.class);
+            COOKIE_RESPONSE(0x04, WrapperLoginClientCookieResponse.class),
+            ;
 
             private final int id;
             private final Class<? extends PacketWrapper<?>> wrapperClass;
@@ -410,7 +539,8 @@ public final class PacketType {
             LOGIN_PLUGIN_REQUEST(0x04, WrapperLoginServerPluginRequest.class),
 
             // Added in 1.20.5
-            COOKIE_REQUEST(0x05, WrapperLoginServerCookieRequest.class);
+            COOKIE_REQUEST(0x05, WrapperLoginServerCookieRequest.class),
+            ;
 
             private final int id;
             private final Class<? extends PacketWrapper<?>> wrapperClass;
@@ -470,7 +600,8 @@ public final class PacketType {
 
             // Added in 1.20.5
             COOKIE_RESPONSE(WrapperConfigClientCookieResponse.class),
-            SELECT_KNOWN_PACKS(WrapperConfigClientSelectKnownPacks.class);
+            SELECT_KNOWN_PACKS(WrapperConfigClientSelectKnownPacks.class),
+            ;
 
             private static int INDEX = 0;
             private static final Map<Byte, Map<Integer, PacketTypeCommon>> PACKET_TYPE_ID_MAP = new HashMap<>();
@@ -564,7 +695,8 @@ public final class PacketType {
 
             // added in 1.21
             CUSTOM_REPORT_DETAILS(WrapperConfigServerCustomReportDetails.class),
-            SERVER_LINKS(WrapperConfigServerServerLinks.class);
+            SERVER_LINKS(WrapperConfigServerServerLinks.class),
+            ;
 
             private static int INDEX = 0;
             private static final Map<Byte, Map<Integer, PacketTypeCommon>> PACKET_TYPE_ID_MAP = new HashMap<>();
@@ -945,7 +1077,11 @@ public final class PacketType {
             DEATH_COMBAT_EVENT(WrapperPlayServerDeathCombatEvent.class),
             FACE_PLAYER(WrapperPlayServerFacePlayer.class),
             PLAYER_POSITION_AND_LOOK(WrapperPlayServerPlayerPositionAndLook.class),
-            UNLOCK_RECIPES(null), // removed in 1.21.2
+            /**
+             * Removed with 1.21.2
+             */
+            @ApiStatus.Obsolete
+            UNLOCK_RECIPES(null),
             DESTROY_ENTITIES(WrapperPlayServerDestroyEntities.class),
             REMOVE_ENTITY_EFFECT(WrapperPlayServerRemoveEntityEffect.class),
             RESOURCE_PACK_SEND(WrapperPlayServerResourcePackSend.class),
