@@ -161,6 +161,7 @@ import com.github.retrooper.packetevents.wrapper.play.client.WrapperPlayClientSe
 import com.github.retrooper.packetevents.wrapper.play.client.WrapperPlayClientSetDifficulty;
 import com.github.retrooper.packetevents.wrapper.play.client.WrapperPlayClientSetDisplayedRecipe;
 import com.github.retrooper.packetevents.wrapper.play.client.WrapperPlayClientSetRecipeBookState;
+import com.github.retrooper.packetevents.wrapper.play.client.WrapperPlayClientSetStructureBlock;
 import com.github.retrooper.packetevents.wrapper.play.client.WrapperPlayClientSetTestBlock;
 import com.github.retrooper.packetevents.wrapper.play.client.WrapperPlayClientSettings;
 import com.github.retrooper.packetevents.wrapper.play.client.WrapperPlayClientSlotStateChange;
@@ -828,7 +829,7 @@ public final class PacketType {
             UPDATE_COMMAND_BLOCK_MINECART(WrapperPlayClientUpdateCommandBlockMinecart.class),
             CREATIVE_INVENTORY_ACTION(WrapperPlayClientCreativeInventoryAction.class),
             UPDATE_JIGSAW_BLOCK(WrapperPlayClientUpdateJigsawBlock.class),
-            UPDATE_STRUCTURE_BLOCK(null),
+            UPDATE_STRUCTURE_BLOCK(WrapperPlayClientSetStructureBlock.class),
             UPDATE_SIGN(WrapperPlayClientUpdateSign.class),
             ANIMATION(WrapperPlayClientAnimation.class),
             SPECTATE(WrapperPlayClientSpectate.class),
