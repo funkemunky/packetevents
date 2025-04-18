@@ -137,11 +137,9 @@ public final class PacketEventsImplHelper {
             }
 
             if (uuid == null) {
-                // Only way to be sure of removing a channel
-                protocolManager.getChannelEntries().removeIf(pair -> pair.getValue() == channel);
+                protocolManager.removeChannel(channel);
             } else {
-                // This is the efficient way that we should prefer
-                protocolManager.removeChannel(uuid);
+                protocolManager.removeChannelById(uuid);
             }
         }
     }

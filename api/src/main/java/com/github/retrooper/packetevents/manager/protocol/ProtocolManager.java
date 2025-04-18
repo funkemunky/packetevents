@@ -47,10 +47,6 @@ public interface ProtocolManager {
         return CHANNELS.values();
     }
 
-    default Collection<Map.Entry<UUID, Object>> getChannelEntries() {
-        return CHANNELS.entrySet();
-    }
-
     //Methods to implement
     ProtocolVersion getPlatformVersion();
     void sendPacket(Object channel, Object byteBuf);
@@ -181,7 +177,12 @@ public interface ProtocolManager {
     }
 
     @ApiStatus.Internal
-    default void removeChannel(UUID uuid) {
+    default void removeChannel(Object channel) {
+        CHANNELS.values().remove(channel);
+    }
+
+    @ApiStatus.Internal
+    default void removeChannelById(UUID uuid) {
         CHANNELS.remove(uuid);
     }
 
