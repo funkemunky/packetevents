@@ -26,7 +26,6 @@ import com.github.retrooper.packetevents.protocol.player.User;
 import com.github.retrooper.packetevents.util.PacketTransformationUtil;
 import com.github.retrooper.packetevents.wrapper.PacketWrapper;
 import org.jetbrains.annotations.ApiStatus;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.Collection;
 import java.util.Map;
@@ -34,8 +33,10 @@ import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
 public interface ProtocolManager {
+    @ApiStatus.Internal
     Map<UUID, Object> CHANNELS = new ConcurrentHashMap<>();
     // Use SocketAddress because ProtocolLib wraps Channels with NettyChannelProxy class
+    @ApiStatus.Internal
     Map<Object, User> USERS = new ConcurrentHashMap<>();
 
     default Collection<User> getUsers() {
@@ -155,11 +156,13 @@ public interface ProtocolManager {
         return USERS.get(pipeline);
     }
 
+    @ApiStatus.Internal
     default User removeUser(Object channel) {
         Object pipeline = ChannelHelper.getPipeline(channel);
         return USERS.remove(pipeline);
     }
 
+    @ApiStatus.Internal
     default void setUser(Object channel, User user) {
         synchronized (channel) {
             Object pipeline = ChannelHelper.getPipeline(channel);
@@ -172,10 +175,12 @@ public interface ProtocolManager {
         return CHANNELS.get(uuid);
     }
 
+    @ApiStatus.Internal
     default void setChannel(UUID uuid, Object channel) {
         CHANNELS.put(uuid, channel);
     }
 
+    @ApiStatus.Internal
     default void removeChannel(UUID uuid) {
         CHANNELS.remove(uuid);
     }
