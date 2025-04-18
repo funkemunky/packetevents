@@ -104,14 +104,14 @@ public class MappedEntitySet<T> {
             // single entry list
             list = new ArrayList<>(1);
             ResourceLocation key = new ResourceLocation(singleEntry);
-            list.add(registry.getByName(key));
+            list.add(registry.getByNameOrThrow(key));
         } else {
             // assume it's a list
             NBTList<?> listTag = (NBTList<?>) nbt;
             list = new ArrayList<>(listTag.size());
             for (NBT tag : listTag.getTags()) {
                 ResourceLocation key = new ResourceLocation(((NBTString) tag).getValue());
-                list.add(registry.getByName(key));
+                list.add(registry.getByNameOrThrow(key));
             }
         }
         return new MappedEntitySet<>(list);
