@@ -184,17 +184,21 @@ public class ItemStack {
         if (this.version.isNewerThanOrEquals(ClientVersion.V_1_20_5)) {
             int value = this.getComponentOr(DAMAGE, 0);
             return MathUtil.clamp(value, 0, this.getMaxDamage());
-        } else {
+        } else if (this.version.isNewerThanOrEquals(ClientVersion.V_1_13)) {
             NBTNumber damage = this.nbt != null ? this.nbt.getNumberTagOrNull("Damage") : null;
             return damage == null ? 0 : damage.getAsInt();
+        } else {
+            return Math.max(0, this.legacyData);
         }
     }
 
     public void setDamageValue(int damage) {
         if (this.version.isNewerThanOrEquals(ClientVersion.V_1_20_5)) {
             this.setComponent(DAMAGE, MathUtil.clamp(damage, 0, this.getMaxDamage()));
-        } else {
+        } else if (this.version.isNewerThanOrEquals(ClientVersion.V_1_13)) {
             this.getOrCreateTag().setTag("Damage", new NBTInt(Math.max(0, damage)));
+        } else {
+            this.legacyData = Math.max(0, damage);
         }
     }
 
