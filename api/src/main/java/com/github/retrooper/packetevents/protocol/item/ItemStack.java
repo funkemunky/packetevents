@@ -583,13 +583,12 @@ public class ItemStack {
     }
 
     public boolean isEmpty() {
-        if (this.version.isNewerThanOrEquals(ClientVersion.V_1_13)) {
-            return this.type == ItemTypes.AIR || this.amount <= 0;
-        } else if (this.version.isNewerThanOrEquals(ClientVersion.V_1_11)) {
-            return this.type == ItemTypes.AIR || this.amount <= 0
-                    || this.legacyData < (short) (1 << 15) || this.legacyData > (1 << 16);
+        boolean baseEmpty = this.type == ItemTypes.AIR || this.amount <= 0;
+        if (this.version.isOlderThanOrEquals(ClientVersion.V_1_12_2)) {
+            return baseEmpty || this.legacyData < Short.MIN_VALUE || this.legacyData > (1 << 16);
+        } else {
+            return baseEmpty;
         }
-        return this.amount <= 0;
     }
 
     public ClientVersion getVersion() {
