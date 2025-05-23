@@ -1031,7 +1031,7 @@ public final class PacketType {
             @ApiStatus.Obsolete
             SPAWN_EXPERIENCE_ORB(WrapperPlayServerSpawnExperienceOrb.class),
             ENTITY_ANIMATION(WrapperPlayServerEntityAnimation.class),
-            STATISTICS(null),
+            STATISTICS(WrapperPlayServerStatistics.class),
             BLOCK_BREAK_ANIMATION(WrapperPlayServerBlockBreakAnimation.class),
             BLOCK_ENTITY_DATA(WrapperPlayServerBlockEntityData.class),
             BLOCK_ACTION(WrapperPlayServerBlockAction.class),

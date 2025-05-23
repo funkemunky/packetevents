@@ -25,6 +25,8 @@ import com.github.retrooper.packetevents.protocol.packettype.PacketType;
 import com.github.retrooper.packetevents.protocol.world.states.type.StateTypes;
 import com.github.retrooper.packetevents.util.TimeStampMode;
 import com.github.retrooper.packetevents.wrapper.play.client.WrapperPlayClientInteractEntity;
+import com.github.retrooper.packetevents.wrapper.play.server.WrapperPlayServerStatistics;
+import com.github.retrooper.packetevents.wrapper.play.server.WrapperPlayServerUpdateAdvancements;
 import com.github.retrooper.packetevents.wrapper.play.server.WrapperPlayServerBlockChange;
 import com.github.retrooper.packetevents.wrapper.play.server.WrapperPlayServerSystemChatMessage;
 import io.github.retrooper.packetevents.factory.spigot.SpigotPacketEventsBuilder;
@@ -71,7 +73,7 @@ public class PacketEventsPlugin extends JavaPlugin {
                         event.getUser().sendPacket(blockChange);
                     }
                 }
-            }   
+            }
 
             @Override
             public void onPacketPlaySend(PacketPlaySendEvent event) {
@@ -80,6 +82,12 @@ public class PacketEventsPlugin extends JavaPlugin {
                     ((Player) event.getPlayer()).sendMessage("Type: " + bc.getBlockState().getType().getName());
                 } else if (event.getPacketType() == PacketType.Play.Server.SYSTEM_CHAT_MESSAGE) {
                     WrapperPlayServerSystemChatMessage packet = new WrapperPlayServerSystemChatMessage(event);
+                } else if (event.getPacketType() == PacketType.Play.Server.UPDATE_ADVANCEMENTS) {
+                    WrapperPlayServerUpdateAdvancements packet = new WrapperPlayServerUpdateAdvancements(event);
+                    packet.getAdvancements();
+                } else if (event.getPacketType() == PacketType.Play.Server.STATISTICS) {
+                    WrapperPlayServerStatistics packet = new WrapperPlayServerStatistics(event);
+                    ((Player) event.getPlayer()).sendMessage(packet.getStatistics().toString());
                 }
             }
 
@@ -98,7 +106,7 @@ public class PacketEventsPlugin extends JavaPlugin {
                 PacketEvents.getAPI().getLogManager().debug("User: (host-name) " + event.getUser().getAddress().getHostString() + " disconnected...");
             }
         };
-//        PacketEvents.getAPI().getEventManager().registerListener(listener);
+        PacketEvents.getAPI().getEventManager().registerListener(listener);
     }
 
     @Override

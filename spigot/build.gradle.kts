@@ -36,6 +36,7 @@ tasks {
     // 1-20.5+        = Java 21
     val version = "1.21"
     val javaVersion = JavaLanguageVersion.of(21)
+    // 1.20.5+        = Java 21
 
     val jvmArgsExternal = listOf(
         "-Dcom.mojang.eula.agree=true"
@@ -68,4 +69,3 @@ tasks {
         jvmArgs = jvmArgsExternal
     }
 }
-
