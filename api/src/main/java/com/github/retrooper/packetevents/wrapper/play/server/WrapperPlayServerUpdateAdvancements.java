@@ -62,30 +62,28 @@ public class WrapperPlayServerUpdateAdvancements extends PacketWrapper<WrapperPl
                 display = new AdvancementDisplay(title, description, icon, frameType, showToast, hidden, backgroundTexture, x, y);
             }
 
-            Optional<List<String>> criteria = Optional.empty();
+            Optional<String[]> criteria = Optional.empty();
             if (serverVersion.isOlderThanOrEquals(ServerVersion.V_1_20_1)) {
-                List<String> criteriaList = new ArrayList<>();
-                int criteriaSize = readVarInt();
-                for (int j = 0; j < criteriaSize; j++) {
-                    criteriaList.add(readString());
+                String[] criteriaArray = new String[readVarInt()];
+                for (int j = 0; j < criteriaArray.length; j++) {
+                    criteriaArray[j] = readString();
                 }
-                criteria = Optional.of(criteriaList);
+                criteria = Optional.of(criteriaArray);
             }
-            List<List<String>> requirements = new ArrayList<>();
+            List<String[]> requirements = new ArrayList<>();
             int requirementsSize = readVarInt();
             for (int j = 0; j < requirementsSize; j++) {
-                List<String> requirement = new ArrayList<>();
-                int size = readVarInt();
-                for (int k = 0; k < size; k++) {
-                    requirement.add(readString());
+                String[] requirement = new String[readVarInt()];
+                for (int k = 0; k < requirement.length; k++) {
+                    requirement[k] = readString();
                 }
                 requirements.add(requirement);
             }
-            boolean sendsTelemetryData = false;
+            Optional<Boolean> sendsTelemetryData = Optional.empty();
             if (serverVersion.isNewerThanOrEquals(ServerVersion.V_1_20)) {
-                sendsTelemetryData = readBoolean();
+                sendsTelemetryData = Optional.of(readBoolean());
             }
-            advancements[i] = new Advancement(id, parentId, display, criteria, requirements, Optional.of(sendsTelemetryData));
+            advancements[i] = new Advancement(id, parentId, display, criteria, requirements, sendsTelemetryData);
         }
         removedAdvancements = new String[readVarInt()];
         for (int i = 0; i < removedAdvancements.length; i++) {
@@ -136,15 +134,15 @@ public class WrapperPlayServerUpdateAdvancements extends PacketWrapper<WrapperPl
                 writeFloat(display.getY());
             }
             if (serverVersion.isOlderThanOrEquals(ServerVersion.V_1_20_1)) {
-                List<String> criteriaList = advancement.getCriteria().orElse(new ArrayList<>());
-                writeVarInt(criteriaList.size());
-                for (String criteria : criteriaList) {
+                String[] criteriaArray = advancement.getCriteria().orElse(new String[0]);
+                writeVarInt(criteriaArray.length);
+                for (String criteria : criteriaArray) {
                     writeString(criteria);
                 }
             }
             writeVarInt(advancement.getRequirements().size());
-            for (List<String> requirement : advancement.getRequirements()) {
-                writeVarInt(requirement.size());
+            for (String[] requirement : advancement.getRequirements()) {
+                writeVarInt(requirement.length);
                 for (String s : requirement) {
                     writeString(s);
                 }
@@ -208,11 +206,12 @@ public class WrapperPlayServerUpdateAdvancements extends PacketWrapper<WrapperPl
         private final String parentId;
         private final AdvancementDisplay display;
         // 1.20.1-
-        private final Optional<List<String>> criteria;
-        private final List<List<String>> requirements;
+        private final Optional<String[]> criteria;
+        private final List<String[]> requirements;
+        // 1.20+
         private final Optional<Boolean> sendsTelemetryData;
 
-        public Advancement(String id, String parentId, AdvancementDisplay display, Optional<List<String>> criteria, List<List<String>> requirements, Optional<Boolean> sendsTelemetryData) {
+        public Advancement(String id, String parentId, AdvancementDisplay display, Optional<String[]> criteria, List<String[]> requirements, Optional<Boolean> sendsTelemetryData) {
             this.id = id;
             this.parentId = parentId;
             this.display = display;
@@ -233,11 +232,11 @@ public class WrapperPlayServerUpdateAdvancements extends PacketWrapper<WrapperPl
             return display;
         }
 
-        public Optional<List<String>> getCriteria() {
+        public Optional<String[]> getCriteria() {
             return criteria;
         }
 
-        public List<List<String>> getRequirements() {
+        public List<String[]> getRequirements() {
             return requirements;
         }
 
