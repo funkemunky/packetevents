@@ -94,9 +94,9 @@ public class WrapperPlayServerUpdateAdvancements extends PacketWrapper<WrapperPl
             int size = packetWrapper.readVarInt();
             for (int i = 0; i < size; i++) {
                 String criteria = packetWrapper.readString();
-                long time = -1;
+                Optional<Long> time = Optional.empty();
                 if (readBoolean()) {
-                    time = readLong();
+                    time = Optional.of(readLong());
                 }
                 list.add(new AdvancementProgress(criteria, time));
             }
@@ -159,9 +159,9 @@ public class WrapperPlayServerUpdateAdvancements extends PacketWrapper<WrapperPl
             packetWrapper.writeVarInt(progresses.size());
             for (AdvancementProgress advancementProgress : progresses) {
                 packetWrapper.writeString(advancementProgress.getCriteriaId());
-                if (advancementProgress.getTime() != -1) {
+                if (advancementProgress.getTime().isPresent()) {
                     packetWrapper.writeBoolean(true);
-                    packetWrapper.writeLong(advancementProgress.getTime());
+                    packetWrapper.writeLong(advancementProgress.getTime().get());
                 } else {
                     packetWrapper.writeBoolean(false);
                 }
@@ -338,22 +338,22 @@ public class WrapperPlayServerUpdateAdvancements extends PacketWrapper<WrapperPl
 
     public static class AdvancementProgress {
         private final String criteriaId;
-        private final long time;
+        private final Optional<Long> time;
 
-        public AdvancementProgress(String criteriaId, long time) {
+        public AdvancementProgress(String criteriaId, Optional<Long> time) {
             this.criteriaId = criteriaId;
             this.time = time;
         }
 
         public AdvancementProgress(String criteriaId) {
-            this(criteriaId, -1);
+            this(criteriaId, Optional.empty());
         }
 
         public String getCriteriaId() {
             return criteriaId;
         }
 
-        public long getTime() {
+        public Optional<Long> getTime() {
             return time;
         }
     }
