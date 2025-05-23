@@ -1123,7 +1123,7 @@ public final class PacketType {
             NBT_QUERY_RESPONSE(WrapperPlayServerNBTQueryResponse.class),
             COLLECT_ITEM(WrapperPlayServerCollectItem.class),
             ENTITY_TELEPORT(WrapperPlayServerEntityTeleport.class),
-            UPDATE_ADVANCEMENTS(null),
+            UPDATE_ADVANCEMENTS(WrapperPlayServerUpdateAdvancements.class),
             UPDATE_ATTRIBUTES(WrapperPlayServerUpdateAttributes.class),
             ENTITY_EFFECT(WrapperPlayServerEntityEffect.class),
             DECLARE_RECIPES(WrapperPlayServerDeclareRecipes.class),
