@@ -18,7 +18,7 @@ public class WrapperPlayServerUpdateAdvancements extends PacketWrapper<WrapperPl
     private Advancement[] advancements;
     private String[] removedAdvancements;
     private Map<String, List<AdvancementProgress>> progress;// key = advancement id
-    private boolean showAdvancements; // 1.21.5+
+    private Optional<Boolean> showAdvancements = Optional.empty(); // 1.21.5+
 
     public WrapperPlayServerUpdateAdvancements(PacketSendEvent event) {
         super(event);
@@ -28,7 +28,7 @@ public class WrapperPlayServerUpdateAdvancements extends PacketWrapper<WrapperPl
         super(PacketType.Play.Server.UPDATE_ADVANCEMENTS);
     }
 
-    public WrapperPlayServerUpdateAdvancements(boolean reset, Advancement[] advancements, String[] removedAdvancements, Map<String, List<AdvancementProgress>> progress, boolean showAdvancements) {
+    public WrapperPlayServerUpdateAdvancements(boolean reset, Advancement[] advancements, String[] removedAdvancements, Map<String, List<AdvancementProgress>> progress, Optional<Boolean> showAdvancements) {
         super(PacketType.Play.Server.UPDATE_ADVANCEMENTS);
         this.reset = reset;
         this.advancements = advancements;
@@ -105,7 +105,7 @@ public class WrapperPlayServerUpdateAdvancements extends PacketWrapper<WrapperPl
             return list;
         });
         if (serverVersion.isNewerThanOrEquals(ServerVersion.V_1_21_5)) {
-            showAdvancements = readBoolean();
+            showAdvancements = Optional.of(readBoolean());
         }
     }
 
@@ -170,7 +170,7 @@ public class WrapperPlayServerUpdateAdvancements extends PacketWrapper<WrapperPl
             }
         });
         if (serverVersion.isNewerThanOrEquals(ServerVersion.V_1_21_5)) {
-            writeBoolean(showAdvancements);
+            writeBoolean(showAdvancements.orElse(false));
         }
     }
 
@@ -199,7 +199,7 @@ public class WrapperPlayServerUpdateAdvancements extends PacketWrapper<WrapperPl
         return progress;
     }
 
-    public boolean isShowAdvancements() {
+    public Optional<Boolean> getShowAdvancements() {
         return showAdvancements;
     }
 
