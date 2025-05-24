@@ -24,10 +24,6 @@ public class WrapperPlayServerUpdateAdvancements extends PacketWrapper<WrapperPl
         super(event);
     }
 
-    public WrapperPlayServerUpdateAdvancements() {
-        super(PacketType.Play.Server.UPDATE_ADVANCEMENTS);
-    }
-
     public WrapperPlayServerUpdateAdvancements(boolean reset, Advancement[] advancements, String[] removedAdvancements, Map<String, List<AdvancementProgress>> progress, Optional<Boolean> showAdvancements) {
         super(PacketType.Play.Server.UPDATE_ADVANCEMENTS);
         this.reset = reset;
