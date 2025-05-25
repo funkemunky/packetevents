@@ -106,6 +106,11 @@ public class StaticEnchantmentType extends AbstractMappedEntity implements Encha
     }
 
     @Override
+    public MappedEntityRefSet<EnchantmentType> getExclusiveRefSet() {
+        return this.exclusiveSetRef;
+    }
+
+    @Override
     public StaticComponentMap getEffects() {
         return this.effects;
     }

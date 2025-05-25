@@ -39,4 +39,6 @@ public interface MappedEntityRefSet<T extends MappedEntity> {
     }
 
     MappedEntitySet<T> resolve(ClientVersion version, IRegistry<T> registry);
+
+    boolean isEmpty();
 }

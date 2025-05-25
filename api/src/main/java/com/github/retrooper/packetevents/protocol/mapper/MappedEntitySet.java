@@ -31,6 +31,7 @@ import org.jspecify.annotations.NullMarked;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 import java.util.function.BiFunction;
@@ -155,6 +156,44 @@ public class MappedEntitySet<T extends MappedEntity> implements MappedEntityRefS
         return listTag;
     }
 
+    public static <Z extends MappedEntity> MappedEntityRefSet<Z> decodeRefSet(NBT nbt, ClientVersion version) {
+        List<String> list;
+        if (nbt instanceof NBTString) {
+            String singleEntry = ((NBTString) nbt).getValue();
+            // check whether this is a tag key or a single-entry list
+            if (!singleEntry.isEmpty() && singleEntry.charAt(0) == '#') {
+                String tagName = singleEntry.substring(1);
+                ResourceLocation tagKey = new ResourceLocation(tagName);
+                return new MappedEntitySet<>(tagKey);
+            }
+            // single entry list
+            list = Collections.singletonList(singleEntry);
+        } else {
+            // assume it's a list
+            NBTList<?> listTag = (NBTList<?>) nbt;
+            list = new ArrayList<>(listTag.size());
+            for (NBT tag : listTag.getTags()) {
+                list.add(((NBTString) tag).getValue());
+            }
+        }
+        return new NameRefSetImpl<>(list);
+    }
+
+    public static <Z extends MappedEntity> NBT encodeRefSet(MappedEntityRefSet<Z> refSet, ClientVersion version) {
+        if (refSet instanceof NameRefSetImpl<?>) {
+            NameRefSetImpl<?> nameRefSet = (NameRefSetImpl<?>) refSet;
+            NBTList<NBTString> listTag = NBTList.createStringList();
+            for (String entityName : nameRefSet.entries) {
+                listTag.addTag(new NBTString(entityName));
+            }
+            return listTag;
+        } else if (refSet instanceof MappedEntitySet<?>) {
+            return encode((MappedEntitySet<?>) refSet, version);
+        } else {
+            throw new UnsupportedOperationException("Unsupported mapped entity reference set implementation: " + refSet);
+        }
+    }
+
     @Override
     public MappedEntitySet<T> resolve(PacketWrapper<?> wrapper, IRegistry<T> registry) {
         return this;
@@ -219,6 +258,11 @@ public class MappedEntitySet<T extends MappedEntity> implements MappedEntityRefS
         }
 
         @Override
+        public boolean isEmpty() {
+            return this.entries.length == 0;
+        }
+
+        @Override
         public boolean equals(Object obj) {
             if (!(obj instanceof IdRefSetImpl)) return false;
             IdRefSetImpl<?> idRefSet = (IdRefSetImpl<?>) obj;
@@ -233,6 +277,46 @@ public class MappedEntitySet<T extends MappedEntity> implements MappedEntityRefS
         @Override
         public String toString() {
             return "IdRefSetImpl{entries=" + Arrays.toString(this.entries) + '}';
+        }
+    }
+
+    private static final class NameRefSetImpl<T extends MappedEntity> implements MappedEntityRefSet<T> {
+
+        private final List<String> entries;
+
+        public NameRefSetImpl(List<String> entries) {
+            this.entries = entries;
+        }
+
+        @Override
+        public MappedEntitySet<T> resolve(ClientVersion version, IRegistry<T> registry) {
+            List<T> entities = new ArrayList<>(this.entries.size());
+            for (String entityName : this.entries) {
+                entities.add(registry.getByNameOrThrow(entityName));
+            }
+            return new MappedEntitySet<>(entities);
+        }
+
+        @Override
+        public boolean isEmpty() {
+            return this.entries.isEmpty();
+        }
+
+        @Override
+        public boolean equals(Object obj) {
+            if (!(obj instanceof NameRefSetImpl)) return false;
+            NameRefSetImpl<?> that = (NameRefSetImpl<?>) obj;
+            return this.entries.equals(that.entries);
+        }
+
+        @Override
+        public int hashCode() {
+            return Objects.hashCode(this.entries);
+        }
+
+        @Override
+        public String toString() {
+            return "NameRefSetImpl{entries=" + this.entries + '}';
         }
     }
 }
