@@ -26,6 +26,7 @@ import com.github.retrooper.packetevents.resources.ResourceLocation;
 import com.github.retrooper.packetevents.util.mappings.IRegistry;
 import com.github.retrooper.packetevents.wrapper.PacketWrapper;
 import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.NullMarked;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -35,7 +36,8 @@ import java.util.function.BiFunction;
 /**
  * Either a key to a specific tag or a list of possible entities.
  */
-public class MappedEntitySet<T> {
+@NullMarked
+public class MappedEntitySet<T extends MappedEntity> implements MappedEntityRefSet<T> {
 
     private final @Nullable ResourceLocation tagKey;
     private final @Nullable List<T> entities;
@@ -61,6 +63,31 @@ public class MappedEntitySet<T> {
 
     public static <Z extends MappedEntity> MappedEntitySet<Z> createEmpty() {
         return new MappedEntitySet<>(new ArrayList<>(0));
+    }
+
+    public static <Z extends MappedEntity> MappedEntityRefSet<Z> readRefSet(PacketWrapper<?> wrapper) {
+        int count = wrapper.readVarInt() - 1;
+        if (count == -1) {
+            return new TagRefSetImpl<>(wrapper.readIdentifier());
+        }
+        int[] entries = wrapper.readVarIntArrayOfSize(Math.min(count, 65536));
+        return new IdRefSetImpl<>(entries);
+    }
+
+    public static void writeRefSet(PacketWrapper<?> wrapper, MappedEntityRefSet<?> refSet) {
+        if (refSet instanceof TagRefSetImpl<?>) {
+            TagRefSetImpl<?> tagRefSet = (TagRefSetImpl<?>) refSet;
+            wrapper.writeVarInt(-1 + 1);
+            wrapper.writeIdentifier(tagRefSet.tagKey);
+        } else if (refSet instanceof IdRefSetImpl<?>) {
+            IdRefSetImpl<?> idRefSet = (IdRefSetImpl<?>) refSet;
+            wrapper.writeVarInt(idRefSet.entries.length + 1);
+            wrapper.writeVarIntArrayOfSize(idRefSet.entries);
+        } else if (refSet instanceof MappedEntitySet<?>) {
+            write(wrapper, (MappedEntitySet<?>) refSet);
+        } else {
+            throw new UnsupportedOperationException("Unsupported mapped entity reference set implementation: " + refSet);
+        }
     }
 
     public static <Z extends MappedEntity> MappedEntitySet<Z> read(
@@ -130,6 +157,11 @@ public class MappedEntitySet<T> {
         return listTag;
     }
 
+    @Override
+    public MappedEntitySet<T> resolve(PacketWrapper<?> wrapper, IRegistry<T> registry) {
+        return this;
+    }
+
     public boolean isEmpty() {
         return this.entities != null && this.entities.isEmpty();
     }
@@ -159,5 +191,38 @@ public class MappedEntitySet<T> {
     @Override
     public String toString() {
         return "MappedEntitySet{tagKey=" + this.tagKey + ", entities=" + this.entities + '}';
+    }
+
+    private static final class TagRefSetImpl<T extends MappedEntity> implements MappedEntityRefSet<T> {
+
+        private final ResourceLocation tagKey;
+
+        public TagRefSetImpl(ResourceLocation tagKey) {
+            this.tagKey = tagKey;
+        }
+
+        @Override
+        public MappedEntitySet<T> resolve(PacketWrapper<?> wrapper, IRegistry<T> registry) {
+            return new MappedEntitySet<>(this.tagKey);
+        }
+    }
+
+    private static final class IdRefSetImpl<T extends MappedEntity> implements MappedEntityRefSet<T> {
+
+        private final int[] entries;
+
+        public IdRefSetImpl(int[] entries) {
+            this.entries = entries;
+        }
+
+        @Override
+        public MappedEntitySet<T> resolve(PacketWrapper<?> wrapper, IRegistry<T> registry) {
+            ClientVersion version = wrapper.getServerVersion().toClientVersion();
+            List<T> entities = new ArrayList<>(this.entries.length);
+            for (int entityId : this.entries) {
+                entities.add(registry.getByIdOrThrow(version, entityId));
+            }
+            return new MappedEntitySet<>(entities);
+        }
     }
 }

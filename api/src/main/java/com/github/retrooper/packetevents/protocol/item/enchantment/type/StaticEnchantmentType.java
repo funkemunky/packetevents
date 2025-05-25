@@ -33,7 +33,7 @@ public class StaticEnchantmentType extends AbstractMappedEntity implements Encha
 
     private final Component description;
     private final EnchantmentDefinition definition;
-    private final MappedEntitySet<EnchantmentType> exclusiveSet;
+    private final MappedEntitySet.RefSet<EnchantmentType> exclusiveSet;
     private final StaticComponentMap effects;
 
     public StaticEnchantmentType(
