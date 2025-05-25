@@ -24,11 +24,13 @@ import com.github.retrooper.packetevents.protocol.nbt.NBTString;
 import com.github.retrooper.packetevents.protocol.player.ClientVersion;
 import com.github.retrooper.packetevents.resources.ResourceLocation;
 import com.github.retrooper.packetevents.util.mappings.IRegistry;
+import com.github.retrooper.packetevents.util.mappings.IRegistryHolder;
 import com.github.retrooper.packetevents.wrapper.PacketWrapper;
 import org.jetbrains.annotations.Nullable;
 import org.jspecify.annotations.NullMarked;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 import java.util.function.BiFunction;
@@ -68,18 +70,14 @@ public class MappedEntitySet<T extends MappedEntity> implements MappedEntityRefS
     public static <Z extends MappedEntity> MappedEntityRefSet<Z> readRefSet(PacketWrapper<?> wrapper) {
         int count = wrapper.readVarInt() - 1;
         if (count == -1) {
-            return new TagRefSetImpl<>(wrapper.readIdentifier());
+            return new MappedEntitySet<>(wrapper.readIdentifier());
         }
         int[] entries = wrapper.readVarIntArrayOfSize(Math.min(count, 65536));
         return new IdRefSetImpl<>(entries);
     }
 
     public static void writeRefSet(PacketWrapper<?> wrapper, MappedEntityRefSet<?> refSet) {
-        if (refSet instanceof TagRefSetImpl<?>) {
-            TagRefSetImpl<?> tagRefSet = (TagRefSetImpl<?>) refSet;
-            wrapper.writeVarInt(-1 + 1);
-            wrapper.writeIdentifier(tagRefSet.tagKey);
-        } else if (refSet instanceof IdRefSetImpl<?>) {
+        if (refSet instanceof IdRefSetImpl<?>) {
             IdRefSetImpl<?> idRefSet = (IdRefSetImpl<?>) refSet;
             wrapper.writeVarInt(idRefSet.entries.length + 1);
             wrapper.writeVarIntArrayOfSize(idRefSet.entries);
@@ -162,6 +160,16 @@ public class MappedEntitySet<T extends MappedEntity> implements MappedEntityRefS
         return this;
     }
 
+    @Override
+    public MappedEntitySet<T> resolve(ClientVersion version, IRegistryHolder registryHolder, IRegistry<T> registry) {
+        return this;
+    }
+
+    @Override
+    public MappedEntitySet<T> resolve(ClientVersion version, IRegistry<T> registry) {
+        return this;
+    }
+
     public boolean isEmpty() {
         return this.entities != null && this.entities.isEmpty();
     }
@@ -193,20 +201,6 @@ public class MappedEntitySet<T extends MappedEntity> implements MappedEntityRefS
         return "MappedEntitySet{tagKey=" + this.tagKey + ", entities=" + this.entities + '}';
     }
 
-    private static final class TagRefSetImpl<T extends MappedEntity> implements MappedEntityRefSet<T> {
-
-        private final ResourceLocation tagKey;
-
-        public TagRefSetImpl(ResourceLocation tagKey) {
-            this.tagKey = tagKey;
-        }
-
-        @Override
-        public MappedEntitySet<T> resolve(PacketWrapper<?> wrapper, IRegistry<T> registry) {
-            return new MappedEntitySet<>(this.tagKey);
-        }
-    }
-
     private static final class IdRefSetImpl<T extends MappedEntity> implements MappedEntityRefSet<T> {
 
         private final int[] entries;
@@ -216,13 +210,29 @@ public class MappedEntitySet<T extends MappedEntity> implements MappedEntityRefS
         }
 
         @Override
-        public MappedEntitySet<T> resolve(PacketWrapper<?> wrapper, IRegistry<T> registry) {
-            ClientVersion version = wrapper.getServerVersion().toClientVersion();
+        public MappedEntitySet<T> resolve(ClientVersion version, IRegistry<T> registry) {
             List<T> entities = new ArrayList<>(this.entries.length);
             for (int entityId : this.entries) {
                 entities.add(registry.getByIdOrThrow(version, entityId));
             }
             return new MappedEntitySet<>(entities);
+        }
+
+        @Override
+        public boolean equals(Object obj) {
+            if (!(obj instanceof IdRefSetImpl)) return false;
+            IdRefSetImpl<?> idRefSet = (IdRefSetImpl<?>) obj;
+            return Arrays.equals(this.entries, idRefSet.entries);
+        }
+
+        @Override
+        public int hashCode() {
+            return Arrays.hashCode(this.entries);
+        }
+
+        @Override
+        public String toString() {
+            return "IdRefSetImpl{entries=" + Arrays.toString(this.entries) + '}';
         }
     }
 }

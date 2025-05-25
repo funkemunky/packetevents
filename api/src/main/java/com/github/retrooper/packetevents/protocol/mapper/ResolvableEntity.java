@@ -19,24 +19,17 @@
 package com.github.retrooper.packetevents.protocol.mapper;
 
 import com.github.retrooper.packetevents.protocol.player.ClientVersion;
-import com.github.retrooper.packetevents.util.mappings.IRegistry;
 import com.github.retrooper.packetevents.util.mappings.IRegistryHolder;
-import com.github.retrooper.packetevents.wrapper.PacketWrapper;
+import org.jetbrains.annotations.ApiStatus;
 import org.jspecify.annotations.NullMarked;
 
+/**
+ * Used internally for loading additional data
+ * after registry entries have already been added.
+ */
+@ApiStatus.Internal
 @NullMarked
-public interface MappedEntityRefSet<T extends MappedEntity> {
+public interface ResolvableEntity {
 
-    default MappedEntitySet<T> resolve(PacketWrapper<?> wrapper, IRegistry<T> registry) {
-        ClientVersion version = wrapper.getServerVersion().toClientVersion();
-        IRegistry<T> replacedRegistry = wrapper.getRegistryHolder().getRegistryOr(registry, version);
-        return this.resolve(version, replacedRegistry);
-    }
-
-    default MappedEntitySet<T> resolve(ClientVersion version, IRegistryHolder registryHolder, IRegistry<T> registry) {
-        IRegistry<T> replacedRegistry = registryHolder.getRegistryOr(registry, version);
-        return this.resolve(version, replacedRegistry);
-    }
-
-    MappedEntitySet<T> resolve(ClientVersion version, IRegistry<T> registry);
+    void doResolve(IRegistryHolder registryHolder, ClientVersion version);
 }
