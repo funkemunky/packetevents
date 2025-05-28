@@ -3,7 +3,6 @@ package com.github.retrooper.packetevents.wrapper.play.server;
 import com.github.retrooper.packetevents.event.PacketSendEvent;
 import com.github.retrooper.packetevents.protocol.packettype.PacketType;
 import com.github.retrooper.packetevents.wrapper.PacketWrapper;
-
 import java.util.Map;
 
 public class WrapperPlayServerStatistics extends PacketWrapper<WrapperPlayServerStatistics> {
@@ -37,5 +36,9 @@ public class WrapperPlayServerStatistics extends PacketWrapper<WrapperPlayServer
 
     public Map<String, Integer> getStatistics() {
         return statistics;
+    }
+
+    public void setStatistics(final Map<String, Integer> statistics) {
+        this.statistics = statistics;
     }
 }

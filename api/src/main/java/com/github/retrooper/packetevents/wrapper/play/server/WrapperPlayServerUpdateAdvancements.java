@@ -5,13 +5,12 @@ import com.github.retrooper.packetevents.manager.server.ServerVersion;
 import com.github.retrooper.packetevents.protocol.item.ItemStack;
 import com.github.retrooper.packetevents.protocol.packettype.PacketType;
 import com.github.retrooper.packetevents.wrapper.PacketWrapper;
-import net.kyori.adventure.text.Component;
-import org.jetbrains.annotations.Nullable;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import net.kyori.adventure.text.Component;
+import org.jetbrains.annotations.Nullable;
 
 public class WrapperPlayServerUpdateAdvancements extends PacketWrapper<WrapperPlayServerUpdateAdvancements> {
     private boolean reset;
@@ -197,15 +196,35 @@ public class WrapperPlayServerUpdateAdvancements extends PacketWrapper<WrapperPl
         return showAdvancements;
     }
 
+    public void setReset(final boolean reset) {
+        this.reset = reset;
+    }
+
+    public void setAdvancements(final Advancement[] advancements) {
+        this.advancements = advancements;
+    }
+
+    public void setRemovedAdvancements(final String[] removedAdvancements) {
+        this.removedAdvancements = removedAdvancements;
+    }
+
+    public void setProgress(final Map<String, List<AdvancementProgress>> progress) {
+        this.progress = progress;
+    }
+
+    public void setShowAdvancements(final Optional<Boolean> showAdvancements) {
+        this.showAdvancements = showAdvancements;
+    }
+
     public static class Advancement {
-        private final String id;
-        private final String parentId;
-        private final AdvancementDisplay display;
+        private String id;
+        private String parentId;
+        private AdvancementDisplay display;
         // 1.20.1-
-        private final Optional<String[]> criteria;
-        private final List<String[]> requirements;
+        private Optional<String[]> criteria;
+        private List<String[]> requirements;
         // 1.20+
-        private final Optional<Boolean> sendsTelemetryData;
+        private Optional<Boolean> sendsTelemetryData;
 
         public Advancement(String id, String parentId, AdvancementDisplay display, Optional<String[]> criteria, List<String[]> requirements, Optional<Boolean> sendsTelemetryData) {
             this.id = id;
@@ -239,22 +258,46 @@ public class WrapperPlayServerUpdateAdvancements extends PacketWrapper<WrapperPl
         public Optional<Boolean> isSendsTelemetryData() {
             return sendsTelemetryData;
         }
+
+        public void setId(final String id) {
+            this.id = id;
+        }
+
+        public void setParentId(final String parentId) {
+            this.parentId = parentId;
+        }
+
+        public void setDisplay(final AdvancementDisplay display) {
+            this.display = display;
+        }
+
+        public void setCriteria(final Optional<String[]> criteria) {
+            this.criteria = criteria;
+        }
+
+        public void setRequirements(final List<String[]> requirements) {
+            this.requirements = requirements;
+        }
+
+        public void setSendsTelemetryData(final Optional<Boolean> sendsTelemetryData) {
+            this.sendsTelemetryData = sendsTelemetryData;
+        }
     }
 
     public static class AdvancementDisplay {
         public static final int SHOW_BACKGROUND_TEXTURE = 0x01;
         public static final int SHOW_TOAST = 0x02;
         public static final int HIDDEN = 0x04;
-        private final Component title;
-        private final Component description;
-        private final ItemStack icon;
-        private final AdvancementFrameType frameType;
-        private final boolean showToast;
-        private final boolean hidden;
+        private Component title;
+        private Component description;
+        private ItemStack icon;
+        private AdvancementFrameType frameType;
+        private boolean showToast;
+        private boolean hidden;
         @Nullable
-        private final String backgroundTexture;
-        private final float x;
-        private final float y;
+        private String backgroundTexture;
+        private float x;
+        private float y;
 
         public AdvancementDisplay(Component title, Component description, ItemStack icon, AdvancementFrameType frameType, boolean showToast, boolean hidden, @Nullable String backgroundTexture, float x, float y) {
             this.title = title;
@@ -318,6 +361,42 @@ public class WrapperPlayServerUpdateAdvancements extends PacketWrapper<WrapperPl
         public float getY() {
             return y;
         }
+
+        public void setTitle(final Component title) {
+            this.title = title;
+        }
+
+        public void setDescription(final Component description) {
+            this.description = description;
+        }
+
+        public void setIcon(final ItemStack icon) {
+            this.icon = icon;
+        }
+
+        public void setFrameType(final AdvancementFrameType frameType) {
+            this.frameType = frameType;
+        }
+
+        public void setShowToast(final boolean showToast) {
+            this.showToast = showToast;
+        }
+
+        public void setHidden(final boolean hidden) {
+            this.hidden = hidden;
+        }
+
+        public void setBackgroundTexture(@Nullable final String backgroundTexture) {
+            this.backgroundTexture = backgroundTexture;
+        }
+
+        public void setX(final float x) {
+            this.x = x;
+        }
+
+        public void setY(final float y) {
+            this.y = y;
+        }
     }
 
     public enum AdvancementFrameType {
@@ -333,8 +412,8 @@ public class WrapperPlayServerUpdateAdvancements extends PacketWrapper<WrapperPl
     }
 
     public static class AdvancementProgress {
-        private final String criteriaId;
-        private final Optional<Long> time;
+        private String criteriaId;
+        private Optional<Long> time;
 
         public AdvancementProgress(String criteriaId, Optional<Long> time) {
             this.criteriaId = criteriaId;
@@ -351,6 +430,14 @@ public class WrapperPlayServerUpdateAdvancements extends PacketWrapper<WrapperPl
 
         public Optional<Long> getTime() {
             return time;
+        }
+
+        public void setCriteriaId(final String criteriaId) {
+            this.criteriaId = criteriaId;
+        }
+
+        public void setTime(final Optional<Long> time) {
+            this.time = time;
         }
     }
 }
