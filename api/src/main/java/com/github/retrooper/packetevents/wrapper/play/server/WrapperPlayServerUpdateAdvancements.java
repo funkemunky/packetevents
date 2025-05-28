@@ -196,23 +196,23 @@ public class WrapperPlayServerUpdateAdvancements extends PacketWrapper<WrapperPl
         return showAdvancements;
     }
 
-    public void setReset(final boolean reset) {
+    public void setReset(boolean reset) {
         this.reset = reset;
     }
 
-    public void setAdvancements(final Advancement[] advancements) {
+    public void setAdvancements(Advancement[] advancements) {
         this.advancements = advancements;
     }
 
-    public void setRemovedAdvancements(final String[] removedAdvancements) {
+    public void setRemovedAdvancements(String[] removedAdvancements) {
         this.removedAdvancements = removedAdvancements;
     }
 
-    public void setProgress(final Map<String, List<AdvancementProgress>> progress) {
+    public void setProgress(Map<String, List<AdvancementProgress>> progress) {
         this.progress = progress;
     }
 
-    public void setShowAdvancements(final Optional<Boolean> showAdvancements) {
+    public void setShowAdvancements(Optional<Boolean> showAdvancements) {
         this.showAdvancements = showAdvancements;
     }
 
@@ -259,27 +259,27 @@ public class WrapperPlayServerUpdateAdvancements extends PacketWrapper<WrapperPl
             return sendsTelemetryData;
         }
 
-        public void setId(final String id) {
+        public void setId(String id) {
             this.id = id;
         }
 
-        public void setParentId(final String parentId) {
+        public void setParentId(String parentId) {
             this.parentId = parentId;
         }
 
-        public void setDisplay(final AdvancementDisplay display) {
+        public void setDisplay(AdvancementDisplay display) {
             this.display = display;
         }
 
-        public void setCriteria(final Optional<String[]> criteria) {
+        public void setCriteria(Optional<String[]> criteria) {
             this.criteria = criteria;
         }
 
-        public void setRequirements(final List<String[]> requirements) {
+        public void setRequirements(List<String[]> requirements) {
             this.requirements = requirements;
         }
 
-        public void setSendsTelemetryData(final Optional<Boolean> sendsTelemetryData) {
+        public void setSendsTelemetryData(Optional<Boolean> sendsTelemetryData) {
             this.sendsTelemetryData = sendsTelemetryData;
         }
     }
@@ -362,39 +362,39 @@ public class WrapperPlayServerUpdateAdvancements extends PacketWrapper<WrapperPl
             return y;
         }
 
-        public void setTitle(final Component title) {
+        public void setTitle(Component title) {
             this.title = title;
         }
 
-        public void setDescription(final Component description) {
+        public void setDescription(Component description) {
             this.description = description;
         }
 
-        public void setIcon(final ItemStack icon) {
+        public void setIcon(ItemStack icon) {
             this.icon = icon;
         }
 
-        public void setFrameType(final AdvancementFrameType frameType) {
+        public void setFrameType(AdvancementFrameType frameType) {
             this.frameType = frameType;
         }
 
-        public void setShowToast(final boolean showToast) {
+        public void setShowToast(boolean showToast) {
             this.showToast = showToast;
         }
 
-        public void setHidden(final boolean hidden) {
+        public void setHidden(boolean hidden) {
             this.hidden = hidden;
         }
 
-        public void setBackgroundTexture(@Nullable final String backgroundTexture) {
+        public void setBackgroundTexture(@Nullable String backgroundTexture) {
             this.backgroundTexture = backgroundTexture;
         }
 
-        public void setX(final float x) {
+        public void setX(float x) {
             this.x = x;
         }
 
-        public void setY(final float y) {
+        public void setY(float y) {
             this.y = y;
         }
     }
@@ -432,11 +432,11 @@ public class WrapperPlayServerUpdateAdvancements extends PacketWrapper<WrapperPl
             return time;
         }
 
-        public void setCriteriaId(final String criteriaId) {
+        public void setCriteriaId(String criteriaId) {
             this.criteriaId = criteriaId;
         }
 
-        public void setTime(final Optional<Long> time) {
+        public void setTime(Optional<Long> time) {
             this.time = time;
         }
     }

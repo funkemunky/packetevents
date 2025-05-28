@@ -38,7 +38,7 @@ public class WrapperPlayServerStatistics extends PacketWrapper<WrapperPlayServer
         return statistics;
     }
 
-    public void setStatistics(final Map<String, Integer> statistics) {
+    public void setStatistics(Map<String, Integer> statistics) {
         this.statistics = statistics;
     }
 }
