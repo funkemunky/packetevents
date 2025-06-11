@@ -119,6 +119,7 @@ import com.github.retrooper.packetevents.wrapper.login.server.WrapperLoginServer
 import com.github.retrooper.packetevents.wrapper.login.server.WrapperLoginServerSetCompression;
 import com.github.retrooper.packetevents.wrapper.play.client.WrapperPlayClientAdvancementTab;
 import com.github.retrooper.packetevents.wrapper.play.client.WrapperPlayClientAnimation;
+import com.github.retrooper.packetevents.wrapper.play.client.WrapperPlayClientChangeGameMode;
 import com.github.retrooper.packetevents.wrapper.play.client.WrapperPlayClientChatAck;
 import com.github.retrooper.packetevents.wrapper.play.client.WrapperPlayClientChatCommand;
 import com.github.retrooper.packetevents.wrapper.play.client.WrapperPlayClientChatCommandUnsigned;
