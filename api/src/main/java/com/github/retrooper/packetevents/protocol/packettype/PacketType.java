@@ -88,6 +88,7 @@ import com.github.retrooper.packetevents.wrapper.configuration.client.WrapperCon
 import com.github.retrooper.packetevents.wrapper.configuration.client.WrapperConfigClientResourcePackStatus;
 import com.github.retrooper.packetevents.wrapper.configuration.client.WrapperConfigClientSelectKnownPacks;
 import com.github.retrooper.packetevents.wrapper.configuration.client.WrapperConfigClientSettings;
+import com.github.retrooper.packetevents.wrapper.configuration.server.WrapperConfigServerClearDialog;
 import com.github.retrooper.packetevents.wrapper.configuration.server.WrapperConfigServerConfigurationEnd;
 import com.github.retrooper.packetevents.wrapper.configuration.server.WrapperConfigServerCookieRequest;
 import com.github.retrooper.packetevents.wrapper.configuration.server.WrapperConfigServerCustomReportDetails;
