@@ -81,6 +81,7 @@ import com.github.retrooper.packetevents.util.VersionMapper;
 import com.github.retrooper.packetevents.wrapper.PacketWrapper;
 import com.github.retrooper.packetevents.wrapper.configuration.client.WrapperConfigClientConfigurationEndAck;
 import com.github.retrooper.packetevents.wrapper.configuration.client.WrapperConfigClientCookieResponse;
+import com.github.retrooper.packetevents.wrapper.configuration.client.WrapperConfigClientCustomClickAction;
 import com.github.retrooper.packetevents.wrapper.configuration.client.WrapperConfigClientKeepAlive;
 import com.github.retrooper.packetevents.wrapper.configuration.client.WrapperConfigClientPluginMessage;
 import com.github.retrooper.packetevents.wrapper.configuration.client.WrapperConfigClientPong;
@@ -132,6 +133,7 @@ import com.github.retrooper.packetevents.wrapper.play.client.WrapperPlayClientCo
 import com.github.retrooper.packetevents.wrapper.play.client.WrapperPlayClientCookieResponse;
 import com.github.retrooper.packetevents.wrapper.play.client.WrapperPlayClientCraftRecipeRequest;
 import com.github.retrooper.packetevents.wrapper.play.client.WrapperPlayClientCreativeInventoryAction;
+import com.github.retrooper.packetevents.wrapper.play.client.WrapperPlayClientCustomClickAction;
 import com.github.retrooper.packetevents.wrapper.play.client.WrapperPlayClientDebugPing;
 import com.github.retrooper.packetevents.wrapper.play.client.WrapperPlayClientDebugSampleSubscription;
 import com.github.retrooper.packetevents.wrapper.play.client.WrapperPlayClientEditBook;

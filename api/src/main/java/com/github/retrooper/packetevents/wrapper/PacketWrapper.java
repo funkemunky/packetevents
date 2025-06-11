@@ -1511,6 +1511,36 @@ public class PacketWrapper<T extends PacketWrapper<T>> {
         this.writeVarInt(i == null ? 0 : i + 1);
     }
 
+    public <Z> Z readLengthPrefixed(int maxLength, Reader<Z> reader) {
+        int length = this.readVarInt();
+        if (length > maxLength) {
+            throw new RuntimeException("Buffer size " + length + " is larger than allowed limit of " + maxLength);
+        }
+        Object prevBuffer = this.buffer;
+        try {
+            // temporarily replace wrapped buffer with slice
+            this.buffer = ByteBufHelper.readSlice(prevBuffer, length);
+            return reader.apply(this);
+        } finally {
+            this.buffer = prevBuffer;
+        }
+    }
+
+    public <Z> void writeLengthPrefixed(Z value, Writer<Z> writer) {
+        Object payloadBuffer = ByteBufHelper.allocateNewBuffer(this.buffer);
+        Object prevBuffer = this.buffer;
+        try {
+            // temporarily replace wrapped buffer with payload buffer
+            this.buffer = payloadBuffer;
+            writer.accept(this, value);
+        } finally {
+            this.buffer = prevBuffer;
+        }
+        // write length to real buffer copy payload afterwards
+        this.writeVarInt(ByteBufHelper.readableBytes(payloadBuffer));
+        ByteBufHelper.writeBytes(prevBuffer, payloadBuffer);
+    }
+
     @FunctionalInterface
     public interface Reader<T> extends Function<PacketWrapper<?>, T> {
     }
