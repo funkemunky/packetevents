@@ -1,6 +1,6 @@
 /*
  * This file is part of packetevents - https://github.com/retrooper/packetevents
- * Copyright (C) 2022 retrooper and contributors
+ * Copyright (C) 2025 retrooper and contributors
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,7 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.github.retrooper.packetevents.wrapper.play.server;
+package com.github.retrooper.packetevents.wrapper.configuration.server;
 
 import com.github.retrooper.packetevents.event.PacketSendEvent;
 import com.github.retrooper.packetevents.protocol.packettype.PacketType;
@@ -25,13 +25,13 @@ import com.github.retrooper.packetevents.wrapper.common.server.WrapperCommonServ
 /**
  * {@inheritDoc}
  */
-public class WrapperPlayServerPing extends WrapperCommonServerPing<WrapperPlayServerPing> {
+public class WrapperConfigServerPing extends WrapperCommonServerPing<WrapperConfigServerPing> {
 
-    public WrapperPlayServerPing(PacketSendEvent event) {
+    public WrapperConfigServerPing(PacketSendEvent event) {
         super(event);
     }
 
-    public WrapperPlayServerPing(int id) {
-        super(PacketType.Play.Server.PING, id);
+    public WrapperConfigServerPing(int id) {
+        super(PacketType.Configuration.Server.PING, id);
     }
 }

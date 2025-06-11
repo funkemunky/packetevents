@@ -94,6 +94,7 @@ import com.github.retrooper.packetevents.wrapper.configuration.server.WrapperCon
 import com.github.retrooper.packetevents.wrapper.configuration.server.WrapperConfigServerCustomReportDetails;
 import com.github.retrooper.packetevents.wrapper.configuration.server.WrapperConfigServerDisconnect;
 import com.github.retrooper.packetevents.wrapper.configuration.server.WrapperConfigServerKeepAlive;
+import com.github.retrooper.packetevents.wrapper.configuration.server.WrapperConfigServerPing;
 import com.github.retrooper.packetevents.wrapper.configuration.server.WrapperConfigServerPluginMessage;
 import com.github.retrooper.packetevents.wrapper.configuration.server.WrapperConfigServerRegistryData;
 import com.github.retrooper.packetevents.wrapper.configuration.server.WrapperConfigServerResetChat;
@@ -704,7 +705,7 @@ public final class PacketType {
             DISCONNECT(WrapperConfigServerDisconnect.class),
             CONFIGURATION_END(WrapperConfigServerConfigurationEnd.class),
             KEEP_ALIVE(WrapperConfigServerKeepAlive.class),
-            PING(null),
+            PING(WrapperConfigServerPing.class),
             REGISTRY_DATA(WrapperConfigServerRegistryData.class),
             RESOURCE_PACK_SEND(WrapperConfigServerResourcePackSend.class),
             UPDATE_ENABLED_FEATURES(WrapperConfigServerUpdateEnabledFeatures.class),
