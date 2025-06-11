@@ -16,29 +16,26 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.github.retrooper.packetevents.wrapper.configuration.server;
+package com.github.retrooper.packetevents.protocol.dialog.input;
 
-import com.github.retrooper.packetevents.event.PacketSendEvent;
-import com.github.retrooper.packetevents.protocol.packettype.PacketType;
-import com.github.retrooper.packetevents.wrapper.common.server.WrapperCommonServerShowDialog;
+import org.jspecify.annotations.NullMarked;
 
-public class WrapperConfigServerShowDialog extends WrapperCommonServerShowDialog<WrapperConfigServerShowDialog> {
+@NullMarked
+public class DialogInput {
 
-    public WrapperConfigServerShowDialog(PacketSendEvent event) {
-        super(event);
+    private final String key;
+    private final InputControl control;
+
+    public DialogInput(String key, InputControl control) {
+        this.key = key;
+        this.control = control;
     }
 
-    public WrapperConfigServerShowDialog(Dialog dialog) {
-        super(PacketType.Configuration.Server.SHOW_DIALOG, dialog);
+    public String getKey() {
+        return this.key;
     }
 
-    @Override
-    public void read() {
-        this.dialog = Dialog.readDirect(this);
-    }
-
-    @Override
-    public void write() {
-        Dialog.writeDirect(this, this.dialog);
+    public InputControl getControl() {
+        return this.control;
     }
 }

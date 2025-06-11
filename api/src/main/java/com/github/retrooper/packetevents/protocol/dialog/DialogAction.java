@@ -16,29 +16,31 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.github.retrooper.packetevents.wrapper.configuration.server;
+package com.github.retrooper.packetevents.protocol.dialog;
 
-import com.github.retrooper.packetevents.event.PacketSendEvent;
-import com.github.retrooper.packetevents.protocol.packettype.PacketType;
-import com.github.retrooper.packetevents.wrapper.common.server.WrapperCommonServerShowDialog;
+import org.jspecify.annotations.NullMarked;
 
-public class WrapperConfigServerShowDialog extends WrapperCommonServerShowDialog<WrapperConfigServerShowDialog> {
+@NullMarked
+public enum DialogAction {
 
-    public WrapperConfigServerShowDialog(PacketSendEvent event) {
-        super(event);
+    CLOSE("close", true),
+    NONE("none", false),
+    WAIT_FOR_RESPONSE("wait_for_response", true),
+    ;
+
+    private final String name;
+    private final boolean willUnpause;
+
+    DialogAction(String name, boolean willUnpause) {
+        this.name = name;
+        this.willUnpause = willUnpause;
     }
 
-    public WrapperConfigServerShowDialog(Dialog dialog) {
-        super(PacketType.Configuration.Server.SHOW_DIALOG, dialog);
+    public String getName() {
+        return this.name;
     }
 
-    @Override
-    public void read() {
-        this.dialog = Dialog.readDirect(this);
-    }
-
-    @Override
-    public void write() {
-        Dialog.writeDirect(this, this.dialog);
+    public boolean isWillUnpause() {
+        return this.willUnpause;
     }
 }
