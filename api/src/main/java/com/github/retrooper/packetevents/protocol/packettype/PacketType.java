@@ -101,6 +101,7 @@ import com.github.retrooper.packetevents.wrapper.configuration.server.WrapperCon
 import com.github.retrooper.packetevents.wrapper.configuration.server.WrapperConfigServerResourcePackSend;
 import com.github.retrooper.packetevents.wrapper.configuration.server.WrapperConfigServerSelectKnownPacks;
 import com.github.retrooper.packetevents.wrapper.configuration.server.WrapperConfigServerServerLinks;
+import com.github.retrooper.packetevents.wrapper.configuration.server.WrapperConfigServerShowDialog;
 import com.github.retrooper.packetevents.wrapper.configuration.server.WrapperConfigServerStoreCookie;
 import com.github.retrooper.packetevents.wrapper.configuration.server.WrapperConfigServerTransfer;
 import com.github.retrooper.packetevents.wrapper.configuration.server.WrapperConfigServerUpdateEnabledFeatures;
