@@ -20,17 +20,14 @@ package com.github.retrooper.packetevents.wrapper.play.server;
 
 import com.github.retrooper.packetevents.event.PacketSendEvent;
 import com.github.retrooper.packetevents.manager.server.ServerVersion;
-import com.github.retrooper.packetevents.protocol.asset.ClientAsset;
 import com.github.retrooper.packetevents.protocol.item.ItemStack;
 import com.github.retrooper.packetevents.protocol.packettype.PacketType;
 import com.github.retrooper.packetevents.resources.ResourceLocation;
 import com.github.retrooper.packetevents.wrapper.PacketWrapper;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-
 import net.kyori.adventure.text.Component;
 import org.jetbrains.annotations.Nullable;
 
@@ -60,30 +57,7 @@ public class WrapperPlayServerUpdateAdvancements extends PacketWrapper<WrapperPl
         advancements = new AdvancementHolder[readVarInt()];
         for (int i = 0; i < advancements.length; i++) {
             ResourceLocation id = readIdentifier();
-            ResourceLocation parentId = readOptional(PacketWrapper::readIdentifier);
-            AdvancementDisplay display = readOptional(AdvancementDisplay::read);
-            Optional<String[]> criteria = Optional.empty();
-            if (serverVersion.isOlderThanOrEquals(ServerVersion.V_1_20_1)) {
-                String[] criteriaArray = new String[readVarInt()];
-                for (int j = 0; j < criteriaArray.length; j++) {
-                    criteriaArray[j] = readString();
-                }
-                criteria = Optional.of(criteriaArray);
-            }
-            List<String[]> requirements = new ArrayList<>();
-            int requirementsSize = readVarInt();
-            for (int j = 0; j < requirementsSize; j++) {
-                String[] requirement = new String[readVarInt()];
-                for (int k = 0; k < requirement.length; k++) {
-                    requirement[k] = readString();
-                }
-                requirements.add(requirement);
-            }
-            Optional<Boolean> sendsTelemetryData = Optional.empty();
-            if (serverVersion.isNewerThanOrEquals(ServerVersion.V_1_20)) {
-                sendsTelemetryData = Optional.of(readBoolean());
-            }
-            advancements[i] = new AdvancementHolder(id, new Advancement(parentId, display, criteria, requirements, sendsTelemetryData));
+            advancements[i] = new AdvancementHolder(id, Advancement.read(this, serverVersion));
         }
         removedAdvancements = new String[readVarInt()];
         for (int i = 0; i < removedAdvancements.length; i++) {
@@ -112,27 +86,8 @@ public class WrapperPlayServerUpdateAdvancements extends PacketWrapper<WrapperPl
         writeBoolean(reset);
         writeVarInt(advancements.length);
         for (AdvancementHolder advancementHolder : advancements) {
-            Advancement advancement = advancementHolder.getAdvancement();
-            writeIdentifier(advancementHolder.getIdentifier());
-            writeOptional(advancement.getParent(), PacketWrapper::writeIdentifier);
-            AdvancementDisplay.write(this, advancement.getDisplay());
-            if (serverVersion.isOlderThanOrEquals(ServerVersion.V_1_20_1)) {
-                String[] criteriaArray = advancement.getCriteria().orElse(new String[0]);
-                writeVarInt(criteriaArray.length);
-                for (String criteria : criteriaArray) {
-                    writeString(criteria);
-                }
-            }
-            writeVarInt(advancement.getRequirements().size());
-            for (String[] requirement : advancement.getRequirements()) {
-                writeVarInt(requirement.length);
-                for (String s : requirement) {
-                    writeString(s);
-                }
-            }
-            if (serverVersion.isNewerThanOrEquals(ServerVersion.V_1_20)) {
-                writeBoolean(advancement.isSendsTelemetryData().orElse(false));
-            }
+            writeIdentifier(advancementHolder.identifier);
+            Advancement.write(this, serverVersion, advancementHolder.advancement);
         }
         writeVarInt(removedAdvancements.length);
         for (String removedAdvancement : removedAdvancements) {
@@ -247,11 +202,54 @@ public class WrapperPlayServerUpdateAdvancements extends PacketWrapper<WrapperPl
             this.sendsTelemetryData = sendsTelemetryData;
         }
 
-        public static Advancement read(PacketWrapper<?> wrapper) {
-            ResourceLocation parentId = wrapper.readOptional(PacketWrapper::readIdentifier);
+        public static Advancement read(PacketWrapper<?> wrapper, ServerVersion serverVersion) {
+            ResourceLocation parentId = wrapper.readOptional(ResourceLocation::read);
 
-            //TODO Finish
-            return null;
+            AdvancementDisplay display = wrapper.readOptional(AdvancementDisplay::read);
+            Optional<String[]> criteria = Optional.empty();
+            if (serverVersion.isOlderThanOrEquals(ServerVersion.V_1_20_1)) {
+                String[] criteriaArray = new String[wrapper.readVarInt()];
+                for (int j = 0; j < criteriaArray.length; j++) {
+                    criteriaArray[j] = wrapper.readString();
+                }
+                criteria = Optional.of(criteriaArray);
+            }
+            List<String[]> requirements = new ArrayList<>();
+            int requirementsSize = wrapper.readVarInt();
+            for (int j = 0; j < requirementsSize; j++) {
+                String[] requirement = new String[wrapper.readVarInt()];
+                for (int k = 0; k < requirement.length; k++) {
+                    requirement[k] = wrapper.readString();
+                }
+                requirements.add(requirement);
+            }
+            Optional<Boolean> sendsTelemetryData = Optional.empty();
+            if (serverVersion.isNewerThanOrEquals(ServerVersion.V_1_20)) {
+                sendsTelemetryData = Optional.of(wrapper.readBoolean());
+            }
+            return new Advancement(parentId, display, criteria, requirements, sendsTelemetryData);
+        }
+
+        public static void write(PacketWrapper<?> packetWrapper, final ServerVersion serverVersion, Advancement advancement) {
+            packetWrapper.writeOptional(advancement.getParent(), PacketWrapper::writeIdentifier);
+            packetWrapper.writeOptional(advancement.getDisplay(), AdvancementDisplay::write);
+            if (serverVersion.isOlderThanOrEquals(ServerVersion.V_1_20_1)) {
+                String[] criteriaArray = advancement.getCriteria().orElse(new String[0]);
+                packetWrapper.writeVarInt(criteriaArray.length);
+                for (String criteria : criteriaArray) {
+                    packetWrapper.writeString(criteria);
+                }
+            }
+            packetWrapper.writeVarInt(advancement.getRequirements().size());
+            for (String[] requirement : advancement.getRequirements()) {
+                packetWrapper.writeVarInt(requirement.length);
+                for (String s : requirement) {
+                    packetWrapper.writeString(s);
+                }
+            }
+            if (serverVersion.isNewerThanOrEquals(ServerVersion.V_1_20)) {
+                packetWrapper.writeBoolean(advancement.isSendsTelemetryData().orElse(false));
+            }
         }
 
         public @Nullable ResourceLocation getParent() {
@@ -305,11 +303,11 @@ public class WrapperPlayServerUpdateAdvancements extends PacketWrapper<WrapperPl
         private AdvancementType type;
         private boolean showToast;
         private boolean hidden;
-        private @Nullable ClientAsset background;
+        private @Nullable ResourceLocation background;
         private float x;
         private float y;
 
-        public AdvancementDisplay(Component title, Component description, ItemStack icon, AdvancementType type, @Nullable ClientAsset background, boolean showToast,
+        public AdvancementDisplay(Component title, Component description, ItemStack icon, AdvancementType type, @Nullable ResourceLocation background, boolean showToast,
                                   boolean hidden, float x, float y) {
             this.title = title;
             this.description = description;
@@ -329,7 +327,7 @@ public class WrapperPlayServerUpdateAdvancements extends PacketWrapper<WrapperPl
             ItemStack icon = wrapper.readItemStack();
             AdvancementType type = wrapper.readEnum(AdvancementType.class);
             int flags = wrapper.readInt();
-            ClientAsset background = (flags & SHOW_BACKGROUND_TEXTURE) != 0 ? ClientAsset.read(wrapper) : null;
+            ResourceLocation background = (flags & SHOW_BACKGROUND_TEXTURE) != 0 ? ResourceLocation.read(wrapper) : null;
             boolean showToast = (flags & SHOW_TOAST) != 0;
             boolean hidden = (flags & HIDDEN) != 0;
             float x = wrapper.readFloat();
@@ -345,7 +343,7 @@ public class WrapperPlayServerUpdateAdvancements extends PacketWrapper<WrapperPl
             int flags = display.flags();
             wrapper.writeInt(flags);
             if (display.background != null) {
-                ClientAsset.write(wrapper, display.background);
+                ResourceLocation.write(wrapper, display.background);
             }
             wrapper.writeFloat(display.x);
             wrapper.writeFloat(display.y);
@@ -390,7 +388,7 @@ public class WrapperPlayServerUpdateAdvancements extends PacketWrapper<WrapperPl
         }
 
         @Nullable
-        public ClientAsset getBackground() {
+        public ResourceLocation getBackground() {
             return background;
         }
 
@@ -426,7 +424,7 @@ public class WrapperPlayServerUpdateAdvancements extends PacketWrapper<WrapperPl
             this.hidden = hidden;
         }
 
-        public void setBackground(@Nullable ClientAsset background) {
+        public void setBackground(@Nullable ResourceLocation background) {
             this.background = background;
         }
 
