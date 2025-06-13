@@ -18,30 +18,15 @@
 
 package com.github.retrooper.packetevents.protocol.dialog;
 
-import com.github.retrooper.packetevents.protocol.util.NbtMapDecoder;
-import com.github.retrooper.packetevents.protocol.util.NbtMapEncoder;
-import com.github.retrooper.packetevents.util.mappings.VersionedRegistry;
+import com.github.retrooper.packetevents.protocol.mapper.MappedEntity;
+import com.github.retrooper.packetevents.protocol.nbt.NBTCompound;
+import com.github.retrooper.packetevents.wrapper.PacketWrapper;
 import org.jspecify.annotations.NullMarked;
 
 @NullMarked
-public final class DialogTypes {
+public interface DialogType<T extends Dialog> extends MappedEntity {
 
-    private static final VersionedRegistry<DialogType<?>> REGISTRY = new VersionedRegistry<>("dialog_type");
+    T decode(NBTCompound compound, PacketWrapper<?> wrapper);
 
-    private DialogTypes() {
-    }
-
-    public static VersionedRegistry<DialogType<?>> getRegistry() {
-        return REGISTRY;
-    }
-
-    public static <T extends Dialog> DialogType<T> define(String name, NbtMapDecoder<T> decoder, NbtMapEncoder<T> encoder) {
-        return REGISTRY.define(name, data -> new StaticDialogType<>(data, decoder, encoder));
-    }
-
-    public static final DialogType<NoticeDialog> NOTICE = define("dialog", NoticeDialog::decode, NoticeDialog::encode);
-
-    static {
-        REGISTRY.unloadMappings();
-    }
+    void encode(NBTCompound compound, PacketWrapper<?> wrapper, T dialog);
 }

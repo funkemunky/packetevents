@@ -19,12 +19,13 @@
 package com.github.retrooper.packetevents.wrapper.common.server;
 
 import com.github.retrooper.packetevents.event.PacketSendEvent;
+import com.github.retrooper.packetevents.protocol.dialog.Dialog;
 import com.github.retrooper.packetevents.protocol.packettype.PacketTypeCommon;
 import com.github.retrooper.packetevents.wrapper.PacketWrapper;
 
 public class WrapperCommonServerShowDialog<T extends WrapperCommonServerShowDialog<T>> extends PacketWrapper<T> {
 
-    private Dialog dialog;
+    protected Dialog dialog;
 
     public WrapperCommonServerShowDialog(PacketSendEvent event) {
         super(event);

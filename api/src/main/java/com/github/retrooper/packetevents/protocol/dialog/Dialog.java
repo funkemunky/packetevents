@@ -18,12 +18,53 @@
 
 package com.github.retrooper.packetevents.protocol.dialog;
 
-import net.kyori.adventure.text.Component;
+import com.github.retrooper.packetevents.protocol.mapper.CopyableEntity;
+import com.github.retrooper.packetevents.protocol.mapper.DeepComparableEntity;
+import com.github.retrooper.packetevents.protocol.mapper.MappedEntity;
+import com.github.retrooper.packetevents.protocol.nbt.NBT;
+import com.github.retrooper.packetevents.protocol.nbt.NBTCompound;
+import com.github.retrooper.packetevents.protocol.nbt.NBTString;
+import com.github.retrooper.packetevents.util.mappings.TypesBuilderData;
+import com.github.retrooper.packetevents.wrapper.PacketWrapper;
+import org.jetbrains.annotations.ApiStatus;
+import org.jetbrains.annotations.Nullable;
 import org.jspecify.annotations.NullMarked;
-import org.jspecify.annotations.Nullable;
-
-import java.util.List;
 
 @NullMarked
-public abstract class Dialog {
+public interface Dialog extends MappedEntity, DeepComparableEntity, CopyableEntity<Dialog> {
+
+    static Dialog read(PacketWrapper<?> wrapper) {
+        return wrapper.readMappedEntityOrDirect(Dialogs.getRegistry(), Dialog::readDirect);
+    }
+
+    static void write(PacketWrapper<?> wrapper, Dialog dialog) {
+        wrapper.writeMappedEntityOrDirect(dialog, Dialog::writeDirect);
+    }
+
+    static Dialog readDirect(PacketWrapper<?> wrapper) {
+        return decode(wrapper.readNBTRaw(), wrapper, null);
+    }
+
+    static void writeDirect(PacketWrapper<?> wrapper, Dialog dialog) {
+        wrapper.writeNBTRaw(encode(dialog, wrapper));
+    }
+
+    @ApiStatus.Internal
+    static Dialog decode(NBT nbt, PacketWrapper<?> wrapper, @Nullable TypesBuilderData data) {
+        NBTCompound compound = (NBTCompound) nbt;
+        String dialogTypeName = compound.getStringTagValueOrThrow("type");
+        DialogType<?> dialogType = DialogTypes.getRegistry().getByNameOrThrow(dialogTypeName);
+        return dialogType.decode(compound, wrapper);
+    }
+
+    @ApiStatus.Internal
+    @SuppressWarnings("unchecked") // not unchecked
+    static NBT encode(Dialog dialog, PacketWrapper<?> wrapper) {
+        NBTCompound compound = new NBTCompound();
+        compound.setTag("type", new NBTString(dialog.getType().getName().toString()));
+        ((DialogType<? super Dialog>) dialog.getType()).encode(compound, wrapper, dialog);
+        return compound;
+    }
+
+    DialogType<?> getType();
 }

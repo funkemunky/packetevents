@@ -18,6 +18,11 @@
 
 package com.github.retrooper.packetevents.protocol.dialog;
 
+import com.github.retrooper.packetevents.protocol.nbt.NBT;
+import com.github.retrooper.packetevents.protocol.nbt.NBTString;
+import com.github.retrooper.packetevents.util.adventure.AdventureIndexUtil;
+import com.github.retrooper.packetevents.wrapper.PacketWrapper;
+import net.kyori.adventure.util.Index;
 import org.jspecify.annotations.NullMarked;
 
 @NullMarked
@@ -28,12 +33,23 @@ public enum DialogAction {
     WAIT_FOR_RESPONSE("wait_for_response", true),
     ;
 
+    public static final Index<String, DialogAction> NAME_INDEX = Index.create(
+            DialogAction.class, DialogAction::getName);
+
     private final String name;
     private final boolean willUnpause;
 
     DialogAction(String name, boolean willUnpause) {
         this.name = name;
         this.willUnpause = willUnpause;
+    }
+
+    public static DialogAction decode(NBT nbt, PacketWrapper<?> wrapper) {
+        return AdventureIndexUtil.indexValueOrThrow(NAME_INDEX, ((NBTString) nbt).getValue());
+    }
+
+    public static NBT encode(PacketWrapper<?> wrapper, DialogAction action) {
+        return new NBTString(action.name);
     }
 
     public String getName() {

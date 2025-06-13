@@ -18,13 +18,13 @@
 
 package com.github.retrooper.packetevents.protocol.util;
 
-import com.github.retrooper.packetevents.protocol.nbt.NBT;
+import com.github.retrooper.packetevents.protocol.nbt.NBTCompound;
 import com.github.retrooper.packetevents.wrapper.PacketWrapper;
 import org.jspecify.annotations.NullMarked;
 
 @NullMarked
 @FunctionalInterface
-public interface NbtDecoder<T> {
+public interface NbtMapDecoder<T> {
 
-    T decode(NBT nbt, PacketWrapper<?> wrapper);
+    T decode(NBTCompound compound, PacketWrapper<?> wrapper);
 }

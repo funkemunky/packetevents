@@ -31,8 +31,8 @@ public interface WaypointInfo {
 
         EMPTY(EmptyWaypointInfo::read, EmptyWaypointInfo::write),
         VEC3I(Vec3iWaypointInfo::read, Vec3iWaypointInfo::write),
-        CHUNK,
-        AZIMUTH,
+        CHUNK(ChunkWaypointInfo::read, ChunkWaypointInfo::write),
+        AZIMUTH(AzimuthWaypointInfo::read, AzimuthWaypointInfo::write),
         ;
 
         private final PacketWrapper.Reader<WaypointInfo> reader;

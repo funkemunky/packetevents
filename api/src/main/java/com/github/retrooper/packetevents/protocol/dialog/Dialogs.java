@@ -18,28 +18,20 @@
 
 package com.github.retrooper.packetevents.protocol.dialog;
 
-import com.github.retrooper.packetevents.protocol.util.NbtMapDecoder;
-import com.github.retrooper.packetevents.protocol.util.NbtMapEncoder;
 import com.github.retrooper.packetevents.util.mappings.VersionedRegistry;
 import org.jspecify.annotations.NullMarked;
 
 @NullMarked
-public final class DialogTypes {
+public final class Dialogs {
 
-    private static final VersionedRegistry<DialogType<?>> REGISTRY = new VersionedRegistry<>("dialog_type");
+    private static final VersionedRegistry<Dialog> REGISTRY = new VersionedRegistry<>("dialog");
 
-    private DialogTypes() {
+    private Dialogs() {
     }
 
-    public static VersionedRegistry<DialogType<?>> getRegistry() {
+    public static VersionedRegistry<Dialog> getRegistry() {
         return REGISTRY;
     }
-
-    public static <T extends Dialog> DialogType<T> define(String name, NbtMapDecoder<T> decoder, NbtMapEncoder<T> encoder) {
-        return REGISTRY.define(name, data -> new StaticDialogType<>(data, decoder, encoder));
-    }
-
-    public static final DialogType<NoticeDialog> NOTICE = define("dialog", NoticeDialog::decode, NoticeDialog::encode);
 
     static {
         REGISTRY.unloadMappings();

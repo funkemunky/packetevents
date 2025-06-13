@@ -18,10 +18,67 @@
 
 package com.github.retrooper.packetevents.protocol.dialog;
 
+import com.github.retrooper.packetevents.protocol.mapper.AbstractMappedEntity;
+import com.github.retrooper.packetevents.protocol.nbt.NBTCompound;
+import com.github.retrooper.packetevents.util.mappings.TypesBuilderData;
+import com.github.retrooper.packetevents.wrapper.PacketWrapper;
+import org.jetbrains.annotations.Nullable;
 import org.jspecify.annotations.NullMarked;
 
+import java.util.Objects;
+
 @NullMarked
-public class NoticeDialog implements Dialog {
+public class NoticeDialog extends AbstractMappedEntity implements Dialog {
 
+    private final CommonDialogData common;
+    private final ActionButton action;
 
+    public NoticeDialog(@Nullable TypesBuilderData data, CommonDialogData common, ActionButton action) {
+        super(data);
+        this.common = common;
+        this.action = action;
+    }
+
+    public static NoticeDialog decode(NBTCompound compound, PacketWrapper<?> wrapper) {
+        CommonDialogData common = CommonDialogData.decode(compound, wrapper);
+        ActionButton action = ActionButton.decode(compound, wrapper);
+        return new NoticeDialog(null, common, action);
+    }
+
+    public static void encode(NBTCompound compound, PacketWrapper<?> wrapper, NoticeDialog dialog) {
+        CommonDialogData.encode(compound, wrapper, dialog.common);
+        ActionButton.encode(compound, wrapper, dialog.action);
+    }
+
+    @Override
+    public Dialog copy(@Nullable TypesBuilderData newData) {
+        return new NoticeDialog(newData, this.common, this.action);
+    }
+
+    public CommonDialogData getCommon() {
+        return this.common;
+    }
+
+    public ActionButton getAction() {
+        return this.action;
+    }
+
+    @Override
+    public DialogType<?> getType() {
+        return DialogTypes.NOTICE;
+    }
+
+    @Override
+    public boolean deepEquals(Object obj) {
+        if (!(obj instanceof NoticeDialog)) return false;
+        if (!super.equals(obj)) return false;
+        NoticeDialog that = (NoticeDialog) obj;
+        if (!this.common.equals(that.common)) return false;
+        return this.action.equals(that.action);
+    }
+
+    @Override
+    public int deepHashCode() {
+        return Objects.hash(super.hashCode(), this.common, this.action);
+    }
 }

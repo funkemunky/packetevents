@@ -22,13 +22,13 @@ import com.github.retrooper.packetevents.PacketEvents;
 import com.github.retrooper.packetevents.protocol.nbt.NBT;
 import com.github.retrooper.packetevents.protocol.player.ClientVersion;
 import com.github.retrooper.packetevents.protocol.stats.Statistics;
+import com.github.retrooper.packetevents.wrapper.PacketWrapper;
 import com.google.gson.JsonElement;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.serializer.gson.GsonComponentSerializer;
 import net.kyori.adventure.text.serializer.json.JSONOptions;
 import net.kyori.adventure.text.serializer.json.legacyimpl.NBTLegacyHoverEventSerializer;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
-import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.EnumMap;
@@ -45,6 +45,10 @@ public final class AdventureSerializer {
 
     private AdventureSerializer(ClientVersion version) {
         this.version = version;
+    }
+
+    public static AdventureSerializer serializer(PacketWrapper<?> wrapper) {
+        return serializer(wrapper.getServerVersion().toClientVersion());
     }
 
     public static AdventureSerializer serializer(ClientVersion version) {

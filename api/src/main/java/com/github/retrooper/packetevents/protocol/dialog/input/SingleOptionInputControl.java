@@ -18,11 +18,17 @@
 
 package com.github.retrooper.packetevents.protocol.dialog.input;
 
+import com.github.retrooper.packetevents.protocol.nbt.NBT;
+import com.github.retrooper.packetevents.protocol.nbt.NBTCompound;
+import com.github.retrooper.packetevents.protocol.nbt.NBTList;
+import com.github.retrooper.packetevents.protocol.player.ClientVersion;
+import com.github.retrooper.packetevents.util.adventure.AdventureSerializer;
 import net.kyori.adventure.text.Component;
 import org.jspecify.annotations.NullMarked;
 import org.jspecify.annotations.Nullable;
 
 import java.util.List;
+import java.util.concurrent.ConcurrentHashMap;
 
 @NullMarked
 public class SingleOptionInputControl implements InputControl {
@@ -46,6 +52,19 @@ public class SingleOptionInputControl implements InputControl {
         this.entries = entries;
         this.label = label;
         this.labelVisible = labelVisible;
+
+    }
+
+    public static SingleOptionInputControl decode(NBTCompound compound, ClientVersion version) {
+//        int width = compound.getNumberTagValueOrDefault("width", 200).intValue();
+//        NBTList<NBT> optionsList = compound.getTagListOfTypeOrSingleOrThrow("options", NBT.class);
+//        Component label = AdventureSerializer.serializer(version).fromNbtTag(compound.getTagOrThrow("label"));
+//        boolean labelVisible = compound.getBooleanOr("label_visible", true);
+        return null;
+    }
+
+    public static void encode(NBTCompound compound, ClientVersion version, SingleOptionInputControl control) {
+
     }
 
     @Override

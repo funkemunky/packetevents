@@ -21,12 +21,12 @@ package com.github.retrooper.packetevents.protocol.dialog.input;
 import org.jspecify.annotations.NullMarked;
 
 @NullMarked
-public class DialogInput {
+public class Input {
 
     private final String key;
     private final InputControl control;
 
-    public DialogInput(String key, InputControl control) {
+    public Input(String key, InputControl control) {
         this.key = key;
         this.control = control;
     }

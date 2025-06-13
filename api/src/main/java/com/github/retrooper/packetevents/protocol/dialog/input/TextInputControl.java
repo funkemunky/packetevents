@@ -18,6 +18,8 @@
 
 package com.github.retrooper.packetevents.protocol.dialog.input;
 
+import com.github.retrooper.packetevents.protocol.nbt.NBTCompound;
+import com.github.retrooper.packetevents.protocol.player.ClientVersion;
 import net.kyori.adventure.text.Component;
 import org.jspecify.annotations.NullMarked;
 import org.jspecify.annotations.Nullable;
@@ -42,6 +44,14 @@ public class TextInputControl implements InputControl {
         this.initial = initial;
         this.maxLength = maxLength;
         this.multiline = multiline;
+    }
+
+    public static TextInputControl decode(NBTCompound compound, ClientVersion version) {
+        return null;
+    }
+
+    public static void encode(NBTCompound compound, ClientVersion version, TextInputControl control) {
+
     }
 
     @Override
