@@ -2,19 +2,23 @@ package com.github.retrooper.packetevents.wrapper.play.server;
 
 import com.github.retrooper.packetevents.event.PacketSendEvent;
 import com.github.retrooper.packetevents.manager.server.ServerVersion;
+import com.github.retrooper.packetevents.protocol.asset.ClientAsset;
 import com.github.retrooper.packetevents.protocol.item.ItemStack;
 import com.github.retrooper.packetevents.protocol.packettype.PacketType;
+import com.github.retrooper.packetevents.resources.ResourceLocation;
 import com.github.retrooper.packetevents.wrapper.PacketWrapper;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+
 import net.kyori.adventure.text.Component;
 import org.jetbrains.annotations.Nullable;
 
 public class WrapperPlayServerUpdateAdvancements extends PacketWrapper<WrapperPlayServerUpdateAdvancements> {
     private boolean reset;
-    private Advancement[] advancements;
+    private AdvancementHolder[] advancements;
     private String[] removedAdvancements;
     private Map<String, List<AdvancementProgress>> progress;// key = advancement id
     private Optional<Boolean> showAdvancements = Optional.empty(); // 1.21.5+
@@ -23,7 +27,7 @@ public class WrapperPlayServerUpdateAdvancements extends PacketWrapper<WrapperPl
         super(event);
     }
 
-    public WrapperPlayServerUpdateAdvancements(boolean reset, Advancement[] advancements, String[] removedAdvancements, Map<String, List<AdvancementProgress>> progress, Optional<Boolean> showAdvancements) {
+    public WrapperPlayServerUpdateAdvancements(boolean reset, AdvancementHolder[] advancements, String[] removedAdvancements, Map<String, List<AdvancementProgress>> progress, Optional<Boolean> showAdvancements) {
         super(PacketType.Play.Server.UPDATE_ADVANCEMENTS);
         this.reset = reset;
         this.advancements = advancements;
@@ -35,28 +39,11 @@ public class WrapperPlayServerUpdateAdvancements extends PacketWrapper<WrapperPl
     @Override
     public void read() {
         reset = readBoolean();
-        advancements = new Advancement[readVarInt()];
+        advancements = new AdvancementHolder[readVarInt()];
         for (int i = 0; i < advancements.length; i++) {
-            String id = readString();
-            String parentId = readBoolean() ? readString() : null;
-            AdvancementDisplay display = null;
-            if (readBoolean()) {
-                Component title = readComponent();
-                Component description = readComponent();
-                ItemStack icon = readItemStack();
-                AdvancementFrameType frameType = AdvancementFrameType.getById(readVarInt());
-                int flags = readInt();
-
-                boolean hasBackgroundTexture = (flags & AdvancementDisplay.SHOW_BACKGROUND_TEXTURE) != 0;
-                boolean showToast = (flags & AdvancementDisplay.SHOW_TOAST) != 0;
-                boolean hidden = (flags & AdvancementDisplay.HIDDEN) != 0;
-                String backgroundTexture = hasBackgroundTexture ? readString() : null;
-
-                float x = readFloat();
-                float y = readFloat();
-                display = new AdvancementDisplay(title, description, icon, frameType, showToast, hidden, backgroundTexture, x, y);
-            }
-
+            ResourceLocation id = readIdentifier();
+            ResourceLocation parentId = readOptional(PacketWrapper::readIdentifier);
+            AdvancementDisplay display = readOptional(AdvancementDisplay::read);
             Optional<String[]> criteria = Optional.empty();
             if (serverVersion.isOlderThanOrEquals(ServerVersion.V_1_20_1)) {
                 String[] criteriaArray = new String[readVarInt()];
@@ -78,7 +65,7 @@ public class WrapperPlayServerUpdateAdvancements extends PacketWrapper<WrapperPl
             if (serverVersion.isNewerThanOrEquals(ServerVersion.V_1_20)) {
                 sendsTelemetryData = Optional.of(readBoolean());
             }
-            advancements[i] = new Advancement(id, parentId, display, criteria, requirements, sendsTelemetryData);
+            advancements[i] = new AdvancementHolder(id, new Advancement(parentId, display, criteria, requirements, sendsTelemetryData));
         }
         removedAdvancements = new String[readVarInt()];
         for (int i = 0; i < removedAdvancements.length; i++) {
@@ -106,28 +93,11 @@ public class WrapperPlayServerUpdateAdvancements extends PacketWrapper<WrapperPl
     public void write() {
         writeBoolean(reset);
         writeVarInt(advancements.length);
-        for (Advancement advancement : advancements) {
-            writeString(advancement.getId());
-            if (advancement.getParentId() != null) {
-                writeBoolean(true);
-                writeString(advancement.getParentId());
-            } else {
-                writeBoolean(false);
-            }
-            AdvancementDisplay display = advancement.getDisplay();
-            writeBoolean(display != null);
-            if (display != null) {
-                writeComponent(display.getTitle());
-                writeComponent(display.getDescription());
-                writeItemStack(display.getIcon());
-                writeVarInt(display.getFrameType().getId());
-                writeInt(display.getFlags());
-                if (display.getBackgroundTexture() != null) {
-                    writeString(display.getBackgroundTexture());
-                }
-                writeFloat(display.getX());
-                writeFloat(display.getY());
-            }
+        for (AdvancementHolder advancementHolder : advancements) {
+            Advancement advancement = advancementHolder.getAdvancement();
+            writeIdentifier(advancementHolder.getIdentifier());
+            writeOptional(advancement.getParent(), PacketWrapper::writeIdentifier);
+            AdvancementDisplay.write(this, advancement.getDisplay());
             if (serverVersion.isOlderThanOrEquals(ServerVersion.V_1_20_1)) {
                 String[] criteriaArray = advancement.getCriteria().orElse(new String[0]);
                 writeVarInt(criteriaArray.length);
@@ -180,7 +150,7 @@ public class WrapperPlayServerUpdateAdvancements extends PacketWrapper<WrapperPl
         return reset;
     }
 
-    public Advancement[] getAdvancements() {
+    public AdvancementHolder[] getAdvancements() {
         return advancements;
     }
 
@@ -200,7 +170,7 @@ public class WrapperPlayServerUpdateAdvancements extends PacketWrapper<WrapperPl
         this.reset = reset;
     }
 
-    public void setAdvancements(Advancement[] advancements) {
+    public void setAdvancements(AdvancementHolder[] advancements) {
         this.advancements = advancements;
     }
 
@@ -216,9 +186,34 @@ public class WrapperPlayServerUpdateAdvancements extends PacketWrapper<WrapperPl
         this.showAdvancements = showAdvancements;
     }
 
+    public static class AdvancementHolder {
+        private ResourceLocation identifier;
+        private Advancement advancement;
+
+        public AdvancementHolder(ResourceLocation identifier, Advancement advancement) {
+            this.identifier = identifier;
+            this.advancement = advancement;
+        }
+
+        public ResourceLocation getIdentifier() {
+            return identifier;
+        }
+
+        public void setIdentifier(ResourceLocation identifier) {
+            this.identifier = identifier;
+        }
+
+        public Advancement getAdvancement() {
+            return advancement;
+        }
+
+        public void setAdvancement(Advancement advancement) {
+            this.advancement = advancement;
+        }
+    }
+
     public static class Advancement {
-        private String id;
-        private String parentId;
+        private @Nullable ResourceLocation parent;
         private AdvancementDisplay display;
         // 1.20.1-
         private Optional<String[]> criteria;
@@ -226,21 +221,23 @@ public class WrapperPlayServerUpdateAdvancements extends PacketWrapper<WrapperPl
         // 1.20+
         private Optional<Boolean> sendsTelemetryData;
 
-        public Advancement(String id, String parentId, AdvancementDisplay display, Optional<String[]> criteria, List<String[]> requirements, Optional<Boolean> sendsTelemetryData) {
-            this.id = id;
-            this.parentId = parentId;
+        public Advancement(@Nullable ResourceLocation parent, AdvancementDisplay display, Optional<String[]> criteria, List<String[]> requirements, Optional<Boolean> sendsTelemetryData) {
+            this.parent = parent;
             this.display = display;
             this.criteria = criteria;
             this.requirements = requirements;
             this.sendsTelemetryData = sendsTelemetryData;
         }
 
-        public String getId() {
-            return id;
+        public static Advancement read(PacketWrapper<?> wrapper) {
+            ResourceLocation parentId = wrapper.readOptional(PacketWrapper::readIdentifier);
+
+            //TODO Finish
+            return null;
         }
 
-        public String getParentId() {
-            return parentId;
+        public @Nullable ResourceLocation getParent() {
+            return parent;
         }
 
         public AdvancementDisplay getDisplay() {
@@ -259,12 +256,8 @@ public class WrapperPlayServerUpdateAdvancements extends PacketWrapper<WrapperPl
             return sendsTelemetryData;
         }
 
-        public void setId(String id) {
-            this.id = id;
-        }
-
-        public void setParentId(String parentId) {
-            this.parentId = parentId;
+        public void setParent(@Nullable ResourceLocation parent) {
+            this.parent = parent;
         }
 
         public void setDisplay(AdvancementDisplay display) {
@@ -291,29 +284,58 @@ public class WrapperPlayServerUpdateAdvancements extends PacketWrapper<WrapperPl
         private Component title;
         private Component description;
         private ItemStack icon;
-        private AdvancementFrameType frameType;
+        private AdvancementType type;
         private boolean showToast;
         private boolean hidden;
-        @Nullable
-        private String backgroundTexture;
+        private @Nullable ClientAsset background;
         private float x;
         private float y;
 
-        public AdvancementDisplay(Component title, Component description, ItemStack icon, AdvancementFrameType frameType, boolean showToast, boolean hidden, @Nullable String backgroundTexture, float x, float y) {
+        public AdvancementDisplay(Component title, Component description, ItemStack icon, AdvancementType type, @Nullable ClientAsset background, boolean showToast,
+                                  boolean hidden, float x, float y) {
             this.title = title;
             this.description = description;
             this.icon = icon;
-            this.frameType = frameType;
+            this.type = type;
             this.showToast = showToast;
             this.hidden = hidden;
-            this.backgroundTexture = backgroundTexture;
+            this.background = background;
             this.x = x;
             this.y = y;
         }
 
-        public int getFlags() {
+
+        public static AdvancementDisplay read(PacketWrapper<?> wrapper) {
+            Component title = wrapper.readComponent();
+            Component description = wrapper.readComponent();
+            ItemStack icon = wrapper.readItemStack();
+            AdvancementType type = wrapper.readEnum(AdvancementType.class);
+            int flags = wrapper.readInt();
+            ClientAsset background = (flags & SHOW_BACKGROUND_TEXTURE) != 0 ? ClientAsset.read(wrapper) : null;
+            boolean showToast = (flags & SHOW_TOAST) != 0;
+            boolean hidden = (flags & HIDDEN) != 0;
+            float x = wrapper.readFloat();
+            float y = wrapper.readFloat();
+            return new AdvancementDisplay(title, description, icon, type, background, showToast, hidden, x, y);
+        }
+
+        public static void write(PacketWrapper<?> wrapper, AdvancementDisplay display) {
+            wrapper.writeComponent(display.title);
+            wrapper.writeComponent(display.description);
+            wrapper.writeItemStack(display.icon);
+            wrapper.writeEnum(display.type);
+            int flags = display.flags();
+            wrapper.writeInt(flags);
+            if (display.background != null) {
+                ClientAsset.write(wrapper, display.background);
+            }
+            wrapper.writeFloat(display.x);
+            wrapper.writeFloat(display.y);
+        }
+
+        public int flags() {
             int flags = 0;
-            if (backgroundTexture != null) {
+            if (background != null) {
                 flags |= SHOW_BACKGROUND_TEXTURE;
             }
             if (showToast) {
@@ -337,8 +359,8 @@ public class WrapperPlayServerUpdateAdvancements extends PacketWrapper<WrapperPl
             return icon;
         }
 
-        public AdvancementFrameType getFrameType() {
-            return frameType;
+        public AdvancementType getType() {
+            return type;
         }
 
         public boolean isShowToast() {
@@ -350,8 +372,8 @@ public class WrapperPlayServerUpdateAdvancements extends PacketWrapper<WrapperPl
         }
 
         @Nullable
-        public String getBackgroundTexture() {
-            return backgroundTexture;
+        public ClientAsset getBackground() {
+            return background;
         }
 
         public float getX() {
@@ -374,8 +396,8 @@ public class WrapperPlayServerUpdateAdvancements extends PacketWrapper<WrapperPl
             this.icon = icon;
         }
 
-        public void setFrameType(AdvancementFrameType frameType) {
-            this.frameType = frameType;
+        public void setType(AdvancementType type) {
+            this.type = type;
         }
 
         public void setShowToast(boolean showToast) {
@@ -386,8 +408,8 @@ public class WrapperPlayServerUpdateAdvancements extends PacketWrapper<WrapperPl
             this.hidden = hidden;
         }
 
-        public void setBackgroundTexture(@Nullable String backgroundTexture) {
-            this.backgroundTexture = backgroundTexture;
+        public void setBackground(@Nullable ClientAsset background) {
+            this.background = background;
         }
 
         public void setX(float x) {
@@ -399,10 +421,10 @@ public class WrapperPlayServerUpdateAdvancements extends PacketWrapper<WrapperPl
         }
     }
 
-    public enum AdvancementFrameType {
+    public enum AdvancementType {
         TASK, CHALLENGE, GOAL;
 
-        public static AdvancementFrameType getById(int id) {
+        public static AdvancementType getById(int id) {
             return values()[id];
         }
 
