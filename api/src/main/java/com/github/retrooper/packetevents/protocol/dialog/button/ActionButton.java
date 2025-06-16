@@ -19,6 +19,7 @@
 package com.github.retrooper.packetevents.protocol.dialog.button;
 
 import com.github.retrooper.packetevents.protocol.dialog.action.Action;
+import com.github.retrooper.packetevents.protocol.nbt.NBT;
 import com.github.retrooper.packetevents.protocol.nbt.NBTCompound;
 import com.github.retrooper.packetevents.wrapper.PacketWrapper;
 import org.jspecify.annotations.NullMarked;
@@ -35,17 +36,20 @@ public class ActionButton {
         this.action = action;
     }
 
-    public static ActionButton decode(NBTCompound compound, PacketWrapper<?> wrapper) {
+    public static ActionButton decode(NBT nbt, PacketWrapper<?> wrapper) {
+        NBTCompound compound = (NBTCompound) nbt;
         CommonButtonData button = CommonButtonData.decode(compound, wrapper);
         Action action = compound.getOrNull("action", Action::decode, wrapper);
         return new ActionButton(button, action);
     }
 
-    public static void encode(NBTCompound compound, PacketWrapper<?> wrapper, ActionButton button) {
+    public static NBT encode(PacketWrapper<?> wrapper, ActionButton button) {
+        NBTCompound compound = new NBTCompound();
         CommonButtonData.encode(compound, wrapper, button.button);
         if (button.action != null) {
             compound.set("action", button.action, Action::encode, wrapper);
         }
+        return compound;
     }
 
     public CommonButtonData getButton() {

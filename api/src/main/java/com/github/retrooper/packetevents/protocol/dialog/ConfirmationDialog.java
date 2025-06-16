@@ -19,12 +19,10 @@
 package com.github.retrooper.packetevents.protocol.dialog;
 
 import com.github.retrooper.packetevents.protocol.dialog.button.ActionButton;
-import com.github.retrooper.packetevents.protocol.dialog.button.CommonButtonData;
 import com.github.retrooper.packetevents.protocol.mapper.AbstractMappedEntity;
 import com.github.retrooper.packetevents.protocol.nbt.NBTCompound;
 import com.github.retrooper.packetevents.util.mappings.TypesBuilderData;
 import com.github.retrooper.packetevents.wrapper.PacketWrapper;
-import net.kyori.adventure.text.Component;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Nullable;
 import org.jspecify.annotations.NullMarked;
@@ -32,65 +30,70 @@ import org.jspecify.annotations.NullMarked;
 import java.util.Objects;
 
 @NullMarked
-public class NoticeDialog extends AbstractMappedEntity implements Dialog {
-
-    public static final ActionButton DEFAULT_ACTION = new ActionButton(
-            new CommonButtonData(Component.translatable("gui.ok"), null, 150),
-            null
-    );
+public class ConfirmationDialog extends AbstractMappedEntity implements Dialog {
 
     private final CommonDialogData common;
-    private final ActionButton action;
+    private final ActionButton yesButton;
+    private final ActionButton noButton;
 
     @ApiStatus.Internal
-    public NoticeDialog(@Nullable TypesBuilderData data, CommonDialogData common, ActionButton action) {
+    public ConfirmationDialog(
+            @Nullable TypesBuilderData data, CommonDialogData common,
+            ActionButton yesButton, ActionButton noButton
+    ) {
         super(data);
         this.common = common;
-        this.action = action;
+        this.yesButton = yesButton;
+        this.noButton = noButton;
     }
 
-    public static NoticeDialog decode(NBTCompound compound, PacketWrapper<?> wrapper) {
+    public static ConfirmationDialog decode(NBTCompound compound, PacketWrapper<?> wrapper) {
         CommonDialogData common = CommonDialogData.decode(compound, wrapper);
-        ActionButton action = compound.getOr("action", ActionButton::decode, DEFAULT_ACTION, wrapper);
-        return new NoticeDialog(null, common, action);
+        ActionButton yesButton = compound.getOrThrow("yes", ActionButton::decode, wrapper);
+        ActionButton noButton = compound.getOrThrow("no", ActionButton::decode, wrapper);
+        return new ConfirmationDialog(null, common, yesButton, noButton);
     }
 
-    public static void encode(NBTCompound compound, PacketWrapper<?> wrapper, NoticeDialog dialog) {
+    public static void encode(NBTCompound compound, PacketWrapper<?> wrapper, ConfirmationDialog dialog) {
         CommonDialogData.encode(compound, wrapper, dialog.common);
-        if (dialog.action != DEFAULT_ACTION) {
-            compound.set("action", dialog.action, ActionButton::encode, wrapper);
-        }
+        compound.set("yes", dialog.yesButton, ActionButton::encode, wrapper);
+        compound.set("no", dialog.noButton, ActionButton::encode, wrapper);
     }
 
     @Override
     public Dialog copy(@Nullable TypesBuilderData newData) {
-        return new NoticeDialog(newData, this.common, this.action);
+        return new ConfirmationDialog(newData, this.common, this.yesButton, this.noButton);
     }
 
     public CommonDialogData getCommon() {
         return this.common;
     }
 
-    public ActionButton getAction() {
-        return this.action;
+    public ActionButton getYesButton() {
+        return this.yesButton;
+    }
+
+    public ActionButton getNoButton() {
+        return this.noButton;
     }
 
     @Override
     public DialogType<?> getType() {
-        return DialogTypes.NOTICE;
+        return DialogTypes.CONFIRMATION;
     }
 
     @Override
     public boolean deepEquals(Object obj) {
-        if (!(obj instanceof NoticeDialog)) return false;
+        if (!(obj instanceof ConfirmationDialog)) return false;
         if (!super.equals(obj)) return false;
-        NoticeDialog that = (NoticeDialog) obj;
+        ConfirmationDialog that = (ConfirmationDialog) obj;
         if (!this.common.equals(that.common)) return false;
-        return this.action.equals(that.action);
+        if (!this.yesButton.equals(that.yesButton)) return false;
+        return this.noButton.equals(that.noButton);
     }
 
     @Override
     public int deepHashCode() {
-        return Objects.hash(super.hashCode(), this.common, this.action);
+        return Objects.hash(super.hashCode(), this.common, this.yesButton, this.noButton);
     }
 }

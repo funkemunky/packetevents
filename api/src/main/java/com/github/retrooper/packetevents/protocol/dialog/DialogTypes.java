@@ -39,7 +39,16 @@ public final class DialogTypes {
         return REGISTRY.define(name, data -> new StaticDialogType<>(data, decoder, encoder));
     }
 
-    public static final DialogType<NoticeDialog> NOTICE = define("dialog", NoticeDialog::decode, NoticeDialog::encode);
+    public static final DialogType<NoticeDialog> NOTICE = define("dialog",
+            NoticeDialog::decode, NoticeDialog::encode);
+    public static final DialogType<ServerLinksDialog> SERVER_LINKS = define("server_links",
+            ServerLinksDialog::decode, ServerLinksDialog::encode);
+    public static final DialogType<DialogListDialog> DIALOG_LIST = define("dialog_list",
+            DialogListDialog::decode, DialogListDialog::encode);
+    public static final DialogType<MultiActionDialog> MULTI_ACTION = define("multi_action",
+            MultiActionDialog::decode, MultiActionDialog::encode);
+    public static final DialogType<ConfirmationDialog> CONFIRMATION = define("confirmation",
+            ConfirmationDialog::decode, ConfirmationDialog::encode);
 
     static {
         REGISTRY.unloadMappings();

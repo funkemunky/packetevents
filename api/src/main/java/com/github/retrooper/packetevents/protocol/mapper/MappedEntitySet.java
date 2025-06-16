@@ -156,6 +156,11 @@ public class MappedEntitySet<T extends MappedEntity> implements MappedEntityRefS
         return listTag;
     }
 
+    public static <Z extends MappedEntity> MappedEntityRefSet<Z> decodeRefSet(NBT nbt, PacketWrapper<?> wrapper) {
+        return decodeRefSet(nbt, wrapper.getServerVersion().toClientVersion());
+    }
+
+    @Deprecated
     public static <Z extends MappedEntity> MappedEntityRefSet<Z> decodeRefSet(NBT nbt, ClientVersion version) {
         List<String> list;
         if (nbt instanceof NBTString) {
@@ -179,6 +184,11 @@ public class MappedEntitySet<T extends MappedEntity> implements MappedEntityRefS
         return new NameRefSetImpl<>(list);
     }
 
+    public static <Z extends MappedEntity> NBT encodeRefSet(PacketWrapper<?> wrapper, MappedEntityRefSet<Z> refSet) {
+        return encodeRefSet(refSet, wrapper.getServerVersion().toClientVersion());
+    }
+
+    @Deprecated
     public static <Z extends MappedEntity> NBT encodeRefSet(MappedEntityRefSet<Z> refSet, ClientVersion version) {
         if (refSet instanceof NameRefSetImpl<?>) {
             NameRefSetImpl<?> nameRefSet = (NameRefSetImpl<?>) refSet;
