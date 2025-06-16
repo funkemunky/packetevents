@@ -21,6 +21,7 @@ package com.github.retrooper.packetevents.protocol.dialog.action;
 import com.github.retrooper.packetevents.protocol.util.NbtMapDecoder;
 import com.github.retrooper.packetevents.protocol.util.NbtMapEncoder;
 import com.github.retrooper.packetevents.util.mappings.VersionedRegistry;
+import org.jetbrains.annotations.ApiStatus;
 import org.jspecify.annotations.NullMarked;
 
 @NullMarked
@@ -31,6 +32,7 @@ public final class ActionTypes {
     private ActionTypes() {
     }
 
+    @ApiStatus.Internal
     public static <T extends Action> ActionType<T> define(String name, NbtMapDecoder<T> decoder, NbtMapEncoder<T> encoder) {
         return REGISTRY.define(name, data -> new StaticActionType<>(data, decoder, encoder));
     }

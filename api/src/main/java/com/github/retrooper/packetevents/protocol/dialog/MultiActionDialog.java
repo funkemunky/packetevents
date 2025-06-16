@@ -39,6 +39,15 @@ public class MultiActionDialog extends AbstractMappedEntity implements Dialog {
     private final @Nullable ActionButton exitAction;
     private final int columns;
 
+    public MultiActionDialog(
+            CommonDialogData common,
+            List<ActionButton> actions,
+            @Nullable ActionButton exitAction,
+            int columns
+    ) {
+        this(null, common, actions, exitAction, columns);
+    }
+
     @ApiStatus.Internal
     public MultiActionDialog(
             @Nullable TypesBuilderData data,

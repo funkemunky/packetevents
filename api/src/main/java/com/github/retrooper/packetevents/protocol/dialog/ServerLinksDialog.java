@@ -38,6 +38,14 @@ public class ServerLinksDialog extends AbstractMappedEntity implements Dialog {
     private final int columns;
     private final int buttonWidth;
 
+    public ServerLinksDialog(
+            CommonDialogData common,
+            @Nullable ActionButton exitAction,
+            int columns, int buttonWidth
+    ) {
+        this(null, common, exitAction, columns, buttonWidth);
+    }
+
     @ApiStatus.Internal
     public ServerLinksDialog(
             @Nullable TypesBuilderData data,

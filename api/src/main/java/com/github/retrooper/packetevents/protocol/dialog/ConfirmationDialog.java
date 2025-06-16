@@ -36,6 +36,10 @@ public class ConfirmationDialog extends AbstractMappedEntity implements Dialog {
     private final ActionButton yesButton;
     private final ActionButton noButton;
 
+    public ConfirmationDialog(CommonDialogData common, ActionButton yesButton, ActionButton noButton) {
+        this(null, common, yesButton, noButton);
+    }
+
     @ApiStatus.Internal
     public ConfirmationDialog(
             @Nullable TypesBuilderData data, CommonDialogData common,

@@ -21,6 +21,7 @@ package com.github.retrooper.packetevents.protocol.chat.clickevent;
 import com.github.retrooper.packetevents.protocol.util.NbtMapDecoder;
 import com.github.retrooper.packetevents.protocol.util.NbtMapEncoder;
 import com.github.retrooper.packetevents.util.mappings.VersionedRegistry;
+import org.jetbrains.annotations.ApiStatus;
 import org.jspecify.annotations.NullMarked;
 
 @NullMarked
@@ -31,6 +32,7 @@ public final class ClickEventActions {
     private ClickEventActions() {
     }
 
+    @ApiStatus.Internal
     public static <T extends ClickEvent> ClickEventAction<T> define(
             String name, boolean allowFromServer,
             NbtMapDecoder<T> decoder, NbtMapEncoder<T> encoder
@@ -49,10 +51,24 @@ public final class ClickEventActions {
             OpenFileClickEvent::decode, OpenFileClickEvent::encode);
     public static final ClickEventAction<RunCommandClickEvent> RUN_COMMAND = define("run_command", true,
             RunCommandClickEvent::decode, RunCommandClickEvent::encode);
+    /**
+     * Removed in 1.9
+     */
+    @ApiStatus.Obsolete
+    public static final ClickEventAction<TwitchUserInfoClickEvent> TWITCH_USER_INFO = define("twitch_user_info", false,
+            TwitchUserInfoClickEvent::decode, TwitchUserInfoClickEvent::encode);
     public static final ClickEventAction<SuggestCommandClickEvent> SUGGEST_COMMAND = define("suggest_command", true,
             SuggestCommandClickEvent::decode, SuggestCommandClickEvent::encode);
+
+    /**
+     * Added with 1.8
+     */
     public static final ClickEventAction<ChangePageClickEvent> CHANGE_PAGE = define("change_page", true,
             ChangePageClickEvent::decode, ChangePageClickEvent::encode);
+
+    /**
+     * Added with 1.15
+     */
     public static final ClickEventAction<CopyToClipboardClickEvent> COPY_TO_CLIPBOARD = define("copy_to_clipboard", true,
             CopyToClipboardClickEvent::decode, CopyToClipboardClickEvent::encode);
 

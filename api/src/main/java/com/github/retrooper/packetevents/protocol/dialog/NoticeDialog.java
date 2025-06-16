@@ -42,6 +42,10 @@ public class NoticeDialog extends AbstractMappedEntity implements Dialog {
     private final CommonDialogData common;
     private final ActionButton action;
 
+    public NoticeDialog(CommonDialogData common, ActionButton action) {
+        this(null, common, action);
+    }
+
     @ApiStatus.Internal
     public NoticeDialog(@Nullable TypesBuilderData data, CommonDialogData common, ActionButton action) {
         super(data);

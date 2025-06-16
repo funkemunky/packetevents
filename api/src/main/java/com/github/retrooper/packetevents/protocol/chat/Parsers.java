@@ -227,7 +227,7 @@ public final class Parsers {
     /**
      * Added with 1.21.6
      */
-    public static final Parser DIALOG = define("parser", null, null);
+    public static final Parser DIALOG = define("dialog", null, null);
 
     static {
         REGISTRY.unloadMappings();

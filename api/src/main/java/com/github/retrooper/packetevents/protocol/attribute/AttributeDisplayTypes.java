@@ -20,6 +20,7 @@ package com.github.retrooper.packetevents.protocol.attribute;
 
 import com.github.retrooper.packetevents.util.mappings.VersionedRegistry;
 import com.github.retrooper.packetevents.wrapper.PacketWrapper;
+import org.jetbrains.annotations.ApiStatus;
 import org.jspecify.annotations.NullMarked;
 
 @NullMarked
@@ -30,6 +31,7 @@ public final class AttributeDisplayTypes {
     private AttributeDisplayTypes() {
     }
 
+    @ApiStatus.Internal
     public static <T extends AttributeDisplay> AttributeDisplayType<T> define(
             String name, PacketWrapper.Reader<T> reader, PacketWrapper.Writer<T> writer
     ) {

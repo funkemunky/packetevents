@@ -41,6 +41,15 @@ public class DialogListDialog extends AbstractMappedEntity implements Dialog {
     private final int columns;
     private final int buttonWidth;
 
+    public DialogListDialog(
+            CommonDialogData common,
+            MappedEntityRefSet<Dialog> dialogs,
+            @Nullable ActionButton exitAction,
+            int columns, int buttonWidth
+    ) {
+        this(null, common, dialogs, exitAction, columns, buttonWidth);
+    }
+
     @ApiStatus.Internal
     public DialogListDialog(
             @Nullable TypesBuilderData data,
