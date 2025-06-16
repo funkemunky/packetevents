@@ -18,6 +18,8 @@
 
 package com.github.retrooper.packetevents.protocol.dialog.input;
 
+import com.github.retrooper.packetevents.protocol.util.NbtMapDecoder;
+import com.github.retrooper.packetevents.protocol.util.NbtMapEncoder;
 import com.github.retrooper.packetevents.util.mappings.VersionedRegistry;
 import org.jetbrains.annotations.ApiStatus;
 import org.jspecify.annotations.NullMarked;
@@ -25,30 +27,30 @@ import org.jspecify.annotations.NullMarked;
 @NullMarked
 public final class InputControlTypes {
 
-    private static final VersionedRegistry<InputControl.Type<?>> REGISTRY = new VersionedRegistry<>("input_control_type");
+    private static final VersionedRegistry<InputControlType<?>> REGISTRY = new VersionedRegistry<>("input_control_type");
 
     private InputControlTypes() {
     }
 
-    public static VersionedRegistry<InputControl.Type<?>> getRegistry() {
+    public static VersionedRegistry<InputControlType<?>> getRegistry() {
         return REGISTRY;
     }
 
     @ApiStatus.Internal
-    public static <T extends InputControl> InputControl.Type<T> define(
-            String name, InputControl.Decoder<T> decoder, InputControl.Encoder<T> encoder
+    public static <T extends InputControl> InputControlType<T> define(
+            String name, NbtMapDecoder<T> decoder, NbtMapEncoder<T> encoder
     ) {
         return REGISTRY.define(name, data ->
                 new StaticInputControlType<>(data, decoder, encoder));
     }
 
-    public static final InputControl.Type<BooleanInputControl> BOOLEAN = define("boolean",
+    public static final InputControlType<BooleanInputControl> BOOLEAN = define("boolean",
             BooleanInputControl::decode, BooleanInputControl::encode);
-    public static final InputControl.Type<NumberRangeInputControl> NUMBER_RANGE = define("number_range",
+    public static final InputControlType<NumberRangeInputControl> NUMBER_RANGE = define("number_range",
             NumberRangeInputControl::decode, NumberRangeInputControl::encode);
-    public static final InputControl.Type<SingleOptionInputControl> SINGLE_OPTION = define("single_option",
+    public static final InputControlType<SingleOptionInputControl> SINGLE_OPTION = define("single_option",
             SingleOptionInputControl::decode, SingleOptionInputControl::encode);
-    public static final InputControl.Type<TextInputControl> TEXT = define("text",
+    public static final InputControlType<TextInputControl> TEXT = define("text",
             TextInputControl::decode, TextInputControl::encode);
 
     static {

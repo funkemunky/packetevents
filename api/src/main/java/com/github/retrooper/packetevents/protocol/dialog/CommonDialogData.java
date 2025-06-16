@@ -19,7 +19,6 @@
 package com.github.retrooper.packetevents.protocol.dialog;
 
 import com.github.retrooper.packetevents.protocol.dialog.input.Input;
-import com.github.retrooper.packetevents.protocol.nbt.NBT;
 import com.github.retrooper.packetevents.protocol.nbt.NBTByte;
 import com.github.retrooper.packetevents.protocol.nbt.NBTCompound;
 import com.github.retrooper.packetevents.util.adventure.AdventureSerializer;
@@ -59,10 +58,8 @@ public final class CommonDialogData {
     }
 
     public static CommonDialogData decode(NBTCompound compound, PacketWrapper<?> wrapper) {
-        AdventureSerializer serializer = AdventureSerializer.serializer(wrapper);
-        Component title = serializer.fromNbtTag(compound.getTagOrThrow("title"));
-        NBT externalTitleTag = compound.getTagOrNull("external_title");
-        Component externalTitle = externalTitleTag != null ? serializer.fromNbtTag(externalTitleTag) : null;
+        Component title = compound.getOrThrow("title", AdventureSerializer.serializer(wrapper), wrapper);
+        Component externalTitle = compound.getOrNull("external_title", AdventureSerializer.serializer(wrapper), wrapper);
         boolean canCloseWithEscape = compound.getBooleanOr("can_close_with_escape", true);
         boolean pause = compound.getBooleanOr("pause", true);
         DialogAction afterAction = compound.getOr("after_action", DialogAction::decode, DialogAction.CLOSE, wrapper);
@@ -72,10 +69,9 @@ public final class CommonDialogData {
     }
 
     public static void encode(NBTCompound compound, PacketWrapper<?> wrapper, CommonDialogData data) {
-        AdventureSerializer serializer = AdventureSerializer.serializer(wrapper);
-        compound.setTag("title", serializer.asNbtTag(data.title));
+        compound.set("title", data.title, AdventureSerializer.serializer(wrapper), wrapper);
         if (data.externalTitle != null) {
-            compound.setTag("external_title", serializer.asNbtTag(data.externalTitle));
+            compound.set("external_title", data.externalTitle, AdventureSerializer.serializer(wrapper), wrapper);
         }
         if (!data.canCloseWithEscape) {
             compound.setTag("can_close_with_escape", new NBTByte(false));

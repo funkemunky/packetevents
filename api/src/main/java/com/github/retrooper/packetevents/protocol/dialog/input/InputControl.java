@@ -18,30 +18,25 @@
 
 package com.github.retrooper.packetevents.protocol.dialog.input;
 
-import com.github.retrooper.packetevents.protocol.mapper.MappedEntity;
 import com.github.retrooper.packetevents.protocol.nbt.NBTCompound;
-import com.github.retrooper.packetevents.protocol.player.ClientVersion;
+import com.github.retrooper.packetevents.resources.ResourceLocation;
+import com.github.retrooper.packetevents.wrapper.PacketWrapper;
 import org.jspecify.annotations.NullMarked;
 
 @NullMarked
 public interface InputControl {
 
-    Type<?> getType();
-
-    interface Type<T extends InputControl> extends MappedEntity {
-
-        T decode(NBTCompound compound, ClientVersion version);
-
-        void encode(NBTCompound compound, ClientVersion version, T control);
+    static InputControl decode(NBTCompound compound, PacketWrapper<?> wrapper) {
+        String typeName = compound.getStringTagValueOrThrow("type");
+        InputControlType<?> type = InputControlTypes.getRegistry().getByNameOrThrow(typeName);
+        return type.decode(compound, wrapper);
     }
 
-    @FunctionalInterface
-    interface Decoder<T> {
-        T decode(NBTCompound compound, ClientVersion version);
+    @SuppressWarnings("unchecked") // not unchecked
+    static void encode(NBTCompound compound, PacketWrapper<?> wrapper, InputControl control) {
+        compound.set("tag", control.getType().getName(), ResourceLocation::encode, wrapper);
+        ((InputControlType<? super InputControl>) control.getType()).encode(compound, wrapper, control);
     }
 
-    @FunctionalInterface
-    interface Encoder<T> {
-        void encode(NBTCompound compound, ClientVersion version, T t);
-    }
+    InputControlType<?> getType();
 }

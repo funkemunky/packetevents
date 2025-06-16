@@ -21,8 +21,8 @@ package com.github.retrooper.packetevents.protocol.dialog.input;
 import com.github.retrooper.packetevents.protocol.nbt.NBTByte;
 import com.github.retrooper.packetevents.protocol.nbt.NBTCompound;
 import com.github.retrooper.packetevents.protocol.nbt.NBTString;
-import com.github.retrooper.packetevents.protocol.player.ClientVersion;
 import com.github.retrooper.packetevents.util.adventure.AdventureSerializer;
+import com.github.retrooper.packetevents.wrapper.PacketWrapper;
 import net.kyori.adventure.text.Component;
 import org.jspecify.annotations.NullMarked;
 
@@ -41,16 +41,16 @@ public class BooleanInputControl implements InputControl {
         this.onFalse = onFalse;
     }
 
-    public static BooleanInputControl decode(NBTCompound compound, ClientVersion version) {
-        Component label = AdventureSerializer.serializer(version).fromNbtTag(compound.getTagOrThrow("label"));
+    public static BooleanInputControl decode(NBTCompound compound, PacketWrapper<?> wrapper) {
+        Component label = compound.getOrThrow("label", AdventureSerializer.serializer(wrapper), wrapper);
         boolean initial = compound.getBoolean("initial");
         String onTrue = compound.getStringTagValueOrDefault("on_true", "true");
         String onFalse = compound.getStringTagValueOrDefault("on_false", "false");
         return new BooleanInputControl(label, initial, onTrue, onFalse);
     }
 
-    public static void encode(NBTCompound compound, ClientVersion version, BooleanInputControl control) {
-        compound.setTag("label", AdventureSerializer.serializer(version).asNbtTag(control.label));
+    public static void encode(NBTCompound compound, PacketWrapper<?> wrapper, BooleanInputControl control) {
+        compound.set("label", control.label, AdventureSerializer.serializer(wrapper), wrapper);
         if (control.initial) {
             compound.setTag("initial", new NBTByte(true));
         }
@@ -63,7 +63,7 @@ public class BooleanInputControl implements InputControl {
     }
 
     @Override
-    public Type<?> getType() {
+    public InputControlType<?> getType() {
         return InputControlTypes.BOOLEAN;
     }
 

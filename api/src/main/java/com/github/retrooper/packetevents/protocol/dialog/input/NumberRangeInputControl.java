@@ -23,8 +23,8 @@ import com.github.retrooper.packetevents.protocol.nbt.NBTFloat;
 import com.github.retrooper.packetevents.protocol.nbt.NBTInt;
 import com.github.retrooper.packetevents.protocol.nbt.NBTNumber;
 import com.github.retrooper.packetevents.protocol.nbt.NBTString;
-import com.github.retrooper.packetevents.protocol.player.ClientVersion;
 import com.github.retrooper.packetevents.util.adventure.AdventureSerializer;
+import com.github.retrooper.packetevents.wrapper.PacketWrapper;
 import net.kyori.adventure.text.Component;
 import org.jspecify.annotations.NullMarked;
 import org.jspecify.annotations.Nullable;
@@ -44,27 +44,27 @@ public class NumberRangeInputControl implements InputControl {
         this.rangeInfo = rangeInfo;
     }
 
-    public static NumberRangeInputControl decode(NBTCompound compound, ClientVersion version) {
+    public static NumberRangeInputControl decode(NBTCompound compound, PacketWrapper<?> wrapper) {
         int width = compound.getNumberTagValueOrDefault("width", 200).intValue();
-        Component label = AdventureSerializer.serializer(version).fromNbtTag(compound.getTagOrThrow("label"));
+        Component label = compound.getOrThrow("label", AdventureSerializer.serializer(wrapper), wrapper);
         String labelFormat = compound.getStringTagValueOrDefault("label_format", "options.generic_value");
-        RangeInfo rangeInfo = RangeInfo.decode(compound, version);
+        RangeInfo rangeInfo = RangeInfo.decode(compound, wrapper);
         return new NumberRangeInputControl(width, label, labelFormat, rangeInfo);
     }
 
-    public static void encode(NBTCompound compound, ClientVersion version, NumberRangeInputControl control) {
+    public static void encode(NBTCompound compound, PacketWrapper<?> wrapper, NumberRangeInputControl control) {
         if (control.width != 200) {
             compound.setTag("width", new NBTInt(control.width));
         }
-        compound.setTag("label", AdventureSerializer.serializer(version).asNbtTag(control.label));
+        compound.set("label", control.label, AdventureSerializer.serializer(wrapper), wrapper);
         if (!"options.generic_value".equals(control.labelFormat)) {
             compound.setTag("label_format", new NBTString(control.labelFormat));
         }
-        RangeInfo.encode(compound, version, control.rangeInfo);
+        RangeInfo.encode(compound, wrapper, control.rangeInfo);
     }
 
     @Override
-    public Type<?> getType() {
+    public InputControlType<?> getType() {
         return InputControlTypes.NUMBER_RANGE;
     }
 
@@ -106,7 +106,7 @@ public class NumberRangeInputControl implements InputControl {
             this.step = step;
         }
 
-        public static RangeInfo decode(NBTCompound compound, ClientVersion version) {
+        public static RangeInfo decode(NBTCompound compound, PacketWrapper<?> wrapper) {
             float start = compound.getNumberTagValueOrThrow("start").floatValue();
             float end = compound.getNumberTagValueOrThrow("end").floatValue();
             NBTNumber initialTag = compound.getNumberTagOrNull("initial");
@@ -116,7 +116,7 @@ public class NumberRangeInputControl implements InputControl {
             return new RangeInfo(start, end, initial, step);
         }
 
-        public static void encode(NBTCompound compound, ClientVersion version, RangeInfo rangeInfo) {
+        public static void encode(NBTCompound compound, PacketWrapper<?> wrapper, RangeInfo rangeInfo) {
             compound.setTag("start", new NBTFloat(rangeInfo.start));
             compound.setTag("end", new NBTFloat(rangeInfo.end));
             if (rangeInfo.initial != null) {

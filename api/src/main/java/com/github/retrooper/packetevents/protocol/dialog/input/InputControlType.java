@@ -18,42 +18,15 @@
 
 package com.github.retrooper.packetevents.protocol.dialog.input;
 
-import com.github.retrooper.packetevents.protocol.nbt.NBT;
+import com.github.retrooper.packetevents.protocol.mapper.MappedEntity;
 import com.github.retrooper.packetevents.protocol.nbt.NBTCompound;
-import com.github.retrooper.packetevents.protocol.nbt.NBTString;
 import com.github.retrooper.packetevents.wrapper.PacketWrapper;
 import org.jspecify.annotations.NullMarked;
 
 @NullMarked
-public class Input {
+public interface InputControlType<T extends InputControl> extends MappedEntity {
 
-    private final String key;
-    private final InputControl control;
+    T decode(NBTCompound compound, PacketWrapper<?> wrapper);
 
-    public Input(String key, InputControl control) {
-        this.key = key;
-        this.control = control;
-    }
-
-    public static Input decode(NBT nbt, PacketWrapper<?> wrapper) {
-        NBTCompound compound = (NBTCompound) nbt;
-        String key = compound.getStringTagValueOrThrow("key");
-        InputControl control = InputControl.decode(compound, wrapper);
-        return new Input(key, control);
-    }
-
-    public static NBT encode(PacketWrapper<?> wrapper, Input input) {
-        NBTCompound compound = new NBTCompound();
-        compound.setTag("key", new NBTString(input.key));
-        InputControl.encode(compound, wrapper, input.control);
-        return compound;
-    }
-
-    public String getKey() {
-        return this.key;
-    }
-
-    public InputControl getControl() {
-        return this.control;
-    }
+    void encode(NBTCompound compound, PacketWrapper<?> wrapper, T control);
 }

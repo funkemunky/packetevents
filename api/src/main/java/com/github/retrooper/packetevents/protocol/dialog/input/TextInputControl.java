@@ -18,8 +18,13 @@
 
 package com.github.retrooper.packetevents.protocol.dialog.input;
 
+import com.github.retrooper.packetevents.protocol.nbt.NBT;
+import com.github.retrooper.packetevents.protocol.nbt.NBTByte;
 import com.github.retrooper.packetevents.protocol.nbt.NBTCompound;
-import com.github.retrooper.packetevents.protocol.player.ClientVersion;
+import com.github.retrooper.packetevents.protocol.nbt.NBTInt;
+import com.github.retrooper.packetevents.protocol.nbt.NBTString;
+import com.github.retrooper.packetevents.util.adventure.AdventureSerializer;
+import com.github.retrooper.packetevents.wrapper.PacketWrapper;
 import net.kyori.adventure.text.Component;
 import org.jspecify.annotations.NullMarked;
 import org.jspecify.annotations.Nullable;
@@ -46,16 +51,37 @@ public class TextInputControl implements InputControl {
         this.multiline = multiline;
     }
 
-    public static TextInputControl decode(NBTCompound compound, ClientVersion version) {
-        return null;
+    public static TextInputControl decode(NBTCompound compound, PacketWrapper<?> wrapper) {
+        int width = compound.getNumberTagValueOrDefault("width", 200).intValue();
+        Component label = compound.getOrThrow("label", AdventureSerializer.serializer(wrapper), wrapper);
+        boolean labelVisible = compound.getBooleanOr("label_visible", true);
+        String initial = compound.getStringTagValueOrDefault("initial", "");
+        int maxLength = compound.getNumberTagValueOrDefault("max_length", 32).intValue();
+        MultilineOptions multiline = compound.getOrNull("multiline", MultilineOptions::decode, wrapper);
+        return new TextInputControl(width, label, labelVisible, initial, maxLength, multiline);
     }
 
-    public static void encode(NBTCompound compound, ClientVersion version, TextInputControl control) {
-
+    public static void encode(NBTCompound compound, PacketWrapper<?> wrapper, TextInputControl control) {
+        if (control.width != 200) {
+            compound.setTag("width", new NBTInt(control.width));
+        }
+        compound.set("label", control.label, AdventureSerializer.serializer(wrapper), wrapper);
+        if (!control.labelVisible) {
+            compound.setTag("label_visible", new NBTByte(false));
+        }
+        if (!control.initial.isEmpty()) {
+            compound.setTag("initial", new NBTString(control.initial));
+        }
+        if (control.maxLength != 32) {
+            compound.setTag("max_length", new NBTInt(control.maxLength));
+        }
+        if (control.multiline != null) {
+            compound.set("multiline", control.multiline, MultilineOptions::encode, wrapper);
+        }
     }
 
     @Override
-    public Type<?> getType() {
+    public InputControlType<?> getType() {
         return InputControlTypes.TEXT;
     }
 
@@ -91,6 +117,27 @@ public class TextInputControl implements InputControl {
         public MultilineOptions(@Nullable Integer maxLines, @Nullable Integer height) {
             this.maxLines = maxLines;
             this.height = height;
+        }
+
+        public static MultilineOptions decode(NBT nbt, PacketWrapper<?> wrapper) {
+            NBTCompound compound = (NBTCompound) nbt;
+            Number maxLines = compound.getNumberTagValueOrNull("max_lines");
+            Number height = compound.getNumberTagValueOrNull("height");
+            return new MultilineOptions(
+                    maxLines != null ? maxLines.intValue() : null,
+                    height != null ? height.intValue() : null
+            );
+        }
+
+        public static NBT encode(PacketWrapper<?> wrapper, MultilineOptions options) {
+            NBTCompound compound = new NBTCompound();
+            if (options.maxLines != null) {
+                compound.setTag("max_lines", new NBTInt(options.maxLines));
+            }
+            if (options.height != null) {
+                compound.setTag("height", new NBTInt(options.height));
+            }
+            return compound;
         }
 
         public @Nullable Integer getMaxLines() {

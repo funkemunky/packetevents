@@ -20,23 +20,25 @@ package com.github.retrooper.packetevents.protocol.dialog.input;
 
 import com.github.retrooper.packetevents.protocol.mapper.AbstractMappedEntity;
 import com.github.retrooper.packetevents.protocol.nbt.NBTCompound;
-import com.github.retrooper.packetevents.protocol.player.ClientVersion;
+import com.github.retrooper.packetevents.protocol.util.NbtMapDecoder;
+import com.github.retrooper.packetevents.protocol.util.NbtMapEncoder;
 import com.github.retrooper.packetevents.util.mappings.TypesBuilderData;
+import com.github.retrooper.packetevents.wrapper.PacketWrapper;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Nullable;
 import org.jspecify.annotations.NullMarked;
 
 @NullMarked
-public class StaticInputControlType<T extends InputControl> extends AbstractMappedEntity implements InputControl.Type<T> {
+public class StaticInputControlType<T extends InputControl> extends AbstractMappedEntity implements InputControlType<T> {
 
-    private final InputControl.Decoder<T> decoder;
-    private final InputControl.Encoder<T> encoder;
+    private final NbtMapDecoder<T> decoder;
+    private final NbtMapEncoder<T> encoder;
 
     @ApiStatus.Internal
     public StaticInputControlType(
             @Nullable TypesBuilderData data,
-            InputControl.Decoder<T> decoder,
-            InputControl.Encoder<T> encoder
+            NbtMapDecoder<T> decoder,
+            NbtMapEncoder<T> encoder
     ) {
         super(data);
         this.decoder = decoder;
@@ -44,12 +46,12 @@ public class StaticInputControlType<T extends InputControl> extends AbstractMapp
     }
 
     @Override
-    public T decode(NBTCompound compound, ClientVersion version) {
-        return this.decoder.decode(compound, version);
+    public T decode(NBTCompound compound, PacketWrapper<?> wrapper) {
+        return this.decoder.decode(compound, wrapper);
     }
 
     @Override
-    public void encode(NBTCompound compound, ClientVersion version, T control) {
-        this.encoder.encode(compound, version, control);
+    public void encode(NBTCompound compound, PacketWrapper<?> wrapper, T control) {
+        this.encoder.encode(compound, wrapper, control);
     }
 }

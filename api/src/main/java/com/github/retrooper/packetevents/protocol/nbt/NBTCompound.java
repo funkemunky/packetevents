@@ -118,7 +118,12 @@ public class NBTCompound extends NBT {
         return this.getNumberTagOrThrow(key).getAsNumber();
     }
 
-    public Number getNumberTagValueOrDefault(String key, Number number) {
+    public @Nullable Number getNumberTagValueOrNull(String key) {
+        return this.getNumberTagValueOrDefault(key, null);
+    }
+
+    @Contract("_, !null -> !null")
+    public @Nullable Number getNumberTagValueOrDefault(String key, @Nullable Number number) {
         NBTNumber tag = this.getNumberTagOrNull(key);
         return tag != null ? tag.getAsNumber() : number;
     }

@@ -19,28 +19,29 @@
 package com.github.retrooper.packetevents.protocol.dialog.input;
 
 import com.github.retrooper.packetevents.protocol.nbt.NBT;
+import com.github.retrooper.packetevents.protocol.nbt.NBTByte;
 import com.github.retrooper.packetevents.protocol.nbt.NBTCompound;
-import com.github.retrooper.packetevents.protocol.nbt.NBTList;
-import com.github.retrooper.packetevents.protocol.player.ClientVersion;
+import com.github.retrooper.packetevents.protocol.nbt.NBTInt;
+import com.github.retrooper.packetevents.protocol.nbt.NBTString;
 import com.github.retrooper.packetevents.util.adventure.AdventureSerializer;
+import com.github.retrooper.packetevents.wrapper.PacketWrapper;
 import net.kyori.adventure.text.Component;
 import org.jspecify.annotations.NullMarked;
 import org.jspecify.annotations.Nullable;
 
 import java.util.List;
-import java.util.concurrent.ConcurrentHashMap;
 
 @NullMarked
 public class SingleOptionInputControl implements InputControl {
 
     private final int width;
-    private final List<Entry> entries;
+    private final List<Entry> options;
     private final Component label;
     private final boolean labelVisible;
 
-    public SingleOptionInputControl(int width, List<Entry> entries, Component label, boolean labelVisible) {
+    public SingleOptionInputControl(int width, List<Entry> options, Component label, boolean labelVisible) {
         boolean initial = false;
-        for (Entry entry : entries) {
+        for (Entry entry : options) {
             if (entry.initial) {
                 if (initial) {
                     throw new IllegalArgumentException("Multiple initial values");
@@ -49,26 +50,32 @@ public class SingleOptionInputControl implements InputControl {
             }
         }
         this.width = width;
-        this.entries = entries;
+        this.options = options;
         this.label = label;
         this.labelVisible = labelVisible;
-
     }
 
-    public static SingleOptionInputControl decode(NBTCompound compound, ClientVersion version) {
-//        int width = compound.getNumberTagValueOrDefault("width", 200).intValue();
-//        NBTList<NBT> optionsList = compound.getTagListOfTypeOrSingleOrThrow("options", NBT.class);
-//        Component label = AdventureSerializer.serializer(version).fromNbtTag(compound.getTagOrThrow("label"));
-//        boolean labelVisible = compound.getBooleanOr("label_visible", true);
-        return null;
+    public static SingleOptionInputControl decode(NBTCompound compound, PacketWrapper<?> wrapper) {
+        int width = compound.getNumberTagValueOrDefault("width", 200).intValue();
+        List<Entry> options = compound.getListOrThrow("options", Entry::decode, wrapper);
+        Component label = compound.getOrThrow("label", AdventureSerializer.serializer(wrapper), wrapper);
+        boolean labelVisible = compound.getBooleanOr("label_visible", true);
+        return new SingleOptionInputControl(width, options, label, labelVisible);
     }
 
-    public static void encode(NBTCompound compound, ClientVersion version, SingleOptionInputControl control) {
-
+    public static void encode(NBTCompound compound, PacketWrapper<?> wrapper, SingleOptionInputControl control) {
+        if (control.width != 200) {
+            compound.setTag("width", new NBTInt(control.width));
+        }
+        compound.setList("options", control.options, Entry::encode, wrapper);
+        compound.set("label", control.label, AdventureSerializer.serializer(wrapper), wrapper);
+        if (!control.labelVisible) {
+            compound.setTag("label_visible", new NBTByte(false));
+        }
     }
 
     @Override
-    public Type<?> getType() {
+    public InputControlType<?> getType() {
         return InputControlTypes.SINGLE_OPTION;
     }
 
@@ -76,8 +83,8 @@ public class SingleOptionInputControl implements InputControl {
         return this.width;
     }
 
-    public List<Entry> getEntries() {
-        return this.entries;
+    public List<Entry> getOptions() {
+        return this.options;
     }
 
     public Component getLabel() {
@@ -98,6 +105,32 @@ public class SingleOptionInputControl implements InputControl {
             this.id = id;
             this.display = display;
             this.initial = initial;
+        }
+
+        public static Entry decode(NBT nbt, PacketWrapper<?> wrapper) {
+            if (nbt instanceof NBTString) {
+                return new Entry(((NBTString) nbt).getValue(), null, false);
+            }
+            NBTCompound compound = (NBTCompound) nbt;
+            String id = compound.getStringTagValueOrThrow("id");
+            Component display = compound.getOrNull("display", AdventureSerializer.serializer(wrapper), wrapper);
+            boolean initial = compound.getBooleanOr("initial", false);
+            return new Entry(id, display, initial);
+        }
+
+        public static NBT encode(PacketWrapper<?> wrapper, Entry entry) {
+            if (entry.display == null && !entry.initial) {
+                return new NBTString(entry.id);
+            }
+            NBTCompound compound = new NBTCompound();
+            compound.setTag("id", new NBTString(entry.id));
+            if (entry.display != null) {
+                compound.set("display", entry.display, AdventureSerializer.serializer(wrapper), wrapper);
+            }
+            if (entry.initial) {
+                compound.setTag("initial", new NBTByte(true));
+            }
+            return compound;
         }
 
         public String getId() {
