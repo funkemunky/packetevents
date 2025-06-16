@@ -17,7 +17,6 @@
  */
 
 package com.github.retrooper.packetevents.protocol.dialog.button;
-// Created by booky10 in packetevents (00:46 16.06.2025)
 
 import com.github.retrooper.packetevents.protocol.nbt.NBTCompound;
 import com.github.retrooper.packetevents.protocol.nbt.NBTInt;

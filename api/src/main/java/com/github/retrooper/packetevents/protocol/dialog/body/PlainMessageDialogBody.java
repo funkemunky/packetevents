@@ -16,21 +16,35 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.github.retrooper.packetevents.protocol.mapper;
+package com.github.retrooper.packetevents.protocol.dialog.body;
 
-import com.github.retrooper.packetevents.protocol.player.ClientVersion;
-import com.github.retrooper.packetevents.util.mappings.IRegistryHolder;
+import com.github.retrooper.packetevents.protocol.nbt.NBTCompound;
 import com.github.retrooper.packetevents.wrapper.PacketWrapper;
-import org.jetbrains.annotations.ApiStatus;
 import org.jspecify.annotations.NullMarked;
 
-/**
- * Used internally for loading additional data
- * after registry entries have already been added.
- */
-@ApiStatus.Internal
 @NullMarked
-public interface ResolvableEntity {
+public class PlainMessageDialogBody implements DialogBody {
 
-    void doResolve(PacketWrapper<?> wrapper);
+    private final PlainMessage message;
+
+    public PlainMessageDialogBody(PlainMessage message) {
+        this.message = message;
+    }
+
+    public static PlainMessageDialogBody decode(NBTCompound compound, PacketWrapper<?> wrapper) {
+        return new PlainMessageDialogBody(PlainMessage.decode(compound, wrapper));
+    }
+
+    public static void encode(NBTCompound compound, PacketWrapper<?> wrapper, PlainMessageDialogBody body) {
+        PlainMessage.encode(compound, wrapper, body.message);
+    }
+
+    @Override
+    public DialogBodyType<?> getType() {
+        return DialogBodyTypes.PLAIN_MESSAGE;
+    }
+
+    public PlainMessage getMessage() {
+        return this.message;
+    }
 }
