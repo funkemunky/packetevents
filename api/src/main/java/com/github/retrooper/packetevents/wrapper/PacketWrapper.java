@@ -1415,6 +1415,10 @@ public class PacketWrapper<T extends PacketWrapper<T>> {
         return entity;
     }
 
+    public <Z extends MappedEntity> IRegistry<Z> replaceRegistry(IRegistry<Z> registry) {
+        return this.getRegistryHolder().getRegistryOr(registry, this.serverVersion.toClientVersion());
+    }
+
     public IRegistryHolder getRegistryHolder() {
         // workaround to make packet wrappers work without user context on spigot/fabric servers
         // this will not work for bungee or velocity, as we need to have some reference to get

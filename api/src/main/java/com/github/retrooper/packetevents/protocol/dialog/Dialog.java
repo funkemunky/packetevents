@@ -42,24 +42,39 @@ public interface Dialog extends MappedEntity, DeepComparableEntity, CopyableEnti
     }
 
     static Dialog readDirect(PacketWrapper<?> wrapper) {
-        return decode(wrapper.readNBTRaw(), wrapper, null);
+        return decodeDirect(wrapper.readNBTRaw(), wrapper, null);
     }
 
     static void writeDirect(PacketWrapper<?> wrapper, Dialog dialog) {
-        wrapper.writeNBTRaw(encode(dialog, wrapper));
+        wrapper.writeNBTRaw(encodeDirect(dialog, wrapper));
+    }
+
+    static Dialog decode(NBT nbt, PacketWrapper<?> wrapper) {
+        if (nbt instanceof NBTString) {
+            return wrapper.replaceRegistry(Dialogs.getRegistry()).getByNameOrThrow(((NBTString) nbt).getValue());
+        }
+        return decodeDirect(nbt, wrapper, null);
+    }
+
+    static NBT encode(PacketWrapper<?> wrapper, Dialog dialog) {
+        if (dialog.isRegistered()) {
+            return new NBTString(dialog.getName().toString());
+        }
+        return encodeDirect(dialog, wrapper);
     }
 
     @ApiStatus.Internal
-    static Dialog decode(NBT nbt, PacketWrapper<?> wrapper, @Nullable TypesBuilderData data) {
+    static Dialog decodeDirect(NBT nbt, PacketWrapper<?> wrapper, @Nullable TypesBuilderData data) {
         NBTCompound compound = (NBTCompound) nbt;
         String dialogTypeName = compound.getStringTagValueOrThrow("type");
         DialogType<?> dialogType = DialogTypes.getRegistry().getByNameOrThrow(dialogTypeName);
-        return dialogType.decode(compound, wrapper);
+        // TODO pass down data instead of copying
+        return dialogType.decode(compound, wrapper).copy(data);
     }
 
     @ApiStatus.Internal
     @SuppressWarnings("unchecked") // not unchecked
-    static NBT encode(Dialog dialog, PacketWrapper<?> wrapper) {
+    static NBT encodeDirect(Dialog dialog, PacketWrapper<?> wrapper) {
         NBTCompound compound = new NBTCompound();
         compound.setTag("type", new NBTString(dialog.getType().getName().toString()));
         ((DialogType<? super Dialog>) dialog.getType()).encode(compound, wrapper, dialog);

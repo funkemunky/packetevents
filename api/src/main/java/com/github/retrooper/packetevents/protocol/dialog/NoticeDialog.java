@@ -18,6 +18,7 @@
 
 package com.github.retrooper.packetevents.protocol.dialog;
 
+import com.github.retrooper.packetevents.protocol.dialog.button.ActionButton;
 import com.github.retrooper.packetevents.protocol.mapper.AbstractMappedEntity;
 import com.github.retrooper.packetevents.protocol.nbt.NBTCompound;
 import com.github.retrooper.packetevents.util.mappings.TypesBuilderData;

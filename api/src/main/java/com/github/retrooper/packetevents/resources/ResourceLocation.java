@@ -18,6 +18,8 @@
 
 package com.github.retrooper.packetevents.resources;
 
+import com.github.retrooper.packetevents.protocol.nbt.NBT;
+import com.github.retrooper.packetevents.protocol.nbt.NBTString;
 import com.github.retrooper.packetevents.wrapper.PacketWrapper;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.Nullable;
@@ -55,6 +57,30 @@ public class ResourceLocation {
 
     public static void write(PacketWrapper<?> wrapper, ResourceLocation resourceLocation) {
         wrapper.writeIdentifier(resourceLocation);
+    }
+
+    public static ResourceLocation decode(NBT nbt, PacketWrapper<?> wrapper) {
+        return new ResourceLocation(((NBTString) nbt).getValue());
+    }
+
+    public static NBT encode(PacketWrapper<?> wrapper, ResourceLocation resourceLocation) {
+        return new NBTString(resourceLocation.toString());
+    }
+
+    public static String getNamespace(String location) {
+        int namespaceIdx = location.indexOf(':');
+        if (namespaceIdx > 0) {
+            return location.substring(0, namespaceIdx);
+        }
+        return VANILLA_NAMESPACE;
+    }
+
+    public static String getPath(String location) {
+        int namespaceIdx = location.indexOf(':');
+        if (namespaceIdx != -1) {
+            return location.substring(namespaceIdx + 1);
+        }
+        return location;
     }
 
     @Contract("null -> null; !null -> !null")
