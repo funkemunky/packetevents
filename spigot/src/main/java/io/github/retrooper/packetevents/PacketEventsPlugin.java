@@ -84,7 +84,6 @@ public class PacketEventsPlugin extends JavaPlugin {
                     WrapperPlayServerSystemChatMessage packet = new WrapperPlayServerSystemChatMessage(event);
                 } else if (event.getPacketType() == PacketType.Play.Server.UPDATE_ADVANCEMENTS) {
                     WrapperPlayServerUpdateAdvancements packet = new WrapperPlayServerUpdateAdvancements(event);
-                    packet.getAdvancements();
                 } else if (event.getPacketType() == PacketType.Play.Server.STATISTICS) {
                     WrapperPlayServerStatistics packet = new WrapperPlayServerStatistics(event);
                     ((Player) event.getPlayer()).sendMessage(packet.getStatistics().toString());
