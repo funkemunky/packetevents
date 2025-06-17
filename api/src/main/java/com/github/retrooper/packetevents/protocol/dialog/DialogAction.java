@@ -30,8 +30,7 @@ public enum DialogAction {
 
     CLOSE("close", true),
     NONE("none", false),
-    WAIT_FOR_RESPONSE("wait_for_response", true),
-    ;
+    WAIT_FOR_RESPONSE("wait_for_response", true);
 
     public static final Index<String, DialogAction> NAME_INDEX = Index.create(
             DialogAction.class, DialogAction::getName);

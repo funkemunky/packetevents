@@ -25,37 +25,37 @@ import com.github.retrooper.packetevents.wrapper.PacketWrapper;
 
 public class WrapperPlayClientChangeGameMode extends PacketWrapper<WrapperPlayClientChangeGameMode> {
 
-    private GameMode gamemode;
+    private GameMode gameMode;
 
     public WrapperPlayClientChangeGameMode(PacketReceiveEvent event) {
         super(event);
     }
 
-    public WrapperPlayClientChangeGameMode(GameMode gamemode) {
+    public WrapperPlayClientChangeGameMode(GameMode gameMode) {
         super(PacketType.Play.Client.CHANGE_GAME_MODE);
-        this.gamemode = gamemode;
+        this.gameMode = gameMode;
     }
 
     @Override
     public void read() {
-        this.gamemode = GameMode.getById(this.readVarInt());
+        this.gameMode = GameMode.getById(this.readVarInt());
     }
 
     @Override
     public void write() {
-        this.writeVarInt(this.gamemode.getId());
+        this.writeVarInt(this.gameMode.getId());
     }
 
     @Override
     public void copy(WrapperPlayClientChangeGameMode wrapper) {
-        this.gamemode = wrapper.gamemode;
+        this.gameMode = wrapper.gameMode;
     }
 
-    public GameMode getGamemode() {
-        return this.gamemode;
+    public GameMode getGameMode() {
+        return this.gameMode;
     }
 
-    public void setGamemode(GameMode gamemode) {
-        this.gamemode = gamemode;
+    public void setGameMode(GameMode gamemode) {
+        this.gameMode = gamemode;
     }
 }
