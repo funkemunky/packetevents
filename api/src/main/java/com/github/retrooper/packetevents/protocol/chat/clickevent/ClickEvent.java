@@ -18,9 +18,11 @@
 
 package com.github.retrooper.packetevents.protocol.chat.clickevent;
 
+import com.github.retrooper.packetevents.protocol.dialog.Dialog;
 import com.github.retrooper.packetevents.protocol.nbt.NBTCompound;
 import com.github.retrooper.packetevents.resources.ResourceLocation;
 import com.github.retrooper.packetevents.wrapper.PacketWrapper;
+import net.kyori.adventure.text.event.ClickEvent.Payload;
 import org.jspecify.annotations.NullMarked;
 
 @NullMarked
@@ -54,6 +56,14 @@ public interface ClickEvent {
                 return new ChangePageClickEvent(clickEvent.value());
             case COPY_TO_CLIPBOARD:
                 return new CopyToClipboardClickEvent(clickEvent.value());
+            case SHOW_DIALOG:
+                return new ShowDialogClickEvent((Dialog) ((Payload.Dialog) clickEvent.payload()).dialog());
+            case CUSTOM:
+                Payload.Custom payload = (Payload.Custom) clickEvent.payload();
+                return new CustomClickEvent(
+                        new ResourceLocation(payload.key()),
+                        null // TODO parse snbt
+                );
             default:
                 throw new UnsupportedOperationException("Unsupported clickevent: " + clickEvent);
         }

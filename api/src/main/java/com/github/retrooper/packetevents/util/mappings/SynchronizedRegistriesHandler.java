@@ -91,9 +91,9 @@ public final class SynchronizedRegistriesHandler {
         Stream.of(
                 new RegistryEntry<>(Biomes.getRegistry(), Biome::decode),
                 new RegistryEntry<>(ChatTypes.getRegistry(), ChatType::decode),
-                new RegistryEntry<>(TrimPatterns.getRegistry(), TrimPattern::decode),
-                new RegistryEntry<>(TrimMaterials.getRegistry(), TrimMaterial::decode),
-                new RegistryEntry<>(WolfVariants.getRegistry(), WolfVariant::decode),
+                new RegistryEntry<>(TrimPatterns.getRegistry(), (NbtEntryDecoder<TrimPattern>) TrimPattern::decode),
+                new RegistryEntry<>(TrimMaterials.getRegistry(), (NbtEntryDecoder<TrimMaterial>) TrimMaterial::decode),
+                new RegistryEntry<>(WolfVariants.getRegistry(), (NbtEntryDecoder<WolfVariant>) WolfVariant::decode),
                 new RegistryEntry<>(WolfSoundVariants.getRegistry(), WolfSoundVariant::decode),
                 new RegistryEntry<>(PigVariants.getRegistry(), PigVariant::decode),
                 new RegistryEntry<>(FrogVariants.getRegistry(), FrogVariant::decode),
@@ -104,9 +104,9 @@ public final class SynchronizedRegistriesHandler {
                 new RegistryEntry<>(DimensionTypes.getRegistry(), DimensionType::decode),
                 new RegistryEntry<>(DamageTypes.getRegistry(), DamageType::decode),
                 new RegistryEntry<>(BannerPatterns.getRegistry(), BannerPattern::decode),
-                new RegistryEntry<>(EnchantmentTypes.getRegistry(), EnchantmentType::decode),
-                new RegistryEntry<>(JukeboxSongs.getRegistry(), IJukeboxSong::decode),
-                new RegistryEntry<>(Instruments.getRegistry(), Instrument::decode),
+                new RegistryEntry<>(EnchantmentTypes.getRegistry(), (NbtEntryDecoder<EnchantmentType>) EnchantmentType::decode),
+                new RegistryEntry<>(JukeboxSongs.getRegistry(), (NbtEntryDecoder<IJukeboxSong>) IJukeboxSong::decode),
+                new RegistryEntry<>(Instruments.getRegistry(), (NbtEntryDecoder<Instrument>) Instrument::decode),
                 new RegistryEntry<>(Dialogs.getRegistry(), Dialog::decodeDirect)
         ).forEach(entry -> REGISTRY_KEYS.put(entry.getRegistryKey(), entry));
     }

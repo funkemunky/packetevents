@@ -163,7 +163,7 @@ public final class AdventureSerializer implements NbtEncoder<Component>, NbtDeco
     }
 
     /**
-     * @deprecated use {@link #fromNbtTag(NBT)} instead
+     * @deprecated use {@link #fromNbtTag(NBT, PacketWrapper)} instead
      */
     @Deprecated
     public static Component fromNbt(NBT tag) {
@@ -171,7 +171,7 @@ public final class AdventureSerializer implements NbtEncoder<Component>, NbtDeco
     }
 
     /**
-     * @deprecated use {@link #asNbtTag(Component)} instead
+     * @deprecated use {@link #asNbtTag(Component, PacketWrapper)} instead
      */
     @Deprecated
     public static NBT toNbt(Component component) {
@@ -204,12 +204,22 @@ public final class AdventureSerializer implements NbtEncoder<Component>, NbtDeco
         return component != null ? this.gson().serializeToTree(component) : null;
     }
 
+    @Deprecated
     public Component fromNbtTag(NBT tag) {
-        return this.nbt().deserializeOrNull(tag);
+        return this.fromNbtTag(tag, PacketWrapper.createDummyWrapper(this.version));
     }
 
+    public Component fromNbtTag(NBT tag, PacketWrapper<?> wrapper) {
+        return this.nbt().deserializeOrNull(tag, wrapper);
+    }
+
+    @Deprecated
     public NBT asNbtTag(Component component) {
-        return this.nbt().serializeOrNull(component);
+        return this.asNbtTag(component, PacketWrapper.createDummyWrapper(this.version));
+    }
+
+    public NBT asNbtTag(Component component, PacketWrapper<?> wrapper) {
+        return this.nbt().serializeOrNull(component, wrapper);
     }
 
     public GsonComponentSerializer gson() {
@@ -264,11 +274,11 @@ public final class AdventureSerializer implements NbtEncoder<Component>, NbtDeco
 
     @Override
     public Component decode(NBT nbt, PacketWrapper<?> wrapper) {
-        return this.nbt().deserialize(nbt);
+        return this.nbt().deserialize(nbt, wrapper);
     }
 
     @Override
     public NBT encode(PacketWrapper<?> wrapper, Component value) {
-        return this.nbt().serialize(value);
+        return this.nbt().serialize(value, wrapper);
     }
 }

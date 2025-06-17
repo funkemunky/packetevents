@@ -206,6 +206,10 @@ public class PacketWrapper<T extends PacketWrapper<T>> {
         this.packetTypeData = new PacketTypeData(packetType, id);
     }
 
+    public static PacketWrapper<?> createDummyWrapper(ClientVersion version) {
+        return new PacketWrapper<>(version, version.toServerVersion(), -2);
+    }
+
     public static PacketWrapper<?> createUniversalPacketWrapper(Object byteBuf) {
         return createUniversalPacketWrapper(byteBuf, PacketEvents.getAPI().getServerManager().getVersion());
     }
@@ -579,7 +583,7 @@ public class PacketWrapper<T extends PacketWrapper<T>> {
     }
 
     public AdventureSerializer getSerializers() {
-        return AdventureSerializer.serializer(this.serverVersion.toClientVersion());
+        return AdventureSerializer.serializer(this);
     }
 
     @Deprecated
@@ -594,7 +598,7 @@ public class PacketWrapper<T extends PacketWrapper<T>> {
     }
 
     public Component readComponentAsNBT() {
-        return this.getSerializers().fromNbtTag(this.readNBTRaw());
+        return this.getSerializers().fromNbtTag(this.readNBTRaw(), this);
     }
 
     public Component readComponentAsJSON() {
@@ -611,7 +615,7 @@ public class PacketWrapper<T extends PacketWrapper<T>> {
     }
 
     public void writeComponentAsNBT(Component component) {
-        this.writeNBTRaw(this.getSerializers().asNbtTag(component));
+        this.writeNBTRaw(this.getSerializers().asNbtTag(component, this));
     }
 
     public void writeComponentAsJSON(Component component) {
@@ -620,11 +624,11 @@ public class PacketWrapper<T extends PacketWrapper<T>> {
     }
 
     public Style readStyle() {
-        return this.getSerializers().nbt().deserializeStyle(this.readNBT());
+        return this.getSerializers().nbt().deserializeStyle(this.readNBT(), this);
     }
 
     public void writeStyle(Style style) {
-        this.writeNBT(this.getSerializers().nbt().serializeStyle(style));
+        this.writeNBT(this.getSerializers().nbt().serializeStyle(style, this));
     }
 
     public ResourceLocation readIdentifier(int maxLen) {

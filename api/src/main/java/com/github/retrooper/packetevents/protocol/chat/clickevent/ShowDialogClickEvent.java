@@ -48,7 +48,7 @@ public class ShowDialogClickEvent implements ClickEvent {
 
     @Override
     public net.kyori.adventure.text.event.ClickEvent asAdventure() {
-        throw new UnsupportedOperationException();
+        return net.kyori.adventure.text.event.ClickEvent.showDialog(this.dialog);
     }
 
     public Dialog getDialog() {

@@ -56,7 +56,8 @@ public class CustomClickEvent implements ClickEvent {
 
     @Override
     public net.kyori.adventure.text.event.ClickEvent asAdventure() {
-        throw new UnsupportedOperationException();
+        // TODO convert payload to snbt
+        return net.kyori.adventure.text.event.ClickEvent.custom(this.id.key(), null);
     }
 
     public ResourceLocation getId() {
