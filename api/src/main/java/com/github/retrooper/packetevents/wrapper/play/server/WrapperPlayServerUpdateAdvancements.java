@@ -25,28 +25,34 @@ import com.github.retrooper.packetevents.protocol.advancements.AdvancementProgre
 import com.github.retrooper.packetevents.protocol.packettype.PacketType;
 import com.github.retrooper.packetevents.resources.ResourceLocation;
 import com.github.retrooper.packetevents.wrapper.PacketWrapper;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
+import java.util.Set;
 
 public class WrapperPlayServerUpdateAdvancements extends PacketWrapper<WrapperPlayServerUpdateAdvancements> {
+
     private boolean reset;
     private List<AdvancementHolder> addedAdvancements;
-    private LinkedHashSet<ResourceLocation> removedAdvancements;
-    private Map<ResourceLocation, AdvancementProgress> progress;// key = advancement id
-    private @Nullable Boolean showAdvancements = null; // 1.21.5+
+    private Set<ResourceLocation> removedAdvancements;
+    private Map<ResourceLocation, AdvancementProgress> progress;
+    /**
+     * Added with 1.21.5
+     */
+    private boolean showAdvancements;
 
     public WrapperPlayServerUpdateAdvancements(PacketSendEvent event) {
         super(event);
     }
 
-    public WrapperPlayServerUpdateAdvancements(boolean reset, List<AdvancementHolder> addedAdvancements,
-                                               LinkedHashSet<ResourceLocation> removedAdvancements,
-                                               Map<ResourceLocation, AdvancementProgress> progress,
-                                               @Nullable Boolean showAdvancements) {
+    public WrapperPlayServerUpdateAdvancements(
+            boolean reset,
+            List<AdvancementHolder> addedAdvancements,
+            Set<ResourceLocation> removedAdvancements,
+            Map<ResourceLocation, AdvancementProgress> progress,
+            boolean showAdvancements
+    ) {
         super(PacketType.Play.Server.UPDATE_ADVANCEMENTS);
         this.reset = reset;
         this.addedAdvancements = addedAdvancements;
@@ -57,26 +63,21 @@ public class WrapperPlayServerUpdateAdvancements extends PacketWrapper<WrapperPl
 
     @Override
     public void read() {
-        reset = readBoolean();
-
-        addedAdvancements = readList(AdvancementHolder::read);
-        removedAdvancements = readCollection(LinkedHashSet::new, ResourceLocation::read);
-
-        progress = readMap(PacketWrapper::readIdentifier, AdvancementProgress::read);
-
-        if (serverVersion.isNewerThanOrEquals(ServerVersion.V_1_21_5)) {
-            showAdvancements = readBoolean();
-        }
+        this.reset = this.readBoolean();
+        this.addedAdvancements = this.readList(AdvancementHolder::read);
+        this.removedAdvancements = this.readCollection(LinkedHashSet::new, ResourceLocation::read);
+        this.progress = this.readMap(ResourceLocation::read, AdvancementProgress::read);
+        this.showAdvancements = this.serverVersion.isOlderThan(ServerVersion.V_1_21_5) || this.readBoolean();
     }
 
     @Override
     public void write() {
-        writeBoolean(reset);
-        writeList(addedAdvancements, AdvancementHolder::write);
-        writeCollection(removedAdvancements, PacketWrapper::writeIdentifier);
-        writeMap(progress, PacketWrapper::writeIdentifier, AdvancementProgress::write);
-        if (serverVersion.isNewerThanOrEquals(ServerVersion.V_1_21_5)) {
-            writeBoolean(showAdvancements != null ? showAdvancements : false);
+        this.writeBoolean(this.reset);
+        this.writeList(this.addedAdvancements, AdvancementHolder::write);
+        this.writeCollection(this.removedAdvancements, ResourceLocation::write);
+        this.writeMap(this.progress, ResourceLocation::write, AdvancementProgress::write);
+        if (this.serverVersion.isNewerThanOrEquals(ServerVersion.V_1_21_5)) {
+            this.writeBoolean(this.showAdvancements);
         }
     }
 
@@ -90,42 +91,48 @@ public class WrapperPlayServerUpdateAdvancements extends PacketWrapper<WrapperPl
     }
 
     public boolean isReset() {
-        return reset;
-    }
-
-    public List<AdvancementHolder> getAddedAdvancements() {
-        return addedAdvancements;
-    }
-
-    public LinkedHashSet<ResourceLocation> getRemovedAdvancements() {
-        return removedAdvancements;
-    }
-
-    public Map<ResourceLocation, AdvancementProgress> getProgress() {
-        return progress;
-    }
-
-    public Optional<Boolean> getShowAdvancements() {
-        return Optional.ofNullable(showAdvancements);
+        return this.reset;
     }
 
     public void setReset(boolean reset) {
         this.reset = reset;
     }
 
+    public List<AdvancementHolder> getAddedAdvancements() {
+        return this.addedAdvancements;
+    }
+
     public void setAddedAdvancements(List<AdvancementHolder> addedAdvancements) {
         this.addedAdvancements = addedAdvancements;
     }
 
-    public void setRemovedAdvancements(LinkedHashSet<ResourceLocation> removedAdvancements) {
+    public Set<ResourceLocation> getRemovedAdvancements() {
+        return this.removedAdvancements;
+    }
+
+    public void setRemovedAdvancements(Set<ResourceLocation> removedAdvancements) {
         this.removedAdvancements = removedAdvancements;
+    }
+
+    public Map<ResourceLocation, AdvancementProgress> getProgress() {
+        return this.progress;
     }
 
     public void setProgress(Map<ResourceLocation, AdvancementProgress> progress) {
         this.progress = progress;
     }
 
-    public void setShowAdvancements(@Nullable Boolean showAdvancements) {
+    /**
+     * Added with 1.21.5
+     */
+    public boolean isShowAdvancements() {
+        return this.showAdvancements;
+    }
+
+    /**
+     * Added with 1.21.5
+     */
+    public void setShowAdvancements(boolean showAdvancements) {
         this.showAdvancements = showAdvancements;
     }
 }
