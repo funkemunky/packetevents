@@ -20,7 +20,9 @@ package com.github.retrooper.packetevents.protocol.chat.clickevent;
 
 import com.github.retrooper.packetevents.protocol.dialog.Dialog;
 import com.github.retrooper.packetevents.protocol.nbt.NBTCompound;
+import com.github.retrooper.packetevents.protocol.nbt.NBTEnd;
 import com.github.retrooper.packetevents.resources.ResourceLocation;
+import com.github.retrooper.packetevents.util.adventure.NbtTagHolder;
 import com.github.retrooper.packetevents.wrapper.PacketWrapper;
 import net.kyori.adventure.text.event.ClickEvent.Payload;
 import org.jspecify.annotations.NullMarked;
@@ -60,9 +62,10 @@ public interface ClickEvent {
                 return new ShowDialogClickEvent((Dialog) ((Payload.Dialog) clickEvent.payload()).dialog());
             case CUSTOM:
                 Payload.Custom payload = (Payload.Custom) clickEvent.payload();
+                NbtTagHolder nbtTag = (NbtTagHolder) payload.nbt();
                 return new CustomClickEvent(
                         new ResourceLocation(payload.key()),
-                        null // TODO parse snbt
+                        nbtTag.getTag() instanceof NBTEnd ? null : nbtTag.getTag()
                 );
             default:
                 throw new UnsupportedOperationException("Unsupported clickevent: " + clickEvent);

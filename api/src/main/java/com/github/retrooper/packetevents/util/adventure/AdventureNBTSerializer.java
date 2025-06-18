@@ -493,7 +493,7 @@ public class AdventureNBTSerializer implements ComponentSerializer<Component, Co
                                     continue;
                                 }
                                 Key key = Key.key(entry.getKey());
-                                map.put(key, new NbtComponentValue(entry.getValue()));
+                                map.put(key, new NbtTagHolder(entry.getValue()));
                             }
                             return map;
                         });
@@ -625,8 +625,8 @@ public class AdventureNBTSerializer implements ComponentSerializer<Component, Co
                                     compsNbt.writeCompound("!" + entry.getKey(), new NBTCompound());
                                     continue;
                                 }
-                                if (entry.getValue() instanceof NbtComponentValue) {
-                                    NBT compNbt = ((NbtComponentValue) entry.getValue()).nbt;
+                                if (entry.getValue() instanceof NbtTagHolder) {
+                                    NBT compNbt = ((NbtTagHolder) entry.getValue()).getTag();
                                     compsNbt.write(entry.getKey().toString(), compNbt);
                                 }
                                 // unsupported entry component value, skip for now
@@ -914,14 +914,5 @@ public class AdventureNBTSerializer implements ComponentSerializer<Component, Co
             throw new IllegalArgumentException("Expected " + required + " but got " + nbt.getType());
         }
         return (T) nbt;
-    }
-
-    private static final class NbtComponentValue implements DataComponentValue {
-
-        private final NBT nbt;
-
-        public NbtComponentValue(NBT nbt) {
-            this.nbt = nbt;
-        }
     }
 }

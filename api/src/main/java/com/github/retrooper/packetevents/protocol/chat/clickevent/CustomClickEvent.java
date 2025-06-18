@@ -20,7 +20,9 @@ package com.github.retrooper.packetevents.protocol.chat.clickevent;
 
 import com.github.retrooper.packetevents.protocol.nbt.NBT;
 import com.github.retrooper.packetevents.protocol.nbt.NBTCompound;
+import com.github.retrooper.packetevents.protocol.nbt.NBTEnd;
 import com.github.retrooper.packetevents.resources.ResourceLocation;
+import com.github.retrooper.packetevents.util.adventure.NbtTagHolder;
 import com.github.retrooper.packetevents.wrapper.PacketWrapper;
 import org.jspecify.annotations.NullMarked;
 import org.jspecify.annotations.Nullable;
@@ -56,8 +58,8 @@ public class CustomClickEvent implements ClickEvent {
 
     @Override
     public net.kyori.adventure.text.event.ClickEvent asAdventure() {
-        // TODO convert payload to snbt
-        return net.kyori.adventure.text.event.ClickEvent.custom(this.id.key(), null);
+        return net.kyori.adventure.text.event.ClickEvent.custom(
+                this.id.key(), new NbtTagHolder(this.payload != null ? this.payload : NBTEnd.INSTANCE));
     }
 
     public ResourceLocation getId() {
