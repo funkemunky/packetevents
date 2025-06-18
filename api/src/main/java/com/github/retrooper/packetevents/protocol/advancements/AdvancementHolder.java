@@ -32,7 +32,7 @@ public class AdvancementHolder {
 
     public static AdvancementHolder read(PacketWrapper<?> wrapper) {
         ResourceLocation identifier = wrapper.readIdentifier();
-        Advancement advancement = Advancement.read(wrapper, wrapper.getServerVersion());
+        Advancement advancement = Advancement.read(wrapper);
         return new AdvancementHolder(identifier, advancement);
     }
 

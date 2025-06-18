@@ -21,24 +21,43 @@ package com.github.retrooper.packetevents.protocol.advancements;
 import com.github.retrooper.packetevents.manager.server.ServerVersion;
 import com.github.retrooper.packetevents.resources.ResourceLocation;
 import com.github.retrooper.packetevents.wrapper.PacketWrapper;
+import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
-import java.util.Optional;
 
 public class Advancement {
 
     private @Nullable ResourceLocation parent;
     private @Nullable AdvancementDisplay display;
-    // 1.20.1-
-    private @Nullable List<String> criteria;
+    /**
+     * Removed with 1.20.2
+     */
+    private List<String> criteria;
     private List<List<String>> requirements;
-    // 1.20+
-    private @Nullable Boolean sendsTelemetryData;
+    /**
+     * Added with 1.20
+     */
+    private boolean sendsTelemetryData;
 
-    public Advancement(@Nullable ResourceLocation parent, @Nullable AdvancementDisplay display, @Nullable List<String> criteria,
-                       List<List<String>> requirements, @Nullable Boolean sendsTelemetryData) {
+    public Advancement(
+            @Nullable ResourceLocation parent,
+            @Nullable AdvancementDisplay display,
+            List<List<String>> requirements,
+            boolean sendsTelemetryData
+    ) {
+        this(parent, display, Collections.emptyList(), requirements, sendsTelemetryData);
+    }
+
+    @ApiStatus.Obsolete
+    public Advancement(
+            @Nullable ResourceLocation parent,
+            @Nullable AdvancementDisplay display,
+            List<String> criteria,
+            List<List<String>> requirements,
+            boolean sendsTelemetryData
+    ) {
         this.parent = parent;
         this.display = display;
         this.criteria = criteria;
@@ -46,72 +65,80 @@ public class Advancement {
         this.sendsTelemetryData = sendsTelemetryData;
     }
 
-    public static Advancement read(PacketWrapper<?> wrapper, ServerVersion serverVersion) {
+    public static Advancement read(PacketWrapper<?> wrapper) {
         ResourceLocation parentId = wrapper.readOptional(ResourceLocation::read);
         AdvancementDisplay display = wrapper.readOptional(AdvancementDisplay::read);
-        List<String> criteria = null;
-        if (serverVersion.isOlderThanOrEquals(ServerVersion.V_1_20_1)) {
-            criteria = wrapper.readList(PacketWrapper::readString);
-        }
-        List<List<String>> requirements = wrapper.readList(packetWrapper -> wrapper.readList(PacketWrapper::readString));
-        Boolean sendsTelemetryData = null;
-        if (serverVersion.isNewerThanOrEquals(ServerVersion.V_1_20)) {
-            sendsTelemetryData = wrapper.readBoolean();
-        }
+        List<String> criteria = wrapper.getServerVersion().isOlderThan(ServerVersion.V_1_20_2)
+                ? wrapper.readList(PacketWrapper::readString) : null;
+        List<List<String>> requirements = wrapper.readList(
+                ew -> wrapper.readList(PacketWrapper::readString));
+        boolean sendsTelemetryData = wrapper.getServerVersion().isNewerThanOrEquals(ServerVersion.V_1_20)
+                && wrapper.readBoolean();
         return new Advancement(parentId, display, criteria, requirements, sendsTelemetryData);
     }
 
-    public static void write(PacketWrapper<?> packetWrapper, Advancement advancement) {
-        packetWrapper.writeOptional(advancement.getParent().orElse(null), PacketWrapper::writeIdentifier);
-        packetWrapper.writeOptional(advancement.getDisplay().orElse(null), AdvancementDisplay::write);
-        if (packetWrapper.getServerVersion().isOlderThanOrEquals(ServerVersion.V_1_20_1)) {
-            List<String> criteria = advancement.getCriteria().orElse(new ArrayList<>());
-            packetWrapper.writeList(criteria, PacketWrapper::writeString);
+    public static void write(PacketWrapper<?> wrapper, Advancement advancement) {
+        wrapper.writeOptional(advancement.parent, ResourceLocation::write);
+        wrapper.writeOptional(advancement.display, AdvancementDisplay::write);
+        if (wrapper.getServerVersion().isOlderThan(ServerVersion.V_1_20_2)) {
+            wrapper.writeList(advancement.criteria, PacketWrapper::writeString);
         }
-        packetWrapper.writeList(advancement.getRequirements(), (packetWrapper1, strings)
-                -> packetWrapper1.writeList(strings, PacketWrapper::writeString));
-        if (packetWrapper.getServerVersion().isNewerThanOrEquals(ServerVersion.V_1_20)) {
-            packetWrapper.writeBoolean(advancement.isSendsTelemetryData().orElse(false));
+        wrapper.writeList(advancement.getRequirements(), (ew, anyList) ->
+                ew.writeList(anyList, PacketWrapper::writeString));
+        if (wrapper.getServerVersion().isNewerThanOrEquals(ServerVersion.V_1_20)) {
+            wrapper.writeBoolean(advancement.sendsTelemetryData);
         }
     }
 
-    public Optional<ResourceLocation> getParent() {
-        return Optional.ofNullable(parent);
-    }
-
-    public Optional<AdvancementDisplay> getDisplay() {
-        return Optional.ofNullable(display);
-    }
-
-    public Optional<List<String>> getCriteria() {
-        return Optional.ofNullable(criteria);
-    }
-
-    public List<List<String>> getRequirements() {
-        return requirements;
-    }
-
-    public Optional<Boolean> isSendsTelemetryData() {
-        return Optional.ofNullable(sendsTelemetryData);
+    public @Nullable ResourceLocation getParent() {
+        return this.parent;
     }
 
     public void setParent(@Nullable ResourceLocation parent) {
         this.parent = parent;
     }
 
+    public @Nullable AdvancementDisplay getDisplay() {
+        return this.display;
+    }
+
     public void setDisplay(@Nullable AdvancementDisplay display) {
         this.display = display;
     }
 
-    public void setCriteria(@Nullable List<String> criteria) {
+    /**
+     * Removed with 1.20.2
+     */
+    public List<String> getCriteria() {
+        return this.criteria;
+    }
+
+    /**
+     * Removed with 1.20.2
+     */
+    public void setCriteria(List<String> criteria) {
         this.criteria = criteria;
+    }
+
+    public List<List<String>> getRequirements() {
+        return this.requirements;
     }
 
     public void setRequirements(List<List<String>> requirements) {
         this.requirements = requirements;
     }
 
-    public void setSendsTelemetryData(@Nullable Boolean sendsTelemetryData) {
+    /**
+     * Added with 1.20
+     */
+    public boolean isSendsTelemetryData() {
+        return this.sendsTelemetryData;
+    }
+
+    /**
+     * Added with 1.20
+     */
+    public void setSendsTelemetryData(boolean sendsTelemetryData) {
         this.sendsTelemetryData = sendsTelemetryData;
     }
 }
