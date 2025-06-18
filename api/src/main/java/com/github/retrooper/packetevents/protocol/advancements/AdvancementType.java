@@ -19,13 +19,9 @@
 package com.github.retrooper.packetevents.protocol.advancements;
 
 public enum AdvancementType {
-    TASK, CHALLENGE, GOAL;
 
-    public static AdvancementType getById(int id) {
-        return values()[id];
-    }
-
-    public int getId() {
-        return ordinal();
-    }
+    TASK,
+    CHALLENGE,
+    GOAL,
+    ;
 }

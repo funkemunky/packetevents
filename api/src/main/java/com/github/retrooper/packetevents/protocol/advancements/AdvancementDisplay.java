@@ -24,10 +24,12 @@ import com.github.retrooper.packetevents.wrapper.PacketWrapper;
 import net.kyori.adventure.text.Component;
 import org.jetbrains.annotations.Nullable;
 
-public class AdvancementDisplay {
-    public static final int SHOW_BACKGROUND_TEXTURE = 0x01;
-    public static final int SHOW_TOAST = 0x02;
-    public static final int HIDDEN = 0x04;
+public final class AdvancementDisplay {
+
+    public static final int FLAG_HAS_BACKGROUND = 0b001;
+    public static final int FLAG_SHOW_TOAST = 0b010;
+    public static final int FLAG_HIDDEN = 0b100;
+
     private Component title;
     private Component description;
     private ItemStack icon;
@@ -51,16 +53,15 @@ public class AdvancementDisplay {
         this.y = y;
     }
 
-
     public static AdvancementDisplay read(PacketWrapper<?> wrapper) {
         Component title = wrapper.readComponent();
         Component description = wrapper.readComponent();
         ItemStack icon = wrapper.readItemStack();
         AdvancementType type = wrapper.readEnum(AdvancementType.class);
         int flags = wrapper.readInt();
-        ResourceLocation background = (flags & SHOW_BACKGROUND_TEXTURE) != 0 ? ResourceLocation.read(wrapper) : null;
-        boolean showToast = (flags & SHOW_TOAST) != 0;
-        boolean hidden = (flags & HIDDEN) != 0;
+        ResourceLocation background = (flags & FLAG_HAS_BACKGROUND) != 0 ? ResourceLocation.read(wrapper) : null;
+        boolean showToast = (flags & FLAG_SHOW_TOAST) != 0;
+        boolean hidden = (flags & FLAG_HIDDEN) != 0;
         float x = wrapper.readFloat();
         float y = wrapper.readFloat();
         return new AdvancementDisplay(title, description, icon, type, background, showToast, hidden, x, y);
@@ -71,8 +72,7 @@ public class AdvancementDisplay {
         wrapper.writeComponent(display.description);
         wrapper.writeItemStack(display.icon);
         wrapper.writeEnum(display.type);
-        int flags = display.flags();
-        wrapper.writeInt(flags);
+        wrapper.writeInt(display.packFlags());
         if (display.background != null) {
             ResourceLocation.write(wrapper, display.background);
         }
@@ -80,87 +80,86 @@ public class AdvancementDisplay {
         wrapper.writeFloat(display.y);
     }
 
-    public int flags() {
+    public int packFlags() {
         int flags = 0;
-        if (background != null) {
-            flags |= SHOW_BACKGROUND_TEXTURE;
+        if (this.background != null) {
+            flags |= FLAG_HAS_BACKGROUND;
         }
-        if (showToast) {
-            flags |= SHOW_TOAST;
+        if (this.showToast) {
+            flags |= FLAG_SHOW_TOAST;
         }
-        if (hidden) {
-            flags |= HIDDEN;
+        if (this.hidden) {
+            flags |= FLAG_HIDDEN;
         }
         return flags;
     }
 
     public Component getTitle() {
-        return title;
-    }
-
-    public Component getDescription() {
-        return description;
-    }
-
-    public ItemStack getIcon() {
-        return icon;
-    }
-
-    public AdvancementType getType() {
-        return type;
-    }
-
-    public boolean isShowToast() {
-        return showToast;
-    }
-
-    public boolean isHidden() {
-        return hidden;
-    }
-
-    @Nullable
-    public ResourceLocation getBackground() {
-        return background;
-    }
-
-    public float getX() {
-        return x;
-    }
-
-    public float getY() {
-        return y;
+        return this.title;
     }
 
     public void setTitle(Component title) {
         this.title = title;
     }
 
+    public Component getDescription() {
+        return this.description;
+    }
+
     public void setDescription(Component description) {
         this.description = description;
+    }
+
+    public ItemStack getIcon() {
+        return this.icon;
     }
 
     public void setIcon(ItemStack icon) {
         this.icon = icon;
     }
 
+    public AdvancementType getType() {
+        return this.type;
+    }
+
     public void setType(AdvancementType type) {
         this.type = type;
+    }
+
+    public boolean isShowToast() {
+        return this.showToast;
     }
 
     public void setShowToast(boolean showToast) {
         this.showToast = showToast;
     }
 
+    public boolean isHidden() {
+        return this.hidden;
+    }
+
     public void setHidden(boolean hidden) {
         this.hidden = hidden;
+    }
+
+    public @Nullable ResourceLocation getBackground() {
+        return this.background;
     }
 
     public void setBackground(@Nullable ResourceLocation background) {
         this.background = background;
     }
 
+    public float getX() {
+        return this.x;
+    }
+
     public void setX(float x) {
         this.x = x;
+    }
+
+    public float getY() {
+        return this.y;
     }
 
     public void setY(float y) {

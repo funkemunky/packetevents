@@ -21,7 +21,8 @@ package com.github.retrooper.packetevents.protocol.advancements;
 import com.github.retrooper.packetevents.resources.ResourceLocation;
 import com.github.retrooper.packetevents.wrapper.PacketWrapper;
 
-public class AdvancementHolder {
+public final class AdvancementHolder {
+
     private ResourceLocation identifier;
     private Advancement advancement;
 
@@ -42,7 +43,7 @@ public class AdvancementHolder {
     }
 
     public ResourceLocation getIdentifier() {
-        return identifier;
+        return this.identifier;
     }
 
     public void setIdentifier(ResourceLocation identifier) {
@@ -50,7 +51,7 @@ public class AdvancementHolder {
     }
 
     public Advancement getAdvancement() {
-        return advancement;
+        return this.advancement;
     }
 
     public void setAdvancement(Advancement advancement) {
