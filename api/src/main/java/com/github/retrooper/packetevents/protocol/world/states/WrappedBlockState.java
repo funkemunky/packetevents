@@ -1502,6 +1502,22 @@ public class WrappedBlockState {
         this.checkIsStillValid();
     }
 
+    /**
+     * Added with 1.21.6
+     */
+    public int getHydration() {
+        return (int) this.data.get(StateValue.HYDRATION);
+    }
+
+    /**
+     * Added with 1.21.6
+     */
+    public void setHydration(int hydration) {
+        this.checkIfCloneNeeded();
+        this.data.put(StateValue.HYDRATION, hydration);
+        this.checkIsStillValid();
+    }
+
     // End all block data types
 
     /**
