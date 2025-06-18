@@ -19,34 +19,57 @@
 package com.github.retrooper.packetevents.protocol.advancements;
 
 import com.github.retrooper.packetevents.wrapper.PacketWrapper;
+import org.jspecify.annotations.Nullable;
 
-import java.util.HashMap;
 import java.util.Map;
-import java.util.Optional;
 
-public class AdvancementProgress {
-    private Map<String, Optional<Long>> criteria = new HashMap<>();
+public final class AdvancementProgress {
 
-    public AdvancementProgress(Map<String, Optional<Long>> criteria) {
+    private Map<String, CriterionProgress> criteria;
+
+    public AdvancementProgress(Map<String, CriterionProgress> criteria) {
         this.criteria = criteria;
     }
 
     public static AdvancementProgress read(PacketWrapper<?> wrapper) {
-        Map<String, Optional<Long>> criteria = wrapper.readMap(PacketWrapper::readString, packetWrapper -> Optional.ofNullable(packetWrapper.readOptional(PacketWrapper::readLong)));
+        Map<String, CriterionProgress> criteria = wrapper.readMap(PacketWrapper::readString, CriterionProgress::read);
         return new AdvancementProgress(criteria);
     }
 
     public static void write(PacketWrapper<?> wrapper, AdvancementProgress progress) {
-        wrapper.writeMap(progress.getCriteria(), PacketWrapper::writeString,
-                (packetWrapper, aLong) -> packetWrapper.writeOptional(aLong.orElse(null),
-                        PacketWrapper::writeLong));
+        wrapper.writeMap(progress.getCriteria(), PacketWrapper::writeString, CriterionProgress::write);
     }
 
-    public Map<String, Optional<Long>> getCriteria() {
-        return criteria;
+    public Map<String, CriterionProgress> getCriteria() {
+        return this.criteria;
     }
 
-    public void setCriteria(Map<String, Optional<Long>> criteria) {
+    public void setCriteria(Map<String, CriterionProgress> criteria) {
         this.criteria = criteria;
+    }
+
+    public static final class CriterionProgress {
+
+        private @Nullable Long obtainedTimestamp;
+
+        public CriterionProgress(@Nullable Long obtainedTimestamp) {
+            this.obtainedTimestamp = obtainedTimestamp;
+        }
+
+        public static CriterionProgress read(PacketWrapper<?> wrapper) {
+            return new CriterionProgress(wrapper.readOptional(PacketWrapper::readLong));
+        }
+
+        public static void write(PacketWrapper<?> wrapper, CriterionProgress progress) {
+            wrapper.writeOptional(progress.obtainedTimestamp, PacketWrapper::writeLong);
+        }
+
+        public @Nullable Long getObtainedTimestamp() {
+            return this.obtainedTimestamp;
+        }
+
+        public void setObtainedTimestamp(@Nullable Long obtainedTimestamp) {
+            this.obtainedTimestamp = obtainedTimestamp;
+        }
     }
 }
